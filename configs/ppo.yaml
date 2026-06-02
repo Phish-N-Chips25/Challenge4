@@ -1,0 +1,39 @@
+# ── PPO training configuration ───────────────────────────────────────────────
+
+env:
+  world_file: "src/webots_world/office.wbt"
+  time_step: 64                   # Webots simulation timestep (ms)
+  max_episode_steps: 2000
+  num_rooms: 5
+  observation:
+    include_robot_position: true   # discretised room index
+    include_sensor_alerts: true    # binary per motion sensor
+    include_camera_detections: true # known / unknown / none per camera
+    include_time_since_patrol: true # time since each room was last visited
+
+reward:
+  intrusion_detected: 10.0        # robot reaches room with unknown face
+  intrusion_missed_penalty: -20.0 # intruder present > 60s without response
+  room_visit_bonus: 1.0           # reward for visiting unpatrolled rooms
+  step_penalty: -0.01             # small cost per timestep (encourages efficiency)
+  false_alarm_penalty: -2.0       # responding to empty alert
+
+algorithm:
+  name: "PPO"
+  policy: "MlpPolicy"
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  total_timesteps: 500_000        # ~2-4 hours on RTX 3060 laptop
+
+evaluation:
+  eval_freq: 10_000
+  n_eval_episodes: 10
+  baselines:
+    - "random_walk"
+    - "cyclic_patrol"
+    - "greedy_nearest"

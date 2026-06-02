@@ -1,0 +1,70 @@
+# =============================================================================
+# GPU-AGNOSTIC setup
+#
+# Teammates WITH an NVIDIA GPU:
+#   docker compose --profile gpu build
+#   docker compose --profile gpu run --rm train
+#   docker compose --profile gpu up gui
+#
+# Teammates WITHOUT an NVIDIA GPU (or AMD/Intel):
+#   docker compose build
+#   docker compose run --rm train
+#   docker compose up gui
+#
+# Both use the EXACT same image. The only difference is whether
+# Docker passes the GPU device into the container.
+# =============================================================================
+
+services:
+  # ── Default: CPU mode (works on any machine) ──────────────────────────────
+  train:
+    build: .
+    image: cps:latest
+    container_name: cps-train
+    volumes:
+      - .:/workspace
+      - ./data:/workspace/data
+    environment:
+      - WEBOTS_HEADLESS=true
+    command: bash
+
+  gui:
+    image: cps:latest
+    container_name: cps-gui
+    volumes:
+      - .:/workspace
+      - ./data:/workspace/data
+    ports:
+      - "6080:6080"
+      - "8888:8888"
+    environment:
+      - WEBOTS_HEADLESS=false
+    command: >
+      bash -c "webots /workspace/src/webots_world/office.wbt &
+               tensorboard --logdir /workspace/data/logs --port 8888 --bind_all &
+               wait"
+
+  # ── GPU variants (same image, just adds GPU passthrough) ───────────────────
+  train-gpu:
+    extends: train
+    container_name: cps-train-gpu
+    profiles: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  gui-gpu:
+    extends: gui
+    container_name: cps-gui-gpu
+    profiles: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

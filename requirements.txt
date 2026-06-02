@@ -1,0 +1,23 @@
+# ── Reinforcement Learning ───────────────────────────────────────────────────
+stable-baselines3[extra]
+gymnasium
+shimmy
+
+# ── Computer Vision / Face Detection ────────────────────────────────────────
+opencv-python-headless
+Pillow
+
+# ── Deep Learning backend ───────────────────────────────────────────────────
+torch
+torchvision
+
+# ── Data / Visualization ────────────────────────────────────────────────────
+numpy
+pandas
+matplotlib
+seaborn
+tensorboard
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+pyyaml
+tqdm
