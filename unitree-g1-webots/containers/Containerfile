@@ -1,0 +1,77 @@
+FROM ros:humble-ros-base-jammy
+
+LABEL maintainer="ISEP Robotics Challenge Team"
+LABEL description="ROS 2 Humble + Webots R2025a controller stack for Booster T1 bipedal humanoid"
+
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    ca-certificates \
+    cmake \
+    curl \
+    file \
+    git \
+    graphviz \
+    iproute2 \
+    iputils-ping \
+    joystick \
+    libasound2 \
+    libboost-dev \
+    libcurl4-openssl-dev \
+    libeigen3-dev \
+    libgl1 \
+    libgl1-mesa-dri \
+    libgoogle-glog-dev \
+    libgraphviz-dev \
+    libgtest-dev \
+    liblua5.3-dev \
+    libnss3 \
+    libopengl0 \
+    libsdl2-dev \
+    libspdlog-dev \
+    libx11-6 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxkbcommon-x11-0 \
+    libxrandr2 \
+    libxrender1 \
+    libxtst6 \
+    lsof \
+    nano \
+    net-tools \
+    ninja-build \
+    psmisc \
+    procps \
+    python3-colcon-common-extensions \
+    python3-pip \
+    ros-humble-geometry-msgs \
+    ros-humble-joint-state-publisher \
+    ros-humble-nav-msgs \
+    ros-humble-robot-state-publisher \
+    ros-humble-sensor-msgs \
+    ros-humble-std-msgs \
+    ros-humble-tf2-tools \
+    ros-humble-webots-ros2 \
+    ros-humble-webots-ros2-driver \
+    unzip \
+    wget \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace/project/ros2_ws
+
+RUN echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc
+
+# Smart entrypoint: sources ROS, workspace overlay, and FastDDS profile
+COPY containers/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

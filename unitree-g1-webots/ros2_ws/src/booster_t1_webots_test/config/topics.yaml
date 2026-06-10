@@ -1,0 +1,12 @@
+topics:
+  joint_states:
+    - /booster_t1/joint_states
+    - /joint_states
+  imu:
+    - /booster_t1/imu
+    - /imu
+  low_state:
+    - /booster_t1/low_state
+    - /low_state
+  safe_command:
+    - /cmd_vel
