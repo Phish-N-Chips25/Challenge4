@@ -1,0 +1,1559 @@
+#VRML_SIM R2023b utf8
+# SentinelMAS — Ambiente de empresa para o demonstrador do Challenge 4.
+# Zonas: lobby, corredor (checkpoint facial), 4 salas de trabalho, datacenter
+# (acesso por reconhecimento facial), sala de convívio. Sensores PIR em todas
+# as zonas, robô de patrulha e agentes CyberSentinel nos servidores.
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/tables/protos/Desk.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/tables/protos/Table.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/chairs/protos/OfficeChair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/chairs/protos/WoodenChair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/computers/protos/Monitor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/computers/protos/Keyboard.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/living_room_furniture/protos/Sofa.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/plants/protos/PottedTree.proto"
+
+WorldInfo {
+  title "SentinelMAS - ambiente de empresa"
+  info [
+    "Demonstrador Webots do SentinelMAS (Challenge 4)."
+    "Lobby com checkpoint facial, 4 salas de trabalho, datacenter com"
+    "controlo de acesso facial, sala de convivio, sensores PIR por zona,"
+    "robo de patrulha e agentes CyberSentinel nos servidores."
+  ]
+  basicTimeStep 32
+}
+Viewpoint {
+  position 0 -20 18
+  orientation 1 0 0 0.84
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+  size 28 22
+  name "ground"
+}
+
+# ============================================================ zonas (marcas)
+Solid {
+  translation -5 -3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.55 0.7 0.95 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 9.6 4.6 }
+    }
+  ]
+  name "zone mark lobby"
+}
+Solid {
+  translation 5 -3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.95 0.75 0.45 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 9.6 4.6 }
+    }
+  ]
+  name "zone mark break room"
+}
+Solid {
+  translation 0 0 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.75 0.75 0.75 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 19.6 1.6 }
+    }
+  ]
+  name "zone mark corridor"
+}
+Solid {
+  translation -8 3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.6 0.9 0.6 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 3.6 4.6 }
+    }
+  ]
+  name "zone mark work room 1"
+}
+Solid {
+  translation -4 3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.6 0.9 0.6 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 3.6 4.6 }
+    }
+  ]
+  name "zone mark work room 2"
+}
+Solid {
+  translation 0 3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.6 0.9 0.6 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 3.6 4.6 }
+    }
+  ]
+  name "zone mark work room 3"
+}
+Solid {
+  translation 4 3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.6 0.9 0.6 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 3.6 4.6 }
+    }
+  ]
+  name "zone mark work room 4"
+}
+Solid {
+  translation 8 3.5 0.012
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.5 0.5 transparency 0.6 roughness 1 metalness 0 }
+      geometry Plane { size 3.6 4.6 }
+    }
+  ]
+  name "zone mark datacenter"
+}
+
+# ============================================================ paredes exteriores
+Wall {
+  translation -7.75 -6 0
+  name "wall south west"
+  size 4.5 0.2 2.4
+}
+DEF DOOR_ENTRANCE Door {
+  translation -5 -6 0
+  name "porta entrada"
+  size 1 0.2 2.4
+  position 1.5
+}
+Wall {
+  translation 2.75 -6 0
+  name "wall south east"
+  size 14.5 0.2 2.4
+}
+Wall {
+  translation 0 6 0
+  name "wall north"
+  size 20 0.2 2.4
+}
+Wall {
+  translation -10 0 0
+  rotation 0 0 1 1.5708
+  name "wall west"
+  size 12.4 0.2 2.4
+}
+Wall {
+  translation 10 0 0
+  rotation 0 0 1 1.5708
+  name "wall east"
+  size 12.4 0.2 2.4
+}
+
+# ============================================ parede sul do corredor (y = -1)
+Wall {
+  translation -7.75 -1 0
+  name "wall corridor south 1"
+  size 4.5 0.2 2.4
+}
+DEF DOOR_CHECKPOINT Door {
+  translation -5 -1 0
+  name "porta checkpoint"
+  size 1 0.2 2.4
+}
+Wall {
+  translation 0 -1 0
+  name "wall corridor south 2"
+  size 9 0.2 2.4
+}
+DEF DOOR_BREAK Door {
+  translation 5 -1 0
+  name "porta sala convivio"
+  size 1 0.2 2.4
+  position 1.5
+}
+Wall {
+  translation 7.75 -1 0
+  name "wall corridor south 3"
+  size 4.5 0.2 2.4
+}
+
+# ============================================ parede norte do corredor (y = 1)
+Wall {
+  translation -9.25 1 0
+  name "wall corridor north 1"
+  size 1.5 0.2 2.4
+}
+DEF DOOR_WR1 Door {
+  translation -8 1 0
+  name "porta sala trabalho 1"
+  size 1 0.2 2.4
+}
+Wall {
+  translation -6 1 0
+  name "wall corridor north 2"
+  size 3 0.2 2.4
+}
+DEF DOOR_WR2 Door {
+  translation -4 1 0
+  name "porta sala trabalho 2"
+  size 1 0.2 2.4
+}
+Wall {
+  translation -2 1 0
+  name "wall corridor north 3"
+  size 3 0.2 2.4
+}
+DEF DOOR_WR3 Door {
+  translation 0 1 0
+  name "porta sala trabalho 3"
+  size 1 0.2 2.4
+}
+Wall {
+  translation 2 1 0
+  name "wall corridor north 4"
+  size 3 0.2 2.4
+}
+DEF DOOR_WR4 Door {
+  translation 4 1 0
+  name "porta sala trabalho 4"
+  size 1 0.2 2.4
+}
+Wall {
+  translation 6 1 0
+  name "wall corridor north 5"
+  size 3 0.2 2.4
+}
+DEF DOOR_DATACENTER Door {
+  translation 8 1 0
+  name "porta datacenter"
+  size 1 0.2 2.4
+}
+Wall {
+  translation 9.25 1 0
+  name "wall corridor north 6"
+  size 1.5 0.2 2.4
+}
+
+# ============================================================ divisorias
+Wall {
+  translation 0 -3.5 0
+  rotation 0 0 1 1.5708
+  name "wall lobby break divider"
+  size 5 0.2 2.4
+}
+Wall {
+  translation -6 3.5 0
+  rotation 0 0 1 1.5708
+  name "wall divider wr1 wr2"
+  size 5 0.2 2.4
+}
+Wall {
+  translation -2 3.5 0
+  rotation 0 0 1 1.5708
+  name "wall divider wr2 wr3"
+  size 5 0.2 2.4
+}
+Wall {
+  translation 2 3.5 0
+  rotation 0 0 1 1.5708
+  name "wall divider wr3 wr4"
+  size 5 0.2 2.4
+}
+Wall {
+  translation 6 3.5 0
+  rotation 0 0 1 1.5708
+  name "wall divider wr4 datacenter"
+  size 5 0.2 2.4
+}
+
+# ============================================================ lobby
+Desk {
+  translation -8.9 -3.5 0
+  rotation 0 0 1 1.5708
+  name "desk rececao"
+}
+OfficeChair {
+  translation -9.4 -3.5 0
+  name "office chair rececao"
+}
+Sofa {
+  translation -2 -5.2 0
+  rotation 0 0 1 1.5708
+  name "sofa lobby"
+}
+PottedTree {
+  translation -0.7 -1.7 0
+  name "potted tree lobby 1"
+}
+PottedTree {
+  translation -9.3 -5.3 0
+  name "potted tree lobby 2"
+}
+
+# ============================================================ sala de convivio
+Table {
+  translation 5 -4 0
+  name "table convivio"
+}
+WoodenChair {
+  translation 3.9 -4 0
+  name "wooden chair 1"
+}
+WoodenChair {
+  translation 6.1 -4 0
+  rotation 0 0 1 3.14159
+  name "wooden chair 2"
+}
+WoodenChair {
+  translation 5 -3.2 0
+  rotation 0 0 1 -1.5708
+  name "wooden chair 3"
+}
+WoodenChair {
+  translation 5 -4.8 0
+  rotation 0 0 1 1.5708
+  name "wooden chair 4"
+}
+Sofa {
+  translation 9 -3.5 0
+  rotation 0 0 1 3.14159
+  name "sofa convivio"
+}
+PottedTree {
+  translation 1 -5.4 0
+  name "potted tree convivio 1"
+}
+PottedTree {
+  translation 9.3 -5.4 0
+  name "potted tree convivio 2"
+}
+
+# ============================================================ sala trabalho 1
+Desk {
+  translation -8.9 4.7 0
+  name "desk wr1 a"
+}
+Monitor {
+  translation -8.9 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr1 a"
+}
+Keyboard {
+  translation -8.9 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr1 a"
+}
+OfficeChair {
+  translation -8.9 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr1 a"
+}
+Desk {
+  translation -7.1 4.7 0
+  name "desk wr1 b"
+}
+Monitor {
+  translation -7.1 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr1 b"
+}
+Keyboard {
+  translation -7.1 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr1 b"
+}
+OfficeChair {
+  translation -7.1 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr1 b"
+}
+
+# ============================================================ sala trabalho 2
+Desk {
+  translation -4.9 4.7 0
+  name "desk wr2 a"
+}
+Monitor {
+  translation -4.9 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr2 a"
+}
+Keyboard {
+  translation -4.9 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr2 a"
+}
+OfficeChair {
+  translation -4.9 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr2 a"
+}
+Desk {
+  translation -3.1 4.7 0
+  name "desk wr2 b"
+}
+Monitor {
+  translation -3.1 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr2 b"
+}
+Keyboard {
+  translation -3.1 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr2 b"
+}
+OfficeChair {
+  translation -3.1 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr2 b"
+}
+
+# ============================================================ sala trabalho 3
+Desk {
+  translation -0.9 4.7 0
+  name "desk wr3 a"
+}
+Monitor {
+  translation -0.9 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr3 a"
+}
+Keyboard {
+  translation -0.9 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr3 a"
+}
+OfficeChair {
+  translation -0.9 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr3 a"
+}
+Desk {
+  translation 0.9 4.7 0
+  name "desk wr3 b"
+}
+Monitor {
+  translation 0.9 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr3 b"
+}
+Keyboard {
+  translation 0.9 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr3 b"
+}
+OfficeChair {
+  translation 0.9 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr3 b"
+}
+
+# ============================================================ sala trabalho 4
+Desk {
+  translation 3.1 4.7 0
+  name "desk wr4 a"
+}
+Monitor {
+  translation 3.1 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr4 a"
+}
+Keyboard {
+  translation 3.1 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr4 a"
+}
+OfficeChair {
+  translation 3.1 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr4 a"
+}
+Desk {
+  translation 4.9 4.7 0
+  name "desk wr4 b"
+}
+Monitor {
+  translation 4.9 4.75 0.72
+  rotation 0 0 1 -1.5708
+  name "monitor wr4 b"
+}
+Keyboard {
+  translation 4.9 4.45 0.72
+  rotation 0 0 1 -1.5708
+  name "keyboard wr4 b"
+}
+OfficeChair {
+  translation 4.9 3.9 0
+  rotation 0 0 1 1.5708
+  name "office chair wr4 b"
+}
+
+# ============================================================ datacenter
+Desk {
+  translation 9.2 2 0
+  rotation 0 0 1 1.5708
+  name "desk consola datacenter"
+}
+Monitor {
+  translation 9.2 2 0.72
+  rotation 0 0 1 3.14159
+  name "monitor consola datacenter"
+}
+
+DEF RACK_1 Robot {
+  translation 6.8 5.3 0
+  name "rack_1"
+  model "server_rack"
+  controller "cyber_sentinel_agent"
+  children [
+    Emitter {
+      channel 1
+    }
+    Pose {
+      translation 0 0 1
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.12 0.12 0.14 roughness 0.4 metalness 0.6 }
+          geometry Box { size 0.7 0.9 2 }
+        }
+      ]
+    }
+    LED {
+      translation 0 -0.47 1.7
+      name "status_led"
+      color [
+        0 1 0
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.03 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 1
+    children [
+      Box { size 0.7 0.9 2 }
+    ]
+  }
+}
+DEF RACK_2 Robot {
+  translation 8.2 5.3 0
+  name "rack_2"
+  model "server_rack"
+  controller "cyber_sentinel_agent"
+  children [
+    Emitter {
+      channel 1
+    }
+    Pose {
+      translation 0 0 1
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.12 0.12 0.14 roughness 0.4 metalness 0.6 }
+          geometry Box { size 0.7 0.9 2 }
+        }
+      ]
+    }
+    LED {
+      translation 0 -0.47 1.7
+      name "status_led"
+      color [
+        0 1 0
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.03 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 1
+    children [
+      Box { size 0.7 0.9 2 }
+    ]
+  }
+}
+DEF RACK_3 Robot {
+  translation 6.8 3.4 0
+  name "rack_3"
+  model "server_rack"
+  controller "cyber_sentinel_agent"
+  children [
+    Emitter {
+      channel 1
+    }
+    Pose {
+      translation 0 0 1
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.12 0.12 0.14 roughness 0.4 metalness 0.6 }
+          geometry Box { size 0.7 0.9 2 }
+        }
+      ]
+    }
+    LED {
+      translation 0 -0.47 1.7
+      name "status_led"
+      color [
+        0 1 0
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.03 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 1
+    children [
+      Box { size 0.7 0.9 2 }
+    ]
+  }
+}
+DEF RACK_4 Robot {
+  translation 8.2 3.4 0
+  name "rack_4"
+  model "server_rack"
+  controller "cyber_sentinel_agent"
+  children [
+    Emitter {
+      channel 1
+    }
+    Pose {
+      translation 0 0 1
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.12 0.12 0.14 roughness 0.4 metalness 0.6 }
+          geometry Box { size 0.7 0.9 2 }
+        }
+      ]
+    }
+    LED {
+      translation 0 -0.47 1.7
+      name "status_led"
+      color [
+        0 1 0
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.03 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 1
+    children [
+      Box { size 0.7 0.9 2 }
+    ]
+  }
+}
+
+# ====================================== camaras de reconhecimento facial
+DEF FACECAM_CHECKPOINT Robot {
+  translation -5 -1.25 2.15
+  rotation 0 0 1 -1.5708
+  name "facecam_checkpoint"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=checkpoint"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.15 0.15 0.18 roughness 0.4 metalness 0.4 }
+          geometry Box { size 0.14 0.07 0.07 }
+        }
+        Camera {
+          translation 0.08 0 0
+          name "camera"
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+}
+DEF FACECAM_DATACENTER Robot {
+  translation 8 0.78 2.15
+  rotation 0 0 1 -1.5708
+  name "facecam_datacenter"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=datacenter"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.15 0.15 0.18 roughness 0.4 metalness 0.4 }
+          geometry Box { size 0.14 0.07 0.07 }
+        }
+        Camera {
+          translation 0.08 0 0
+          name "camera"
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+}
+
+# ====================================== sensores de movimento (PIR) por zona
+DEF PIR_LOBBY Robot {
+  translation -7.5 -1.18 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_lobby"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=lobby"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_BREAK Robot {
+  translation 2.5 -1.18 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_break_room"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=break_room"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_CORRIDOR Robot {
+  translation -9.78 0 2
+  name "pir_corridor"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=corridor"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.06 0.1 0.09 }
+    }
+    LED {
+      translation 0.04 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.12
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.06
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.12
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.06
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.12
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_WR1 Robot {
+  translation -8 5.82 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_work_room_1"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=work_room_1"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_WR2 Robot {
+  translation -4 5.82 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_work_room_2"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=work_room_2"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_WR3 Robot {
+  translation 0 5.82 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_work_room_3"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=work_room_3"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_WR4 Robot {
+  translation 4 5.82 2.3
+  rotation 0 0 1 -1.5708
+  name "pir_work_room_4"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=work_room_4"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.1 0.06 0.09 }
+    }
+    LED {
+      translation 0.05 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.55
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+DEF PIR_DATACENTER Robot {
+  translation 9.8 2.2 2.3
+  rotation 0 0 1 3.14159
+  name "pir_datacenter"
+  controller "motion_agent"
+  controllerArgs [
+    "--zone=datacenter"
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.9 0.9 0.88 roughness 0.7 metalness 0 }
+      geometry Box { size 0.06 0.1 0.09 }
+    }
+    LED {
+      translation 0.04 0 0.02
+      name "led"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.5 metalness 0 }
+          geometry Sphere { radius 0.012 }
+        }
+      ]
+    }
+    DistanceSensor {
+      rotation 0 1 0 0.35
+      name "ds_center"
+      lookupTable [
+        0 0 0
+        8 8 0
+      ]
+    }
+    Pose {
+      rotation 0 0 1 0.45
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_left"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+    Pose {
+      rotation 0 0 1 -0.45
+      children [
+        DistanceSensor {
+          rotation 0 1 0 0.3
+          name "ds_right"
+          lookupTable [
+            0 0 0
+            8 8 0
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+# ============================================================ pessoas
+DEF PERSON_ALICE Robot {
+  translation -5 -7.5 0
+  rotation 0 0 1 1.5708
+  name "Alice"
+  model "employee_alice"
+  controller "person"
+  supervisor TRUE
+  recognitionColors [
+    0.13 0.55 0.13
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.13 0.55 0.13 roughness 0.85 metalness 0 }
+          geometry Capsule { height 0.95 radius 0.18 }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.9 0.75 0.6 roughness 1 metalness 0 }
+          geometry Sphere { radius 0.13 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder { height 1.8 radius 0.25 }
+    ]
+  }
+}
+DEF PERSON_BRUNO Robot {
+  translation -3.5 -8 0
+  rotation 0 0 1 1.5708
+  name "Bruno"
+  model "employee_bruno"
+  controller "person"
+  supervisor TRUE
+  recognitionColors [
+    0.15 0.3 0.8
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.15 0.3 0.8 roughness 0.85 metalness 0 }
+          geometry Capsule { height 0.95 radius 0.18 }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.85 0.7 0.55 roughness 1 metalness 0 }
+          geometry Sphere { radius 0.13 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder { height 1.8 radius 0.25 }
+    ]
+  }
+}
+DEF PERSON_CARLA Robot {
+  translation -6.5 -8.5 0
+  rotation 0 0 1 1.5708
+  name "Carla"
+  model "employee_carla"
+  controller "person"
+  supervisor TRUE
+  recognitionColors [
+    0.6 0.3 0.7
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.6 0.3 0.7 roughness 0.85 metalness 0 }
+          geometry Capsule { height 0.95 radius 0.18 }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.95 0.8 0.65 roughness 1 metalness 0 }
+          geometry Sphere { radius 0.13 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder { height 1.8 radius 0.25 }
+    ]
+  }
+}
+DEF PERSON_INTRUDER Robot {
+  translation -5 -9.5 0
+  rotation 0 0 1 1.5708
+  name "Intruder"
+  model "person_unknown"
+  controller "person"
+  supervisor TRUE
+  recognitionColors [
+    0.15 0.15 0.15
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.15 0.15 0.15 roughness 0.85 metalness 0 }
+          geometry Capsule { height 0.95 radius 0.18 }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.2 0.2 0.2 roughness 1 metalness 0 }
+          geometry Sphere { radius 0.13 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder { height 1.8 radius 0.25 }
+    ]
+  }
+}
+
+# ============================================================ robo de patrulha
+DEF PATROL_ROBOT Robot {
+  translation 9 0 0
+  rotation 0 0 1 3.14159
+  name "patrol_robot"
+  model "patrol_robot"
+  controller "patrol_agent"
+  supervisor TRUE
+  recognitionColors [
+    0.1 0.3 0.9
+  ]
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.25
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.1 0.15 0.35 roughness 0.5 metalness 0.4 }
+          geometry Cylinder { height 0.4 radius 0.28 }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0.22 0.08
+      rotation 1 0 0 1.5708
+      children [
+        DEF WHEEL_SHAPE Shape {
+          appearance PBRAppearance { baseColor 0.05 0.05 0.05 roughness 0.9 metalness 0 }
+          geometry Cylinder { height 0.05 radius 0.08 }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 -0.22 0.08
+      rotation 1 0 0 1.5708
+      children [
+        USE WHEEL_SHAPE
+      ]
+    }
+    Pose {
+      translation -0.2 0.22 0.08
+      rotation 1 0 0 1.5708
+      children [
+        USE WHEEL_SHAPE
+      ]
+    }
+    Pose {
+      translation -0.2 -0.22 0.08
+      rotation 1 0 0 1.5708
+      children [
+        USE WHEEL_SHAPE
+      ]
+    }
+    Pose {
+      translation 0 0 0.7
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.3 0.3 0.32 roughness 0.5 metalness 0.6 }
+          geometry Cylinder { height 0.5 radius 0.04 }
+        }
+      ]
+    }
+    Camera {
+      translation 0.05 0 0.97
+      name "patrol_camera"
+      fieldOfView 1.3
+      width 320
+      height 240
+      recognition Recognition {
+        maxRange 5
+      }
+    }
+    LED {
+      translation 0 0 1.05
+      name "beacon"
+      color [
+        1 0 0
+      ]
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.3 0.05 0.05 roughness 0.4 metalness 0 }
+          geometry Sphere { radius 0.06 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.5
+    children [
+      Cylinder { height 1 radius 0.3 }
+    ]
+  }
+}
+
+# ===================================== supervisor de seguranca (coordenador)
+DEF SECURITY_SUPERVISOR Robot {
+  translation 0 -10.5 0.05
+  name "security_supervisor"
+  controller "security_supervisor"
+  supervisor TRUE
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Shape {
+      appearance PBRAppearance { baseColor 0.2 0.2 0.25 roughness 0.5 metalness 0.3 }
+      geometry Box { size 0.1 0.1 0.1 }
+    }
+  ]
+}
