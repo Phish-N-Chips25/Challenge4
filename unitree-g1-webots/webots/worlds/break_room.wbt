@@ -1,0 +1,787 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Window.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/MattePaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/plants/protos/PottedTree.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/cabinet/protos/Cabinet.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/cabinet/protos/CabinetHandle.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/GlossyPaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/tables/protos/Table.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/VarnishedPine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/computers/protos/Monitor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/computers/protos/Keyboard.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/chairs/protos/OfficeChair.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/humans/pedestrian/protos/Pedestrian.proto"
+
+WorldInfo {
+  info [
+    "An office break room, surrounded by office desks."
+    "This world contains the domestic objects included in Webots."
+    "Doors are interactive."
+    "This means that a robot could open a drawer, leave an object inside it, and close it."
+  ]
+  title "Break Room"
+}
+Viewpoint {
+  orientation -0.2948175568322996 -0.3642741077234638 0.8833951452355328 4.353324844663156
+  position 5.438802299094121 19.898540375459202 21.76394546443318
+}
+TexturedBackground {
+  texture "entrance_hall"
+  luminosity 0.5
+  skybox FALSE
+}
+TexturedBackgroundLight {
+  texture "entrance_hall"
+}
+Floor {
+  translation 0.243 0.93 0
+  rotation 0 0 1 1.5708
+  size 7.7 12.86
+  appearance Parquetry {
+    type "light strip"
+    textureTransform TextureTransform {
+      rotation 1.57
+      scale 0.4 0.4
+    }
+  }
+}
+Wall {
+  translation -6.17 0.92 0
+  name "wall(A)"
+  size 0.1 7.7 2.5
+  appearance DEF SIDE_WALLS Roughcast {
+    textureTransform TextureTransform {
+      scale 3 3
+    }
+  }
+}
+Wall {
+  translation -5.94 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(B)1"
+  size 0.06 0.4 2.5
+  appearance DEF INTER_WALLS Roughcast {
+    textureTransform TextureTransform {
+      scale 0.3 2.2
+    }
+  }
+}
+Window {
+  translation -5.19 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)2"
+  size 0.06 1.1 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance DEF WINDOWS_WOOD MattePaint {
+    baseColor 0.133333 0.0666667 0
+  }
+}
+Window {
+  translation -3.84 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)3"
+  size 0.06 1.6 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Wall {
+  translation -2.84 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(B)4"
+  size 0.06 0.4 2.5
+  appearance USE INTER_WALLS
+}
+Window {
+  translation -2.09 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)5"
+  size 0.06 1.1 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Window {
+  translation -0.74 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)6"
+  size 0.06 1.6 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Wall {
+  translation 0.26 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(B)7"
+  size 0.1 0.4 2.5
+  appearance USE INTER_WALLS
+}
+Window {
+  translation 1 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)8"
+  size 0.06 1.1 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Window {
+  translation 2.35 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)9"
+  size 0.06 1.6 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Wall {
+  translation 3.35 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(B)10"
+  size 0.06 0.4 2.5
+  appearance USE INTER_WALLS
+}
+Window {
+  translation 4.1 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)11"
+  size 0.06 1.1 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Window {
+  translation 5.45 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "window(B)12"
+  size 0.06 1.6 2.5
+  bottomWallHeight 1
+  frameSize 0.02 0.05 0.02
+  windowSillSize 0.3 0.05
+  frameAppearance USE WINDOWS_WOOD
+}
+Wall {
+  translation 6.45 -2.9 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(B)13"
+  size 0.06 0.4 2.5
+  appearance USE INTER_WALLS
+}
+Wall {
+  translation 6.68 0.92 0
+  name "wall(C)"
+  size 0.1 7.7 2.5
+  appearance USE SIDE_WALLS
+}
+Wall {
+  translation 2.5 0.38 0
+  name "wall(C)(1)"
+  size 0.1 6.5 2.5
+  appearance USE SIDE_WALLS
+}
+Wall {
+  translation -1 -1.4 0
+  name "wall(C)(2)"
+  size 0.1 3 2.5
+  appearance USE SIDE_WALLS
+}
+Wall {
+  translation -1 3.3 0
+  name "wall(C)(3)"
+  size 0.1 3 2.5
+  appearance USE SIDE_WALLS
+}
+Wall {
+  translation 3.6 4.8 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(D)1"
+  size 0.1 6.2 2.5
+}
+Wall {
+  translation 1.25 0 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(D)1(1)"
+  size 0.1 2.5 2.5
+}
+Door {
+  hidden translation_5 0.0011420089354872293 1.7617449973750254e-05 2.220446049250313e-16
+  hidden rotation_5 0 0 -1 0.0002989606333048721
+  translation 0 4.8 0
+  rotation 0 0 -1 1.5708
+  size 0.1 1 2.5
+  position -0.0002989606336157955
+  frameSize 0.01 0.05 0.05
+  frameAppearance MattePaint {
+    baseColor 0.133333 0.0666667 0
+  }
+}
+Wall {
+  translation -3.35 4.8 0
+  rotation 0 0 1 -1.5708003061004252
+  name "wall(D)2"
+  size 0.1 5.7 2.5
+}
+PottedTree {
+  translation 6.23 1.42 0
+  name "potted tree(1)"
+}
+PottedTree {
+  translation -5.78 -2.17 0
+  name "potted tree(2)"
+}
+Cabinet {
+  hidden translation_7 0 0 0
+  translation 2.1 -2.49 0
+  rotation 0 0 1 1.57079
+  outerThickness 0.02
+  rowsHeights [
+    0.3, 0.4, 0.3, 0.3
+  ]
+  columnsWidths [
+    0.6
+  ]
+  layout [
+    "Drawer (1, 1, 1, 1, 3.5)"
+    "Shelf (1, 4, 1, 0)"
+    "Shelf (1, 3, 1, 0)"
+    "Shelf (1, 2, 1, 0)"
+    "Shelf (1, 1, 1, 1)"
+  ]
+  handle CabinetHandle {
+    handleColor 0.533333 0.541176 0.521569
+  }
+  primaryAppearance MattePaint {
+    baseColor 0.729412 0.741176 0.713725
+  }
+  secondaryAppearance GlossyPaint {
+    baseColor 0.643137 0 0
+  }
+}
+Cabinet {
+  hidden translation_7 0 0 0
+  hidden translation_15 0 0 0
+  hidden translation_23 0 0 0
+  hidden translation_31 0 0 0
+  translation 6.65 -0.7 1.6
+  rotation 0 0 1 3.14159
+  name "cabinet(2)"
+  outerThickness 0.02
+  rowsHeights [
+    0.8
+  ]
+  columnsWidths [
+    0.8, 0.8, 0.8, 0.8
+  ]
+  layout [
+    "Drawer (1, 1, 1, 1, 1.5)"
+    "Drawer (2, 1, 1, 1, 1.5)"
+    "Drawer (3, 1, 1, 1, 1.5)"
+    "Drawer (4, 1, 1, 1, 1.5)"
+    "Shelf (1, 1, 0, 1)"
+    "Shelf (2, 1, 0, 1)"
+    "Shelf (3, 1, 0, 1)"
+  ]
+  handle CabinetHandle {
+    handleColor 0.533333 0.541176 0.521569
+  }
+  primaryAppearance MattePaint {
+    baseColor 0.729412 0.741176 0.713725
+  }
+  secondaryAppearance MattePaint {
+    baseColor 0.666667 0.333333 0
+  }
+}
+Cabinet {
+  hidden translation_7 0 0 0
+  hidden translation_15 0 0 0
+  hidden translation_23 0 0 0
+  hidden translation_31 0 0 0
+  translation -6.14 -0.7 1.6
+  name "cabinet(3)"
+  outerThickness 0.02
+  rowsHeights [
+    0.8
+  ]
+  columnsWidths [
+    0.8, 0.8, 0.8, 0.8
+  ]
+  layout [
+    "Drawer (1, 1, 1, 1, 1.5)"
+    "Drawer (2, 1, 1, 1, 1.5)"
+    "Drawer (3, 1, 1, 1, 1.5)"
+    "Drawer (4, 1, 1, 1, 1.5)"
+    "Shelf (1, 1, 0, 1)"
+    "Shelf (2, 1, 0, 1)"
+    "Shelf (3, 1, 0, 1)"
+  ]
+  handle CabinetHandle {
+    handleColor 0.533333 0.541176 0.521569
+  }
+  primaryAppearance MattePaint {
+    baseColor 0.729412 0.741176 0.713725
+  }
+  secondaryAppearance MattePaint {
+    baseColor 0.666667 0.333333 0
+  }
+}
+Cabinet {
+  hidden translation_7 -5.732389313627669e-06 5.504247058141232e-11 0
+  hidden rotation_7 0 0 -1 1.920398386128249e-05
+  translation 1.5 -2.49 0
+  rotation 0 0 1 1.57079
+  name "cabinet(5)"
+  outerThickness 0.02
+  rowsHeights [
+    0.7, 0.3, 0.3
+  ]
+  columnsWidths [
+    0.6
+  ]
+  layout [
+    "LeftSidedDoor (1, 1, 1, 1, 1.5)"
+    "Shelf (1, 3, 1, 0)"
+    "Shelf (1, 2, 1, 0)"
+    "Shelf (1, 1, 1, 1)"
+  ]
+  handle CabinetHandle {
+    handleColor 0.533333 0.541176 0.521569
+  }
+  primaryAppearance MattePaint {
+    baseColor 0.729412 0.741176 0.713725
+  }
+  secondaryAppearance GlossyPaint {
+    baseColor 0.643137 0 0
+  }
+}
+Cabinet {
+  hidden translation_7 -5.7323893136278454e-06 5.504247058141232e-11 0
+  hidden rotation_7 0 0 -1 1.920398386128249e-05
+  translation 0.9 -2.49 0
+  rotation 0 0 1 1.57079
+  name "cabinet(1)"
+  outerThickness 0.02
+  rowsHeights [
+    0.7, 0.3, 0.3
+  ]
+  columnsWidths [
+    0.6
+  ]
+  layout [
+    "LeftSidedDoor (1, 1, 1, 1, 1.5)"
+    "Shelf (1, 3, 1, 0)"
+    "Shelf (1, 2, 1, 0)"
+    "Shelf (1, 1, 1, 1)"
+  ]
+  handle CabinetHandle {
+    handleColor 0.533333 0.541176 0.521569
+  }
+  primaryAppearance MattePaint {
+    baseColor 0.729412 0.741176 0.713725
+  }
+  secondaryAppearance GlossyPaint {
+    baseColor 0.643137 0 0
+  }
+}
+Solid {
+  translation -2.35 -2.45 0.83
+  rotation 0.5773489358556708 0.5773509358554485 0.5773509358554485 2.0944
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_base_color.jpg"
+          ]
+        }
+        roughnessMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_roughness.jpg"
+          ]
+        }
+        metalness 0
+        normalMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_normal.jpg"
+          ]
+        }
+        normalMapFactor 0.2
+      }
+      geometry IndexedFaceSet {
+        coord Coordinate {
+          point [
+            0.05 -0.03 0.3
+            -0.05 -0.03 0.3
+            -0.05 -0.03 -0.3
+            0.05 -0.03 -0.3
+            0.05 0.03 -0.3
+            -0.05 0.03 -0.3
+            -0.05 0.03 0.3
+            0.05 0.03 0.3
+            0.05 0.03 0.3
+            -0.05 0.03 0.3
+            -0.05 -0.03 0.3
+            0.05 -0.03 0.3
+            -0.05 0.03 -0.3
+            0.05 0.03 -0.3
+            0.05 -0.03 -0.3
+            -0.05 -0.03 -0.3
+            0.05 0.03 -0.3
+            0.05 0.03 0.3
+            0.05 -0.03 0.3
+            0.05 -0.03 -0.3
+            -0.05 0.03 0.3
+            -0.05 0.03 -0.3
+            -0.05 -0.03 -0.3
+            -0.05 -0.03 0.3
+          ]
+        }
+        texCoord TextureCoordinate {
+          point [
+            0 0
+            0.16666666666667 0
+            0.16666666666667 1
+            0 1
+            0 0
+            0.16666666666667 0
+            0.16666666666667 1
+            0 1
+            0 0
+            0.16666666666667 0
+            0.16666666666667 0.1
+            0 0.1
+            0 0
+            0.16666666666667 0
+            0.16666666666667 0.1
+            0 0.1
+            0 0
+            1 0
+            1 0.1
+            0 0.1
+            0 0
+            1 0
+            1 0.1
+            0 0.1
+          ]
+        }
+        coordIndex [
+          0, 1, 2, 3, -1, 4, 5, 6, 7, -1, 8, 9, 10, 11, -1, 12, 13, 14, 15, -1, 16, 17, 18, 19, -1, 20, 21, 22, 23, -1
+        ]
+        creaseAngle 1.5
+      }
+    }
+  ]
+  name "worktop(2)"
+  model "box"
+  boundingObject Box {
+    size 0.1 0.06 0.6
+  }
+}
+Solid {
+  translation -2.565 -2.22 0.83
+  rotation 0.5773529358529169 -0.5773489358533613 -0.5773489358533613 2.09439
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_base_color.jpg"
+          ]
+        }
+        roughnessMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_roughness.jpg"
+          ]
+        }
+        metalness 0
+        normalMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/environments/indoor/worlds/textures/rustic_veneer_wood_normal.jpg"
+          ]
+        }
+        normalMapFactor 0.2
+        textureTransform TextureTransform {
+          scale 0.6 0.6
+          translation 0.3 1.18
+        }
+      }
+      geometry IndexedFaceSet {
+        coord Coordinate {
+          point [
+            0.18 -0.03 0.085
+            -0.18 -0.03 0.085
+            -0.18 -0.03 -0.085
+            0.18 -0.03 -0.085
+            0.18 0.03 -0.085
+            -0.18 0.03 -0.085
+            -0.18 0.03 0.085
+            0.18 0.03 0.085
+            0.18 0.03 0.085
+            -0.18 0.03 0.085
+            -0.18 -0.03 0.085
+            0.18 -0.03 0.085
+            -0.18 0.03 -0.085
+            0.18 0.03 -0.085
+            0.18 -0.03 -0.085
+            -0.18 -0.03 -0.085
+            0.18 0.03 -0.085
+            0.18 0.03 0.085
+            0.18 -0.03 0.085
+            0.18 -0.03 -0.085
+            -0.18 0.03 0.085
+            -0.18 0.03 -0.085
+            -0.18 -0.03 -0.085
+            -0.18 -0.03 0.085
+          ]
+        }
+        texCoord TextureCoordinate {
+          point [
+            0 0
+            1 0
+            1 0.47222222222222
+            0 0.47222222222222
+            0 0
+            1 0
+            1 0.47222222222222
+            0 0.47222222222222
+            0 0
+            1 0
+            1 0.16666666666667
+            0 0.16666666666667
+            0 0
+            1 0
+            1 0.16666666666667
+            0 0.16666666666667
+            0 0
+            0.47222222222222 0
+            0.47222222222222 0.16666666666667
+            0 0.16666666666667
+            0 0
+            0.47222222222222 0
+            0.47222222222222 0.16666666666667
+            0 0.16666666666667
+          ]
+        }
+        coordIndex [
+          0, 1, 2, 3, -1, 4, 5, 6, 7, -1, 8, 9, 10, 11, -1, 12, 13, 14, 15, -1, 16, 17, 18, 19, -1, 20, 21, 22, 23, -1
+        ]
+        creaseAngle 1.5
+      }
+    }
+  ]
+  name "worktop(3)"
+  model "box"
+  boundingObject Box {
+    size 0.36 0.06 0.17
+  }
+}
+Table {
+  translation 3.1 -1.66 0
+  size 1 1.6 0.74
+  feetSize 0.05 0.05
+  trayAppearance DEF TABLE_WOOD VarnishedPine {
+    textureTransform TextureTransform {
+      scale 10 10
+    }
+  }
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation 6.14 -1.66 0
+  name "table(1)"
+  size 1 1.6 0.74
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation -3.18 -1.66 0
+  name "table(2)"
+  size 1 1.6 0.74
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation 3.1 0.05 0
+  name "table(3)"
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation 6.14 0.05 0
+  name "table(4)"
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation -3.18 0.05 0
+  name "table(5)"
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Table {
+  translation -3.18 1.86 0
+  name "table(6)"
+  feetSize 0.05 0.05
+  legAppearance MattePaint {
+    baseColor 0.2 0.2 0.2
+  }
+}
+Monitor {
+  translation -2.84072 -1.79048 0.76
+  rotation 0 0 1 2.8797996938995745
+}
+Monitor {
+  translation 6.47928 -1.79048 0.76
+  rotation 0 0 1 -3.2724903061004254
+  name "monitor(1)"
+}
+Monitor {
+  translation -2.84277 -1.29031 0.76
+  rotation 0 0 1 -2.8797996938995745
+  name "monitor(2)"
+}
+Monitor {
+  translation 6.47723 -1.29031 0.76
+  rotation 0 0 1 -3.0106903061004253
+  name "monitor(3)"
+}
+Monitor {
+  translation -2.84277 -0.32031 0.76
+  rotation 0 0 1 3.0106903061004253
+  name "monitor(4)"
+}
+Monitor {
+  translation -2.84277 0.16969 0.76
+  rotation 0 0 1 -3.0106903061004253
+  name "monitor(5)"
+}
+Monitor {
+  translation -2.84277 1.65969 0.76
+  rotation 0 0 1 3.0106996938995745
+  name "monitor(6)"
+}
+Monitor {
+  translation -2.84277 2.14969 0.76
+  rotation 0 0 1 -3.0106903061004253
+  name "monitor(7)"
+}
+Monitor {
+  translation 2.87928 -1.79048 0.76
+  rotation 0 0 1 0.1308996938995747
+  name "monitor(8)"
+}
+Monitor {
+  translation 2.87723 -1.29031 0.76
+  rotation 0 0 1 -0.1308996938995747
+  name "monitor(9)"
+}
+Monitor {
+  translation 2.87723 -0.18031 0.76
+  rotation 0 0 1 0.1308996938995747
+  name "monitor(10)"
+}
+Monitor {
+  translation 2.87723 0.35969 0.76
+  rotation 0 0 1 -0.1308996938995747
+  name "monitor(11)"
+}
+Keyboard {
+  translation -3.22303 -1.73097 0.74
+  rotation 0 0 1 3.0106996938995745
+}
+Keyboard {
+  translation 6.05 -1.57 0.74
+  name "keyboard(1)"
+}
+Keyboard {
+  translation -2.99655 -0.0404275 0.74
+  rotation 0 0 1 -3.0106993877991495
+  name "keyboard(2)"
+}
+Keyboard {
+  translation -3.26 1.91 0.74
+  rotation 0 0 1 -3.141592653589793
+  name "keyboard(3)"
+}
+Keyboard {
+  translation 2.98306 -1.5267 0.74
+  rotation 0 0 1 -0.2617916122008506
+  name "keyboard(4)"
+}
+Pedestrian {
+  translation 0 2 1.27
+  rotation 0 1 0 4.692820414042842e-06
+}
+Keyboard {
+  translation 3.07 0.1 0.74
+  name "keyboard(5)"
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -0.9999999999999999 0.0001952939933482958
+  translation 4.017939939270183 -0.04499976328466035 -0.001415336271324591
+  rotation 0.0007013084249973177 -0.00019352607755335048 0.9999997353570401 2.618000134820598
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -1 0.0001952939933482958
+  translation 3.939999929048776 -1.529999998567867 -0.0014153362713244522
+  rotation 0.0007027117539262635 -5.238270001817975e-06 0.9999997530843454 3.1415900025011747
+  name "office chair(1)"
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -1 0.0001952939933482958
+  translation 5.363880068904277 -1.483379983019787 -0.0014153362713245632
+  rotation 0.0006629204145717009 -0.005342836164215049 0.9999855072141026 0.2618007535295721
+  name "office chair(2)"
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -1 0.0001952939933482958
+  translation -4.16875994881732 -1.981039950842505 -0.0014153362713245632
+  rotation 0.0006900666933119079 -0.0017017339382690063 0.9999983139533597 0.7853981947158652
+  name "office chair(3)"
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -0.9999999999999999 0.0001952939933482958
+  translation -3.999999929048779 0.07000029856805642 -0.0014153362713245077
+  rotation -0.007452831279966661 -0.999972227265711 1.7791434724060665e-06 0.0014054626709651468
+  name "office chair(4)"
+}
+OfficeChair {
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 0 -0.9999999999999999 0.0001952939933482958
+  translation -4.069999948817321 1.850000049157495 -0.0014153362713245632
+  rotation 0.0006900666933119094 -0.0017017339382690653 0.9999983139533597 0.7853981947158652
+  name "office chair(5)"
+}
