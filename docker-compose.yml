@@ -35,13 +35,14 @@ services:
       - .:/workspace
       - ./data:/workspace/data
     ports:
-      - "6080:6080"
-      - "8888:8888"
+      - "6080:6080"   # noVNC browser fallback
+      - "5900:5900"   # native VNC client (TigerVNC, RealVNC, etc.)
+      - "8888:8888"   # TensorBoard
     environment:
       - WEBOTS_HEADLESS=false
+      - VNC_RESOLUTION=${VNC_RESOLUTION:-1920x900}
     command: >
-      bash -c "webots /workspace/src/webots_world/office.wbt &
-               tensorboard --logdir /workspace/data/logs --port 8888 --bind_all &
+      bash -c "tensorboard --logdir /workspace/data/logs --port 8888 --bind_all &
                wait"
 
   # ── GPU variants (same image, just adds GPU passthrough) ───────────────────

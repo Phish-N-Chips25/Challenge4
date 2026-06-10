@@ -28,7 +28,9 @@ algorithm:
   gamma: 0.99
   gae_lambda: 0.95
   clip_range: 0.2
-  total_timesteps: 500_000        # ~2-4 hours on RTX 3060 laptop
+  device: "cpu"
+  total_timesteps: 500_000
+  progress_freq: 10_000            # print a progress line every N steps        # ~2-4 hours on RTX 3060 laptop
 
 evaluation:
   eval_freq: 10_000

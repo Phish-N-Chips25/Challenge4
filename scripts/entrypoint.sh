@@ -9,7 +9,10 @@ if [ -d "$WEBOTS_PYTHON" ]; then
 fi
 
 # ── Virtual display (always start – needed even for headless Webots) ─────────
-Xvfb :99 -screen 0 1920x1080x24 &
+rm -f /tmp/.X99-lock          # clear stale lock from previous container run
+VNC_RESOLUTION="${VNC_RESOLUTION:-1920x900}"
+Xvfb :99 -screen 0 "${VNC_RESOLUTION}x24" &
+export DISPLAY=:99
 sleep 1
 
 if [ "${WEBOTS_HEADLESS}" = "true" ]; then
@@ -17,7 +20,7 @@ if [ "${WEBOTS_HEADLESS}" = "true" ]; then
 else
     echo "[entrypoint] Starting GUI stack (VNC + noVNC on :6080)"
     fluxbox &
-    x11vnc -display :99 -forever -nopw -shared -rfbport 5900 &
+    x11vnc -display :99 -forever -nopw -shared -rfbport 5900 -xrandr &
     websockify --web /usr/share/novnc 6080 localhost:5900 &
     sleep 1
     echo "============================================="

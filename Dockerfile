@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Webots dependencies
     libatk1.0-0 ffmpeg libfreeimage3 libegl1 libgtk-3-0 \
     libssh-dev libzip-dev xserver-xorg-core libxslt1.1 libxcb-cursor0 \
-    vim nano htop tmux \
+    vim nano htop tmux xterm \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Install Webots ───────────────────────────────────────────────────────────
@@ -48,6 +48,21 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
 # ── Workspace ────────────────────────────────────────────────────────────────
 WORKDIR /workspace
 RUN mkdir -p /workspace/data/logs
+
+# ── Fluxbox menu with working terminal entry ─────────────────────────────────
+RUN mkdir -p /root/.fluxbox && cat > /root/.fluxbox/menu <<'EOF'
+[begin] (Fluxbox)
+  [submenu] (Applications)
+    [exec] (Terminal) {xterm}
+    [exec] (Webots) {webots /workspace/src/webots_world/office.wbt}
+  [end]
+  [config] (Configuration)
+  [workspaces] (Workspaces)
+  [reconfig] (Reconfigure)
+  [restart] (Restart)
+  [exit] (Exit)
+[end]
+EOF
 
 # ── VNC / noVNC for remote GUI access ────────────────────────────────────────
 ENV DISPLAY=:99
