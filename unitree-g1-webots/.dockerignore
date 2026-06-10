@@ -1,0 +1,17 @@
+.git/
+.venv/
+.docker/
+.logs/
+.env.*
+.env
+external/
+webots/assets/booster_assets/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+docs/
+__pycache__/
+*.pyc
+*.wbproj
+*.md
+!containers/

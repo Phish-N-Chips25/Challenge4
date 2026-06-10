@@ -1,0 +1,68 @@
+# docker-compose.yml — Booster T1 ROS 2 Simulation Stack
+#
+# Usage:
+#   Default (bridge network, macOS/Windows):
+#     docker compose up -d
+#
+#   Linux (host network + GPU):
+#     docker compose --profile linux up -d
+#     OR use the ros2-linux service directly:
+#     docker compose run --rm ros2-linux bash
+#
+# Environment is loaded from .env (defaults). Override per-platform by copying
+# the matching .env.<platform> values into .env, or by exporting them in your shell.
+
+# ── Shared build/runtime config via YAML anchor ──────────────────────────────
+x-ros2-common: &ros2-common
+  build:
+    context: .
+    dockerfile: containers/Containerfile
+  image: ${IMAGE_NAME:-booster-t1-webots-ros:humble}
+  container_name: ${CONTAINER_NAME:-booster-t1-ros}
+  environment:
+    - HOME=/workspace/project/.docker/home
+    - USER=${USER:-booster}
+    - DISPLAY=${DISPLAY:-}
+    - QT_X11_NO_MITSHM=1
+    - MAKEFLAGS=-j4
+    - WEBOTS_HOST_IP=${WEBOTS_HOST_IP:-127.0.0.1}
+    - WEBOTS_PORT=${WEBOTS_PORT:-1234}
+    - ROBOT_NAME=${ROBOT_NAME:-T1_release}
+  volumes:
+    - .:/workspace/project
+  working_dir: /workspace/project/ros2_ws
+  privileged: true
+  shm_size: 4g
+  stdin_open: true
+  tty: true
+  command: ["sleep", "infinity"]
+  healthcheck:
+    test: ["CMD", "bash", "-c", "source /opt/ros/humble/setup.bash && ros2 topic list"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 10s
+
+services:
+  # ── Default service (bridge network) — works on macOS, Windows, and Linux ──
+  ros2:
+    <<: *ros2-common
+
+  # ── Linux-optimised service (host network + GPU) ───────────────────────────
+  ros2-linux:
+    <<: *ros2-common
+    container_name: ${CONTAINER_NAME:-booster-t1-ros}-linux
+    network_mode: host
+    profiles:
+      - linux
+    volumes:
+      - .:/workspace/project
+      # X11 socket for GUI forwarding on Linux
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
