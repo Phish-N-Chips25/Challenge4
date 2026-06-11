@@ -1,0 +1,750 @@
+[0.016s] Invoking command in '/workspace/project/.docker/ros2_build/booster_interface': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /workspace/project/ros2_ws/src/booster_ros2_interface -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/workspace/project/.docker/ros2_install/booster_interface
+[0.193s] -- The C compiler identification is GNU 11.4.0
+[0.273s] -- The CXX compiler identification is GNU 11.4.0
+[0.282s] -- Detecting C compiler ABI info
+[0.369s] -- Detecting C compiler ABI info - done
+[0.377s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.377s] -- Detecting C compile features
+[0.377s] -- Detecting C compile features - done
+[0.382s] -- Detecting CXX compiler ABI info
+[0.469s] -- Detecting CXX compiler ABI info - done
+[0.476s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.476s] -- Detecting CXX compile features
+[0.477s] -- Detecting CXX compile features - done
+[0.483s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.557s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.604s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.635s] -- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+[0.670s] -- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.674s] -- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.680s] -- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.691s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.704s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.737s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.740s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.808s] -- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[0.824s] -- Found FastRTPS: /opt/ros/humble/include  
+[0.848s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.857s] -- Looking for pthread.h
+[0.937s] -- Looking for pthread.h - found
+[0.938s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[1.012s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[1.014s] -- Found Threads: TRUE  
+[1.060s] -- Found rosidl_default_generators: 1.2.1 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[1.405s] -- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+[1.647s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.735s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.747s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.10.12", minimum required is "3.6") 
+[1.749s] -- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+[1.766s] -- Found PythonLibs: /usr/lib/aarch64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5") 
+[1.767s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[1.767s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+[1.767s] -- Using PYTHON_LIBRARIES: /usr/lib/aarch64-linux-gnu/libpython3.10.so
+[1.777s] -- Found PythonExtra: .so  
+[1.997s] -- Configuring done
+[2.329s] -- Generating done
+[2.401s] -- Build files have been written to: /workspace/project/.docker/ros2_build/booster_interface
+[2.407s] Invoked command in '/workspace/project/.docker/ros2_build/booster_interface' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /workspace/project/ros2_ws/src/booster_ros2_interface -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/workspace/project/.docker/ros2_install/booster_interface
+[2.409s] Invoking command in '/workspace/project/.docker/ros2_build/booster_interface': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /workspace/project/.docker/ros2_build/booster_interface
+[2.451s] [  0%] Generating C code for ROS interfaces
+[2.458s] [  1%] Generating Rust code for ROS interfaces
+[2.462s] [  1%] Built target ament_cmake_python_symlink_booster_interface
+[2.472s] [  1%] Generating C++ code for ROS interfaces
+[2.628s] running egg_info
+[2.628s] creating booster_interface.egg-info
+[2.629s] writing booster_interface.egg-info/PKG-INFO
+[2.630s] writing dependency_links to booster_interface.egg-info/dependency_links.txt
+[2.630s] writing top-level names to booster_interface.egg-info/top_level.txt
+[2.630s] writing manifest file 'booster_interface.egg-info/SOURCES.txt'
+[2.635s] reading manifest file 'booster_interface.egg-info/SOURCES.txt'
+[2.638s] writing manifest file 'booster_interface.egg-info/SOURCES.txt'
+[2.656s] [  1%] Built target ament_cmake_python_build_booster_interface_egg
+[3.193s] [  1%] Built target booster_interface__rs
+[3.951s] [  1%] Built target booster_interface__cpp
+[3.964s] [  4%] Generating C++ type support for eProsima Fast-RTPS
+[3.966s] [  4%] Generating C++ type support dispatch for ROS interfaces
+[3.968s] [  4%] Generating C++ introspection for ROS interfaces
+[3.979s] [  5%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/booster_api_req_msg__functions.c.o
+[3.980s] [  5%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/booster_api_resp_msg__functions.c.o
+[3.985s] [  6%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/motor_state__functions.c.o
+[3.990s] [  6%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/motor_cmd__functions.c.o
+[4.012s] [  7%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/button_event_msg__functions.c.o
+[4.109s] [  7%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/low_cmd__functions.c.o
+[4.113s] [  8%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/imu_state__functions.c.o
+[4.114s] [  8%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/low_state__functions.c.o
+[4.118s] [  9%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/raw_bytes_msg__functions.c.o
+[4.124s] [  9%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/odometer__functions.c.o
+[4.208s] [ 10%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/remote_controller_state__functions.c.o
+[4.212s] [ 10%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/fall_down_state__functions.c.o
+[4.225s] [ 11%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/hand_dds_msg__functions.c.o
+[4.228s] [ 11%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/hand_command__functions.c.o
+[4.229s] [ 12%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/hand_param__functions.c.o
+[4.287s] [ 12%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/prone_body_control_status__functions.c.o
+[4.293s] [ 13%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/robot_states_msg__functions.c.o
+[4.305s] [ 13%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/robot_replay_traj_id__functions.c.o
+[4.312s] [ 14%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/msg/detail/subtitle__functions.c.o
+[4.319s] [ 14%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/srv/detail/rpc_service__functions.c.o
+[4.360s] [ 15%] Building C object CMakeFiles/booster_interface__rosidl_generator_c.dir/rosidl_generator_c/booster_interface/srv/detail/agent_service__functions.c.o
+[4.433s] [ 16%] Linking C shared library libbooster_interface__rosidl_generator_c.so
+[4.484s] [ 16%] Built target booster_interface__rosidl_generator_c
+[4.496s] [ 18%] Generating C type support for eProsima Fast-RTPS
+[4.497s] [ 18%] Generating C type support dispatch for ROS interfaces
+[4.503s] [ 19%] Generating C introspection for ROS interfaces
+[4.809s] [ 20%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/booster_api_req_msg__type_support.cpp.o
+[4.811s] [ 20%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/booster_api_resp_msg__type_support.cpp.o
+[4.813s] [ 20%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/button_event_msg__type_support.cpp.o
+[5.335s] [ 21%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/motor_state__type_support.cpp.o
+[5.355s] [ 21%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/motor_cmd__type_support.cpp.o
+[5.364s] [ 22%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/low_cmd__type_support.cpp.o
+[5.443s] [ 22%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/booster_api_req_msg__type_support.cpp.o
+[5.594s] [ 22%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/booster_api_req_msg__type_support.cpp.o
+[5.655s] [ 22%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/booster_api_req_msg__type_support.cpp.o
+[5.717s] [ 23%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/booster_api_resp_msg__type_support.cpp.o
+[5.787s] [ 23%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/button_event_msg__type_support.cpp.o
+[5.807s] [ 25%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/booster_api_resp_msg__type_support.cpp.o
+[5.808s] [ 25%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/booster_api_resp_msg__type_support.cpp.o
+[5.833s] [ 26%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/motor_state__type_support.cpp.o
+[5.837s] [ 26%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/imu_state__type_support.cpp.o
+[5.884s] [ 26%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/motor_cmd__type_support.cpp.o
+[5.925s] [ 27%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/low_cmd__type_support.cpp.o
+[5.968s] [ 27%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/imu_state__type_support.cpp.o
+[5.984s] [ 27%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/booster_api_req_msg__type_support.c.o
+[6.012s] [ 28%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/low_state__type_support.cpp.o
+[6.028s] [ 28%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/raw_bytes_msg__type_support.cpp.o
+[6.065s] [ 30%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/booster_api_resp_msg__type_support.c.o
+[6.069s] [ 30%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/low_state__type_support.cpp.o
+[6.085s] [ 30%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/booster_api_req_msg__type_support_c.cpp.o
+[6.101s] [ 31%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/odometer__type_support.cpp.o
+[6.113s] [ 31%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/raw_bytes_msg__type_support.cpp.o
+[6.151s] [ 31%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/fall_down_state__type_support.cpp.o
+[6.159s] [ 32%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/odometer__type_support.cpp.o
+[6.161s] [ 32%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/button_event_msg__type_support.c.o
+[6.204s] [ 33%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/remote_controller_state__type_support.cpp.o
+[6.239s] [ 34%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/motor_state__type_support.c.o
+[6.244s] [ 34%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/button_event_msg__type_support.cpp.o
+[6.262s] [ 34%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/hand_command__type_support.cpp.o
+[6.264s] [ 34%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/button_event_msg__type_support.cpp.o
+[6.301s] [ 35%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/hand_dds_msg__type_support.cpp.o
+[6.314s] [ 35%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/motor_cmd__type_support.c.o
+[6.338s] [ 35%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/hand_param__type_support.cpp.o
+[6.350s] [ 36%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/prone_body_control_status__type_support.cpp.o
+[6.402s] [ 37%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/low_cmd__type_support.c.o
+[6.408s] [ 37%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/imu_state__type_support.c.o
+[6.413s] [ 37%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/fall_down_state__type_support.cpp.o
+[6.420s] [ 37%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/robot_states_msg__type_support.cpp.o
+[6.430s] [ 38%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/booster_api_resp_msg__type_support_c.cpp.o
+[6.445s] [ 38%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/button_event_msg__type_support_c.cpp.o
+[6.463s] [ 39%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/robot_replay_traj_id__type_support.cpp.o
+[6.469s] [ 40%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/low_state__type_support.c.o
+[6.475s] [ 41%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/motor_state__type_support.cpp.o
+[6.503s] [ 41%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/msg/subtitle__type_support.cpp.o
+[6.545s] [ 41%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/raw_bytes_msg__type_support.c.o
+[6.553s] [ 42%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/srv/rpc_service__type_support.cpp.o
+[6.616s] [ 43%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/motor_state__type_support.cpp.o
+[6.624s] [ 43%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_c.dir/rosidl_typesupport_c/booster_interface/srv/agent_service__type_support.cpp.o
+[6.627s] [ 44%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/remote_controller_state__type_support.cpp.o
+[6.639s] [ 45%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/odometer__type_support.c.o
+[6.652s] [ 46%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/motor_state__type_support_c.cpp.o
+[6.678s] [ 47%] Linking CXX shared library libbooster_interface__rosidl_typesupport_c.so
+[6.714s] [ 47%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/fall_down_state__type_support.c.o
+[6.775s] [ 47%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/motor_cmd__type_support.cpp.o
+[6.793s] [ 48%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/remote_controller_state__type_support.c.o
+[6.808s] [ 48%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/motor_cmd__type_support.cpp.o
+[6.819s] [ 48%] Built target booster_interface__rosidl_typesupport_c
+[6.826s] [ 48%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/hand_command__type_support.c.o
+[6.851s] [ 49%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/low_cmd__type_support.cpp.o
+[6.864s] [ 49%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/hand_command__type_support.cpp.o
+[6.874s] [ 49%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/motor_cmd__type_support_c.cpp.o
+[6.898s] [ 50%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/hand_dds_msg__type_support.c.o
+[6.957s] [ 50%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/hand_param__type_support.c.o
+[6.986s] [ 51%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/prone_body_control_status__type_support.c.o
+[7.000s] [ 52%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/low_cmd__type_support.cpp.o
+[7.020s] [ 53%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/low_cmd__type_support_c.cpp.o
+[7.054s] [ 53%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/robot_states_msg__type_support.c.o
+[7.121s] [ 54%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/robot_replay_traj_id__type_support.c.o
+[7.236s] [ 55%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/hand_param__type_support.cpp.o
+[7.237s] [ 55%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/hand_dds_msg__type_support.cpp.o
+[7.257s] [ 55%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/msg/detail/subtitle__type_support.c.o
+[7.264s] [ 55%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/imu_state__type_support.cpp.o
+[7.290s] [ 56%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/low_state__type_support.cpp.o
+[7.357s] [ 57%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/srv/detail/rpc_service__type_support.c.o
+[7.389s] [ 57%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/imu_state__type_support_c.cpp.o
+[7.430s] [ 57%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/booster_interface/srv/detail/agent_service__type_support.c.o
+[7.448s] [ 57%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/imu_state__type_support.cpp.o
+[7.467s] [ 58%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/low_state__type_support.cpp.o
+[7.525s] [ 59%] Linking C shared library libbooster_interface__rosidl_typesupport_introspection_c.so
+[7.539s] [ 60%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/low_state__type_support_c.cpp.o
+[7.655s] [ 61%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/prone_body_control_status__type_support.cpp.o
+[7.699s] [ 61%] Built target booster_interface__rosidl_typesupport_introspection_c
+[7.710s] [ 61%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/raw_bytes_msg__type_support_c.cpp.o
+[7.717s] [ 61%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/robot_states_msg__type_support.cpp.o
+[7.755s] [ 62%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/odometer__type_support_c.cpp.o
+[7.809s] [ 62%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/raw_bytes_msg__type_support.cpp.o
+[7.870s] [ 62%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/raw_bytes_msg__type_support.cpp.o
+[7.918s] [ 64%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/fall_down_state__type_support_c.cpp.o
+[7.919s] [ 64%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/odometer__type_support.cpp.o
+[7.921s] [ 64%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/robot_replay_traj_id__type_support.cpp.o
+[7.967s] [ 65%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/odometer__type_support.cpp.o
+[8.090s] [ 65%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/fall_down_state__type_support.cpp.o
+[8.102s] [ 65%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/fall_down_state__type_support.cpp.o
+[8.234s] [ 66%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/remote_controller_state__type_support_c.cpp.o
+[8.263s] [ 66%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/hand_command__type_support_c.cpp.o
+[8.347s] [ 66%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/msg/subtitle__type_support.cpp.o
+[8.397s] [ 67%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/remote_controller_state__type_support.cpp.o
+[8.458s] [ 68%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/remote_controller_state__type_support.cpp.o
+[8.485s] [ 69%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/hand_dds_msg__type_support_c.cpp.o
+[8.686s] [ 70%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/srv/rpc_service__type_support.cpp.o
+[8.709s] [ 70%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/booster_interface/srv/agent_service__type_support.cpp.o
+[8.718s] [ 70%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/hand_param__type_support_c.cpp.o
+[8.759s] [ 71%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/prone_body_control_status__type_support_c.cpp.o
+[8.776s] [ 71%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/robot_states_msg__type_support_c.cpp.o
+[8.951s] [ 71%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/hand_command__type_support.cpp.o
+[8.959s] [ 72%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/robot_replay_traj_id__type_support_c.cpp.o
+[8.971s] [ 72%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/hand_command__type_support.cpp.o
+[8.982s] [ 73%] Linking CXX shared library libbooster_interface__rosidl_typesupport_cpp.so
+[9.016s] [ 74%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/hand_dds_msg__type_support.cpp.o
+[9.135s] [ 74%] Built target booster_interface__rosidl_typesupport_cpp
+[9.139s] [ 75%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/hand_dds_msg__type_support.cpp.o
+[9.148s] [ 75%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/hand_param__type_support.cpp.o
+[9.234s] [ 75%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/hand_param__type_support.cpp.o
+[9.246s] [ 76%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/prone_body_control_status__type_support.cpp.o
+[9.335s] [ 76%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/msg/detail/subtitle__type_support_c.cpp.o
+[9.416s] [ 77%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/prone_body_control_status__type_support.cpp.o
+[9.429s] [ 77%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/robot_states_msg__type_support.cpp.o
+[9.587s] [ 78%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/robot_replay_traj_id__type_support.cpp.o
+[9.647s] [ 79%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/srv/detail/rpc_service__type_support_c.cpp.o
+[9.729s] [ 79%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/msg/detail/dds_fastrtps/subtitle__type_support.cpp.o
+[9.770s] [ 79%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/booster_interface/srv/detail/agent_service__type_support_c.cpp.o
+[9.806s] [ 79%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/robot_states_msg__type_support.cpp.o
+[9.824s] [ 80%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/srv/detail/dds_fastrtps/rpc_service__type_support.cpp.o
+[9.857s] [ 81%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/robot_replay_traj_id__type_support.cpp.o
+[9.974s] [ 81%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/msg/detail/subtitle__type_support.cpp.o
+[10.103s] [ 81%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/booster_interface/srv/detail/dds_fastrtps/agent_service__type_support.cpp.o
+[10.140s] [ 82%] Linking CXX shared library libbooster_interface__rosidl_typesupport_fastrtps_c.so
+[10.262s] [ 83%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/srv/detail/rpc_service__type_support.cpp.o
+[10.281s] [ 83%] Building CXX object CMakeFiles/booster_interface__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/booster_interface/srv/detail/agent_service__type_support.cpp.o
+[10.408s] [ 83%] Built target booster_interface__rosidl_typesupport_fastrtps_c
+[10.632s] [ 84%] Linking CXX shared library libbooster_interface__rosidl_typesupport_fastrtps_cpp.so
+[10.634s] [ 85%] Linking CXX shared library libbooster_interface__rosidl_typesupport_introspection_cpp.so
+[10.734s] [ 85%] Built target booster_interface__rosidl_typesupport_fastrtps_cpp
+[10.738s] [ 85%] Built target booster_interface__rosidl_typesupport_introspection_cpp
+[10.754s] [ 85%] Built target booster_interface
+[10.772s] [ 86%] Generating Python code for ROS interfaces
+[12.499s] [ 86%] Built target booster_interface__py
+[12.519s] [ 86%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_booster_api_req_msg_s.c.o
+[12.519s] [ 86%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_button_event_msg_s.c.o
+[12.521s] [ 86%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_motor_cmd_s.c.o
+[12.522s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_imu_state_s.c.o
+[12.523s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_low_cmd_s.c.o
+[12.525s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_booster_api_resp_msg_s.c.o
+[12.526s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_motor_state_s.c.o
+[12.527s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_low_state_s.c.o
+[12.697s] [ 90%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_raw_bytes_msg_s.c.o
+[12.701s] [ 91%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_odometer_s.c.o
+[12.702s] [ 91%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_fall_down_state_s.c.o
+[12.704s] [ 92%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_remote_controller_state_s.c.o
+[12.706s] [ 92%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_hand_command_s.c.o
+[12.714s] [ 93%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_hand_dds_msg_s.c.o
+[12.723s] [ 93%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_hand_param_s.c.o
+[12.725s] [ 94%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_prone_body_control_status_s.c.o
+[12.954s] [ 94%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_robot_states_msg_s.c.o
+[12.963s] [ 95%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_subtitle_s.c.o
+[12.964s] [ 96%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/msg/_robot_replay_traj_id_s.c.o
+[12.966s] [ 96%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/srv/_agent_service_s.c.o
+[12.967s] [ 96%] Building C object CMakeFiles/booster_interface__rosidl_generator_py.dir/rosidl_generator_py/booster_interface/srv/_rpc_service_s.c.o
+[13.087s] [ 97%] Linking C shared library rosidl_generator_py/booster_interface/libbooster_interface__rosidl_generator_py.so
+[13.135s] [ 97%] Built target booster_interface__rosidl_generator_py
+[13.154s] [ 97%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/booster_interface/_booster_interface_s.ep.rosidl_typesupport_introspection_c.c.o
+[13.155s] [ 97%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/booster_interface/_booster_interface_s.ep.rosidl_typesupport_fastrtps_c.c.o
+[13.155s] [ 97%] Building C object CMakeFiles/booster_interface__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/booster_interface/_booster_interface_s.ep.rosidl_typesupport_c.c.o
+[13.328s] [ 98%] Linking C shared library rosidl_generator_py/booster_interface/booster_interface_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[13.337s] [100%] Linking C shared library rosidl_generator_py/booster_interface/booster_interface_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[13.338s] [100%] Linking C shared library rosidl_generator_py/booster_interface/booster_interface_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[13.363s] [100%] Built target booster_interface__rosidl_typesupport_c__pyext
+[13.373s] [100%] Built target booster_interface__rosidl_typesupport_introspection_c__pyext
+[13.374s] [100%] Built target booster_interface__rosidl_typesupport_fastrtps_c__pyext
+[13.416s] Invoked command in '/workspace/project/.docker/ros2_build/booster_interface' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /workspace/project/.docker/ros2_build/booster_interface
+[13.432s] Invoking command in '/workspace/project/.docker/ros2_build/booster_interface': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /workspace/project/.docker/ros2_build/booster_interface
+[13.437s] -- Install configuration: ""
+[13.439s] -- Execute custom install script
+[13.441s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/ament_index/resource_index/rosidl_interfaces/booster_interface
+[13.451s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/booster_api_req_msg.h
+[13.457s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/booster_api_resp_msg.h
+[13.463s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/button_event_msg.h
+[13.469s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__functions.h
+[13.475s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__struct.h
+[13.480s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__type_support.h
+[13.486s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__functions.h
+[13.491s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__struct.h
+[13.497s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__type_support.h
+[13.505s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__functions.h
+[13.511s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__struct.h
+[13.517s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__type_support.h
+[13.523s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__functions.h
+[13.528s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__struct.h
+[13.534s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__type_support.h
+[13.540s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__functions.h
+[13.545s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__struct.h
+[13.551s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__type_support.h
+[13.556s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__functions.h
+[13.561s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__struct.h
+[13.566s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__type_support.h
+[13.571s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__functions.h
+[13.576s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__struct.h
+[13.580s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__type_support.h
+[13.585s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__functions.h
+[13.591s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__struct.h
+[13.598s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__type_support.h
+[13.604s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__functions.h
+[13.610s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__struct.h
+[13.616s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__type_support.h
+[13.628s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__functions.h
+[13.650s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__struct.h
+[13.657s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__type_support.h
+[13.663s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__functions.h
+[13.668s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__struct.h
+[13.674s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__type_support.h
+[13.680s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__functions.h
+[13.686s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__struct.h
+[13.691s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__type_support.h
+[13.697s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__functions.h
+[13.703s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__struct.h
+[13.709s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__type_support.h
+[13.714s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__functions.h
+[13.720s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__struct.h
+[13.725s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__type_support.h
+[13.730s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__functions.h
+[13.736s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__struct.h
+[13.741s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__type_support.h
+[13.747s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__functions.h
+[13.752s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__struct.h
+[13.758s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__type_support.h
+[13.764s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__functions.h
+[13.771s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__struct.h
+[13.777s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__type_support.h
+[13.783s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__functions.h
+[13.789s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__struct.h
+[13.795s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__type_support.h
+[13.800s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__functions.h
+[13.805s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__struct.h
+[13.811s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__type_support.h
+[13.816s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/fall_down_state.h
+[13.823s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_command.h
+[13.829s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_dds_msg.h
+[13.834s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_param.h
+[13.840s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/imu_state.h
+[13.846s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/low_cmd.h
+[13.853s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/low_state.h
+[13.859s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/motor_cmd.h
+[13.864s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/motor_state.h
+[13.869s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/odometer.h
+[13.875s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/prone_body_control_status.h
+[13.881s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/raw_bytes_msg.h
+[13.886s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/remote_controller_state.h
+[13.892s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/robot_replay_traj_id.h
+[13.897s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/robot_states_msg.h
+[13.902s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/rosidl_generator_c__visibility_control.h
+[13.908s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/subtitle.h
+[13.914s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/agent_service.h
+[13.920s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__functions.h
+[13.925s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__struct.h
+[13.932s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__type_support.h
+[13.937s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__functions.h
+[13.942s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__struct.h
+[13.948s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__type_support.h
+[13.954s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/rpc_service.h
+[13.961s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/library_path.sh
+[13.966s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/library_path.dsv
+[13.975s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__rosidl_typesupport_fastrtps_c.h
+[13.981s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__rosidl_typesupport_fastrtps_c.h
+[13.987s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__rosidl_typesupport_fastrtps_c.h
+[13.992s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__rosidl_typesupport_fastrtps_c.h
+[13.998s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__rosidl_typesupport_fastrtps_c.h
+[14.003s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__rosidl_typesupport_fastrtps_c.h
+[14.009s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__rosidl_typesupport_fastrtps_c.h
+[14.015s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__rosidl_typesupport_fastrtps_c.h
+[14.027s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__rosidl_typesupport_fastrtps_c.h
+[14.028s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__rosidl_typesupport_fastrtps_c.h
+[14.035s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__rosidl_typesupport_fastrtps_c.h
+[14.040s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__rosidl_typesupport_fastrtps_c.h
+[14.046s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__rosidl_typesupport_fastrtps_c.h
+[14.052s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__rosidl_typesupport_fastrtps_c.h
+[14.057s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__rosidl_typesupport_fastrtps_c.h
+[14.062s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__rosidl_typesupport_fastrtps_c.h
+[14.068s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__rosidl_typesupport_fastrtps_c.h
+[14.074s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__rosidl_typesupport_fastrtps_c.h
+[14.080s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__rosidl_typesupport_fastrtps_c.h
+[14.086s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[14.092s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__rosidl_typesupport_fastrtps_c.h
+[14.097s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__rosidl_typesupport_fastrtps_c.h
+[14.106s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/booster_api_req_msg.hpp
+[14.112s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/booster_api_resp_msg.hpp
+[14.117s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/button_event_msg.hpp
+[14.123s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__builder.hpp
+[14.128s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__struct.hpp
+[14.133s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__traits.hpp
+[14.138s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__type_support.hpp
+[14.143s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__builder.hpp
+[14.148s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__struct.hpp
+[14.154s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__traits.hpp
+[14.159s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__type_support.hpp
+[14.164s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__builder.hpp
+[14.170s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__struct.hpp
+[14.175s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__traits.hpp
+[14.181s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__type_support.hpp
+[14.187s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__builder.hpp
+[14.193s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__struct.hpp
+[14.198s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__traits.hpp
+[14.204s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__type_support.hpp
+[14.209s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__builder.hpp
+[14.215s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__struct.hpp
+[14.221s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__traits.hpp
+[14.227s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__type_support.hpp
+[14.232s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__builder.hpp
+[14.238s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__struct.hpp
+[14.245s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__traits.hpp
+[14.251s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__type_support.hpp
+[14.257s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__builder.hpp
+[14.263s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__struct.hpp
+[14.268s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__traits.hpp
+[14.274s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__type_support.hpp
+[14.282s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__builder.hpp
+[14.287s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__struct.hpp
+[14.293s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__traits.hpp
+[14.298s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__type_support.hpp
+[14.304s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__builder.hpp
+[14.310s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__struct.hpp
+[14.316s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__traits.hpp
+[14.321s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__type_support.hpp
+[14.327s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__builder.hpp
+[14.333s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__struct.hpp
+[14.339s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__traits.hpp
+[14.345s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__type_support.hpp
+[14.351s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__builder.hpp
+[14.356s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__struct.hpp
+[14.362s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__traits.hpp
+[14.368s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__type_support.hpp
+[14.373s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__builder.hpp
+[14.379s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__struct.hpp
+[14.384s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__traits.hpp
+[14.390s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__type_support.hpp
+[14.396s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__builder.hpp
+[14.402s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__struct.hpp
+[14.408s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__traits.hpp
+[14.414s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__type_support.hpp
+[14.419s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__builder.hpp
+[14.426s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__struct.hpp
+[14.431s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__traits.hpp
+[14.438s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__type_support.hpp
+[14.444s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__builder.hpp
+[14.450s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__struct.hpp
+[14.455s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__traits.hpp
+[14.461s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__type_support.hpp
+[14.466s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__builder.hpp
+[14.472s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__struct.hpp
+[14.477s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__traits.hpp
+[14.483s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__type_support.hpp
+[14.489s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__builder.hpp
+[14.495s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__struct.hpp
+[14.500s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__traits.hpp
+[14.506s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__type_support.hpp
+[14.512s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__builder.hpp
+[14.517s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__struct.hpp
+[14.522s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__traits.hpp
+[14.527s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__type_support.hpp
+[14.532s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__builder.hpp
+[14.541s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__struct.hpp
+[14.547s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__traits.hpp
+[14.552s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__type_support.hpp
+[14.557s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/fall_down_state.hpp
+[14.563s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_command.hpp
+[14.569s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_dds_msg.hpp
+[14.574s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/hand_param.hpp
+[14.579s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/imu_state.hpp
+[14.584s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/low_cmd.hpp
+[14.590s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/low_state.hpp
+[14.595s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/motor_cmd.hpp
+[14.600s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/motor_state.hpp
+[14.606s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/odometer.hpp
+[14.612s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/prone_body_control_status.hpp
+[14.618s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/raw_bytes_msg.hpp
+[14.624s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/remote_controller_state.hpp
+[14.629s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/robot_replay_traj_id.hpp
+[14.634s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/robot_states_msg.hpp
+[14.641s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/rosidl_generator_cpp__visibility_control.hpp
+[14.646s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/subtitle.hpp
+[14.652s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/agent_service.hpp
+[14.658s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__builder.hpp
+[14.663s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__struct.hpp
+[14.668s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__traits.hpp
+[14.674s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__type_support.hpp
+[14.679s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__builder.hpp
+[14.685s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__struct.hpp
+[14.691s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__traits.hpp
+[14.697s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__type_support.hpp
+[14.703s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/rpc_service.hpp
+[14.712s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.718s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.724s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.729s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__rosidl_typesupport_fastrtps_cpp.hpp
+[14.734s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__rosidl_typesupport_fastrtps_cpp.hpp
+[14.741s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.746s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__rosidl_typesupport_fastrtps_cpp.hpp
+[14.752s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__rosidl_typesupport_fastrtps_cpp.hpp
+[14.757s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__rosidl_typesupport_fastrtps_cpp.hpp
+[14.762s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__rosidl_typesupport_fastrtps_cpp.hpp
+[14.768s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__rosidl_typesupport_fastrtps_cpp.hpp
+[14.774s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__rosidl_typesupport_fastrtps_cpp.hpp
+[14.784s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__rosidl_typesupport_fastrtps_cpp.hpp
+[14.789s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__rosidl_typesupport_fastrtps_cpp.hpp
+[14.795s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.802s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__rosidl_typesupport_fastrtps_cpp.hpp
+[14.807s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__rosidl_typesupport_fastrtps_cpp.hpp
+[14.812s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__rosidl_typesupport_fastrtps_cpp.hpp
+[14.817s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__rosidl_typesupport_fastrtps_cpp.hpp
+[14.823s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[14.829s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__rosidl_typesupport_fastrtps_cpp.hpp
+[14.834s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__rosidl_typesupport_fastrtps_cpp.hpp
+[14.841s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__rosidl_typesupport_introspection_c.h
+[14.847s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__rosidl_typesupport_introspection_c.h
+[14.852s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__rosidl_typesupport_introspection_c.h
+[14.858s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__rosidl_typesupport_introspection_c.h
+[14.863s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__rosidl_typesupport_introspection_c.h
+[14.868s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__rosidl_typesupport_introspection_c.h
+[14.874s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__rosidl_typesupport_introspection_c.h
+[14.879s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__rosidl_typesupport_introspection_c.h
+[14.885s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__rosidl_typesupport_introspection_c.h
+[14.890s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__rosidl_typesupport_introspection_c.h
+[14.895s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__rosidl_typesupport_introspection_c.h
+[14.901s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__rosidl_typesupport_introspection_c.h
+[14.905s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__rosidl_typesupport_introspection_c.h
+[14.911s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__rosidl_typesupport_introspection_c.h
+[14.916s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__rosidl_typesupport_introspection_c.h
+[14.922s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__rosidl_typesupport_introspection_c.h
+[14.927s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__rosidl_typesupport_introspection_c.h
+[14.933s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__rosidl_typesupport_introspection_c.h
+[14.940s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__rosidl_typesupport_introspection_c.h
+[14.945s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[14.951s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__rosidl_typesupport_introspection_c.h
+[14.956s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__rosidl_typesupport_introspection_c.h
+[14.964s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_req_msg__rosidl_typesupport_introspection_cpp.hpp
+[14.968s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/booster_api_resp_msg__rosidl_typesupport_introspection_cpp.hpp
+[14.974s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/button_event_msg__rosidl_typesupport_introspection_cpp.hpp
+[14.979s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/fall_down_state__rosidl_typesupport_introspection_cpp.hpp
+[14.985s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_command__rosidl_typesupport_introspection_cpp.hpp
+[14.991s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_dds_msg__rosidl_typesupport_introspection_cpp.hpp
+[14.997s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/hand_param__rosidl_typesupport_introspection_cpp.hpp
+[15.002s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/imu_state__rosidl_typesupport_introspection_cpp.hpp
+[15.008s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_cmd__rosidl_typesupport_introspection_cpp.hpp
+[15.013s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/low_state__rosidl_typesupport_introspection_cpp.hpp
+[15.018s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_cmd__rosidl_typesupport_introspection_cpp.hpp
+[15.023s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/motor_state__rosidl_typesupport_introspection_cpp.hpp
+[15.029s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/odometer__rosidl_typesupport_introspection_cpp.hpp
+[15.035s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/prone_body_control_status__rosidl_typesupport_introspection_cpp.hpp
+[15.040s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/raw_bytes_msg__rosidl_typesupport_introspection_cpp.hpp
+[15.046s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/remote_controller_state__rosidl_typesupport_introspection_cpp.hpp
+[15.052s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_replay_traj_id__rosidl_typesupport_introspection_cpp.hpp
+[15.057s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/robot_states_msg__rosidl_typesupport_introspection_cpp.hpp
+[15.063s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/msg/detail/subtitle__rosidl_typesupport_introspection_cpp.hpp
+[15.068s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/agent_service__rosidl_typesupport_introspection_cpp.hpp
+[15.074s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include/booster_interface/booster_interface/srv/detail/rpc_service__rosidl_typesupport_introspection_cpp.hpp
+[15.080s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/pythonpath.sh
+[15.085s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/pythonpath.dsv
+[15.092s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface-0.0.0-py3.10.egg-info/PKG-INFO
+[15.097s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface-0.0.0-py3.10.egg-info/SOURCES.txt
+[15.103s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface-0.0.0-py3.10.egg-info/dependency_links.txt
+[15.108s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface-0.0.0-py3.10.egg-info/top_level.txt
+[15.118s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/__init__.py
+[15.123s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/_booster_interface_s.ep.rosidl_typesupport_c.c
+[15.128s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/_booster_interface_s.ep.rosidl_typesupport_fastrtps_c.c
+[15.134s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/_booster_interface_s.ep.rosidl_typesupport_introspection_c.c
+[15.139s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[15.145s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[15.150s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[15.156s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/libbooster_interface__rosidl_generator_py.so
+[15.162s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/__init__.py
+[15.167s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_req_msg.py
+[15.173s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_req_msg_s.c
+[15.179s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_resp_msg.py
+[15.184s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_resp_msg_s.c
+[15.189s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_button_event_msg.py
+[15.194s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_button_event_msg_s.c
+[15.198s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_fall_down_state.py
+[15.204s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_fall_down_state_s.c
+[15.208s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_command.py
+[15.213s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_command_s.c
+[15.219s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_dds_msg.py
+[15.224s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_dds_msg_s.c
+[15.229s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_param.py
+[15.235s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_param_s.c
+[15.241s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_imu_state.py
+[15.247s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_imu_state_s.c
+[15.252s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_cmd.py
+[15.258s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_cmd_s.c
+[15.263s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_state.py
+[15.268s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_state_s.c
+[15.274s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_cmd.py
+[15.280s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_cmd_s.c
+[15.286s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_state.py
+[15.292s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_state_s.c
+[15.297s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_odometer.py
+[15.303s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_odometer_s.c
+[15.309s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_prone_body_control_status.py
+[15.314s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_prone_body_control_status_s.c
+[15.320s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_raw_bytes_msg.py
+[15.326s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_raw_bytes_msg_s.c
+[15.331s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_remote_controller_state.py
+[15.336s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_remote_controller_state_s.c
+[15.342s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_replay_traj_id.py
+[15.348s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_replay_traj_id_s.c
+[15.353s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_states_msg.py
+[15.359s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_states_msg_s.c
+[15.364s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_subtitle.py
+[15.370s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_subtitle_s.c
+[15.376s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/__init__.py
+[15.381s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_agent_service.py
+[15.387s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_agent_service_s.c
+[15.392s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_rpc_service.py
+[15.398s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_rpc_service_s.c
+[15.404s] -- Up-to-date symlink: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[15.405s] -- Up-to-date symlink: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[15.406s] -- Up-to-date symlink: /workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/booster_interface_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[15.407s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/ament_index/resource_index/rust_packages/booster_interface
+[15.416s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/Cargo.toml
+[15.422s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/build.rs
+[15.428s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/src/lib.rs
+[15.434s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/src/msg.rs
+[15.441s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/src/msg/rmw.rs
+[15.448s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/src/srv.rs
+[15.455s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/rust/src/srv/rmw.rs
+[15.461s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/BoosterApiReqMsg.idl
+[15.466s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/BoosterApiRespMsg.idl
+[15.472s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ButtonEventMsg.idl
+[15.477s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/MotorState.idl
+[15.483s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/MotorCmd.idl
+[15.489s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/LowCmd.idl
+[15.494s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ImuState.idl
+[15.500s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/LowState.idl
+[15.505s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RawBytesMsg.idl
+[15.511s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/Odometer.idl
+[15.516s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/FallDownState.idl
+[15.521s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RemoteControllerState.idl
+[15.526s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandCommand.idl
+[15.531s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandDdsMsg.idl
+[15.536s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandParam.idl
+[15.542s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ProneBodyControlStatus.idl
+[15.548s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RobotStatesMsg.idl
+[15.554s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RobotReplayTrajID.idl
+[15.559s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/Subtitle.idl
+[15.565s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/RpcService.idl
+[15.571s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/AgentService.idl
+[15.576s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/BoosterApiReqMsg.msg
+[15.581s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/BoosterApiRespMsg.msg
+[15.587s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ButtonEventMsg.msg
+[15.593s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/MotorState.msg
+[15.598s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/MotorCmd.msg
+[15.603s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/LowCmd.msg
+[15.609s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ImuState.msg
+[15.615s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/LowState.msg
+[15.620s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RawBytesMsg.msg
+[15.625s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/Odometer.msg
+[15.631s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/FallDownState.msg
+[15.636s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RemoteControllerState.msg
+[15.642s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandCommand.msg
+[15.647s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandDdsMsg.msg
+[15.654s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/HandParam.msg
+[15.660s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/ProneBodyControlStatus.msg
+[15.667s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RobotStatesMsg.msg
+[15.678s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/RobotReplayTrajID.msg
+[15.684s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/msg/Subtitle.msg
+[15.691s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/RpcService.srv
+[15.696s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/RpcService_Request.msg
+[15.701s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/RpcService_Response.msg
+[15.706s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/AgentService.srv
+[15.711s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/AgentService_Request.msg
+[15.717s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/srv/AgentService_Response.msg
+[15.724s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include//booster_interface/booster_interface/message_utils.hpp
+[15.731s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/include//booster_interface/booster_interface/third_party/nlohmann_json/json.hpp
+[15.737s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/ament_index/resource_index/package_run_dependencies/booster_interface
+[15.743s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/ament_index/resource_index/parent_prefix_path/booster_interface
+[15.749s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/ament_prefix_path.sh
+[15.754s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/ament_prefix_path.dsv
+[15.760s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/path.sh
+[15.766s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/environment/path.dsv
+[15.772s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/local_setup.bash
+[15.778s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/local_setup.sh
+[15.783s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/local_setup.zsh
+[15.789s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/local_setup.dsv
+[15.795s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/package.dsv
+[15.802s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/ament_index/resource_index/packages/booster_interface
+[15.807s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/rosidl_cmake-extras.cmake
+[15.813s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/ament_cmake_export_include_directories-extras.cmake
+[15.819s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/ament_cmake_export_libraries-extras.cmake
+[15.824s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/ament_cmake_export_targets-extras.cmake
+[15.829s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[15.835s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/ament_cmake_export_dependencies-extras.cmake
+[15.841s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[15.846s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interfaceConfig.cmake
+[15.852s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interfaceConfig-version.cmake
+[15.857s] -- Symlinking: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/package.xml
+[15.863s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_generator_c.so
+[15.868s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_generator_c.so" to ""
+[15.868s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_fastrtps_c.so
+[15.872s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_fastrtps_c.so" to ""
+[15.873s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_fastrtps_cpp.so
+[15.879s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_fastrtps_cpp.so" to ""
+[15.902s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_introspection_c.so
+[15.913s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_introspection_c.so" to ""
+[15.913s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_c.so
+[15.917s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_c.so" to ""
+[15.918s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_introspection_cpp.so
+[15.927s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_introspection_cpp.so" to ""
+[15.928s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_cpp.so
+[15.932s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_typesupport_cpp.so" to ""
+[16.023s] Listing '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface'...
+[16.023s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/__init__.py'...
+[16.023s] Listing '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg'...
+[16.024s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/__init__.py'...
+[16.024s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_req_msg.py'...
+[16.024s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_booster_api_resp_msg.py'...
+[16.024s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_button_event_msg.py'...
+[16.024s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_fall_down_state.py'...
+[16.025s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_command.py'...
+[16.025s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_dds_msg.py'...
+[16.025s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_hand_param.py'...
+[16.025s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_imu_state.py'...
+[16.026s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_cmd.py'...
+[16.026s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_low_state.py'...
+[16.027s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_cmd.py'...
+[16.027s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_motor_state.py'...
+[16.027s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_odometer.py'...
+[16.028s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_prone_body_control_status.py'...
+[16.028s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_raw_bytes_msg.py'...
+[16.028s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_remote_controller_state.py'...
+[16.028s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_replay_traj_id.py'...
+[16.028s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_robot_states_msg.py'...
+[16.029s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/msg/_subtitle.py'...
+[16.029s] Listing '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv'...
+[16.029s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/__init__.py'...
+[16.029s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_agent_service.py'...
+[16.030s] Compiling '/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages/booster_interface/srv/_rpc_service.py'...
+[16.030s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_generator_py.so
+[16.031s] -- Set runtime path of "/workspace/project/.docker/ros2_install/booster_interface/lib/libbooster_interface__rosidl_generator_py.so" to ""
+[16.032s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_generator_cExport.cmake
+[16.034s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_generator_cExport-noconfig.cmake
+[16.037s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_typesupport_fastrtps_cExport.cmake
+[16.047s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[16.071s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_generator_cppExport.cmake
+[16.078s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_typesupport_fastrtps_cppExport.cmake
+[16.081s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[16.083s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_introspection_cExport.cmake
+[16.086s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[16.088s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_cExport.cmake
+[16.091s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_cExport-noconfig.cmake
+[16.094s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_introspection_cppExport.cmake
+[16.096s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[16.098s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_cppExport.cmake
+[16.101s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/booster_interface__rosidl_typesupport_cppExport-noconfig.cmake
+[16.104s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_generator_pyExport.cmake
+[16.106s] -- Installing: /workspace/project/.docker/ros2_install/booster_interface/share/booster_interface/cmake/export_booster_interface__rosidl_generator_pyExport-noconfig.cmake
+[16.112s] Invoked command in '/workspace/project/.docker/ros2_build/booster_interface' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /workspace/project/.docker/ros2_build/booster_interface

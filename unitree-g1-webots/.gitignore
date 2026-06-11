@@ -1,27 +1,12 @@
 .venv/
-external/*
 .logs/
 .docker/
-webots/assets/booster_assets/*
-!webots/assets/booster_assets/robots
-webots/assets/booster_assets/robots/*
-!webots/assets/booster_assets/robots/T1
-webots/assets/booster_assets/robots/T1/*
-!webots/assets/booster_assets/robots/T1/meshes
-ros2_ws/build/
-ros2_ws/install/
-ros2_ws/log/
-*.wbt.bak
-*.wbproj
 __pycache__/
-*.pyc
 
 # User-specific environment overrides
 .env.local
 .env.*.local
 
-# Booster official simulation runner artifacts.
-# These are vendor binaries downloaded from Booster's Feishu/manual resources.
-!external/booster_runner/
-external/booster_runner/*
-!external/booster_runner/README.md
+# Large vendor binaries
+external/booster_runner/*.run
+external/booster_runner/*.zip
