@@ -2,7 +2,12 @@
 external/*
 .logs/
 .docker/
-webots/assets/booster_assets/
+webots/assets/booster_assets/*
+!webots/assets/booster_assets/robots
+webots/assets/booster_assets/robots/*
+!webots/assets/booster_assets/robots/T1
+webots/assets/booster_assets/robots/T1/*
+!webots/assets/booster_assets/robots/T1/meshes
 ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
