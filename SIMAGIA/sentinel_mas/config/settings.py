@@ -47,7 +47,7 @@ PATROL_SCAN_SECONDS = 5.0       # time spent inspecting a zone (era 3.0)
 # Contract Net: when demand first appears, the auctioneer waits this long
 # before sending the CFP, so zones that are still escalating (e.g. a combo
 # that needs to settle) can also bid — prevents priority inversion.
-AUCTION_GATHER_SECONDS = 5.0
+AUCTION_GATHER_SECONDS = 1.0
 
 # ── Auction stress-test mode ──────────────────────────────────
 # When True, a StressBurstSensor fires ALL sensor types in ALL zones
