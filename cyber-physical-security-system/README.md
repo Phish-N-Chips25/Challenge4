@@ -1,6 +1,15 @@
 # Cyber-Physical Security System
 
-RL-trained robot patrol in a simulated office with cameras and motion sensors.
+RL-trained robot **navigation** for the patrol robot in a simulated office.
+
+This trains the *navigation* layer only — driving the robot to a target zone.
+Zone *selection* (which zone to patrol, and when) is handled by the SIMAGIA
+multi-agent system via its Contract Net auction; this PPO policy is the
+low-level "go to waypoint" controller that the MAS dispatches. The action
+space matches the Booster T1 walking interface (`vx, vy, vyaw`) from
+`unitree-g1-webots`, and the trained model is a drop-in replacement for
+`sentinel_mas/agents/patrol.py::NavigationStub` (see
+`src/rl/policy_runner.py`).
 
 ## Prerequisites
 
@@ -51,7 +60,7 @@ training just runs slower on CPU.
 │   ├── webots_world/               # .wbt world file + protos
 │   ├── controllers/
 │   │   └── patrol_robot/           # Webots robot controller
-│   ├── rl/                         # Gymnasium env wrapper + training
+│   ├── rl/                         # Gymnasium nav env + PPO training + policy_runner shim
 │   ├── detection/                  # Face detection model + inference
 │   └── utils/                      # Metrics, logging, shared helpers
 └── data/
