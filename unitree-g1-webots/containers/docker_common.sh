@@ -83,20 +83,21 @@ docker_daemon_is_desktop() {
 
 # ── Runtime Argument Builder ─────────────────────────────────────────────────
 
+DOCKER_RUNTIME_ARGS=()
+
 append_runtime_args() {
-  local -n args_ref="$1"
   local platform
   platform="$(detect_platform)"
 
   # Network mode: --network host only on native Linux (not WSL/Docker Desktop)
   if [[ "${platform}" == "linux" ]]; then
-    args_ref+=(
+    DOCKER_RUNTIME_ARGS+=(
       --network host
       --ipc host
     )
   fi
 
-  args_ref+=(
+  DOCKER_RUNTIME_ARGS+=(
     --privileged
     --shm-size 4g
     --ulimit memlock=-1:-1
@@ -105,19 +106,22 @@ append_runtime_args() {
 
   # User mapping: skip on Windows/WSL where uid/gid mapping doesn't apply
   if [[ "${platform}" != "windows" ]]; then
-    args_ref+=(
+    DOCKER_RUNTIME_ARGS+=(
       --user "$(id -u):$(id -g)"
     )
   fi
 
-  args_ref+=(
+  local num_cpus
+  num_cpus="$(nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)"
+
+  DOCKER_RUNTIME_ARGS+=(
     --env "HOME=/workspace/project/.docker/home"
     --env "USER=${USER:-booster}"
     --env "USERNAME=${USER:-booster}"
     --env "DISPLAY=${DISPLAY:-}"
     --env "QT_X11_NO_MITSHM=1"
     --env "USE_XVFB=${USE_XVFB:-auto}"
-    --env "MAKEFLAGS=-j$(nproc)"
+    --env "MAKEFLAGS=-j${num_cpus}"
     --env "WEBOTS_HOST_IP=${WEBOTS_HOST_IP:-$(auto_webots_host_ip "${platform}")}"
     --env "WEBOTS_PORT=${WEBOTS_PORT:-1234}"
     --env "ROBOT_NAME=${ROBOT_NAME:-T1_release}"
@@ -126,26 +130,28 @@ append_runtime_args() {
 
   # X11 socket forwarding: only on native Linux with X11 present
   if [[ "${USE_X11:-auto}" != "0" && -d /tmp/.X11-unix ]] && ! docker_daemon_is_desktop; then
-    args_ref+=(--mount "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix")
+    DOCKER_RUNTIME_ARGS+=(--mount "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix")
   fi
 
   if [[ -n "${XAUTHORITY:-}" && -f "${XAUTHORITY}" ]] && ! docker_daemon_is_desktop; then
-    args_ref+=(
+    DOCKER_RUNTIME_ARGS+=(
       --env "XAUTHORITY=/tmp/.docker.xauth"
       --mount "type=bind,source=${XAUTHORITY},target=/tmp/.docker.xauth,readonly"
     )
   fi
 
   if [[ -e /dev/dri ]]; then
-    args_ref+=(--device /dev/dri)
+    DOCKER_RUNTIME_ARGS+=(--device /dev/dri)
   fi
 
   if [[ -n "${DOCKER_GPU_ARGS:-}" ]]; then
     # shellcheck disable=SC2206
-    local gpu_args=( ${DOCKER_GPU_ARGS} )
-    args_ref+=("${gpu_args[@]}")
+    local gpu_args
+    local IFS=' '
+    gpu_args=( ${DOCKER_GPU_ARGS} )
+    DOCKER_RUNTIME_ARGS+=("${gpu_args[@]}")
   elif docker_gpu_available; then
-    args_ref+=(
+    DOCKER_RUNTIME_ARGS+=(
       --gpus all
       --env NVIDIA_VISIBLE_DEVICES=all
       --env NVIDIA_DRIVER_CAPABILITIES=all,graphics,display,compute,utility
@@ -172,9 +178,9 @@ ensure_container_running() {
     docker rm "${CONTAINER_NAME}" >/dev/null
   fi
 
-  local args=(run --name "${CONTAINER_NAME}" --detach)
-  append_runtime_args args
-  args+=(--workdir /workspace/project/ros2_ws "${IMAGE_NAME}" sleep infinity)
+  DOCKER_RUNTIME_ARGS=(run --name "${CONTAINER_NAME}" --detach)
+  append_runtime_args
+  DOCKER_RUNTIME_ARGS+=(--workdir /workspace/project/ros2_ws "${IMAGE_NAME}" sleep infinity)
 
-  docker "${args[@]}" >/dev/null
+  docker "${DOCKER_RUNTIME_ARGS[@]}" >/dev/null
 }

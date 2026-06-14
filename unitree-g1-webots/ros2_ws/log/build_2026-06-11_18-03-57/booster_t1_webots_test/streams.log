@@ -1,0 +1,34 @@
+[0.464s] Invoking command in '/workspace/project/.docker/ros2_build/booster_t1_webots_test': AMENT_PREFIX_PATH=/workspace/project/.docker/ros2_install/booster_interface:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/workspace/project/.docker/ros2_install/booster_interface LD_LIBRARY_PATH=/workspace/project/.docker/ros2_install/booster_interface/lib:${LD_LIBRARY_PATH} PYTHONPATH=/workspace/project/.docker/ros2_build/booster_t1_webots_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/python3.10/site-packages:/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /workspace/project/.docker/ros2_build/booster_t1_webots_test/build --no-deps symlink_data
+[0.598s] running develop
+[0.653s] running egg_info
+[0.653s] creating booster_t1_webots_test.egg-info
+[0.654s] writing booster_t1_webots_test.egg-info/PKG-INFO
+[0.655s] writing dependency_links to booster_t1_webots_test.egg-info/dependency_links.txt
+[0.655s] writing entry points to booster_t1_webots_test.egg-info/entry_points.txt
+[0.656s] writing requirements to booster_t1_webots_test.egg-info/requires.txt
+[0.657s] writing top-level names to booster_t1_webots_test.egg-info/top_level.txt
+[0.657s] writing manifest file 'booster_t1_webots_test.egg-info/SOURCES.txt'
+[0.662s] reading manifest file 'booster_t1_webots_test.egg-info/SOURCES.txt'
+[0.665s] writing manifest file 'booster_t1_webots_test.egg-info/SOURCES.txt'
+[0.667s] running build_ext
+[0.668s] Creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/python3.10/site-packages/booster-t1-webots-test.egg-link (link to .)
+[0.669s] Installing imu_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.670s] Installing joint_state_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.671s] Installing low_state_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.672s] Installing rpc_movement_client script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.673s] Installing simple_command_publisher script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.674s] Installing topic_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.675s] Installing webots_state_publisher script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+[0.676s] 
+[0.677s] Installed /workspace/project/.docker/ros2_build/booster_t1_webots_test
+[0.677s] running symlink_data
+[0.678s] creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/ament_index
+[0.678s] creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/ament_index/resource_index
+[0.678s] creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/ament_index/resource_index/packages
+[0.679s] symbolically linking /workspace/project/.docker/ros2_build/booster_t1_webots_test/resource/booster_t1_webots_test -> /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/ament_index/resource_index/packages
+[0.679s] symbolically linking /workspace/project/.docker/ros2_build/booster_t1_webots_test/package.xml -> /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/booster_t1_webots_test
+[0.679s] creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/booster_t1_webots_test/launch
+[0.680s] symbolically linking /workspace/project/.docker/ros2_build/booster_t1_webots_test/launch/booster_t1_break_room.launch.py -> /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/booster_t1_webots_test/launch
+[0.680s] creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/booster_t1_webots_test/config
+[0.681s] symbolically linking /workspace/project/.docker/ros2_build/booster_t1_webots_test/config/topics.yaml -> /workspace/project/.docker/ros2_install/booster_t1_webots_test/share/booster_t1_webots_test/config
+[0.697s] Invoked command in '/workspace/project/.docker/ros2_build/booster_t1_webots_test' returned '0': AMENT_PREFIX_PATH=/workspace/project/.docker/ros2_install/booster_interface:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/workspace/project/.docker/ros2_install/booster_interface LD_LIBRARY_PATH=/workspace/project/.docker/ros2_install/booster_interface/lib:${LD_LIBRARY_PATH} PYTHONPATH=/workspace/project/.docker/ros2_build/booster_t1_webots_test/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/python3.10/site-packages:/workspace/project/.docker/ros2_install/booster_interface/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /workspace/project/.docker/ros2_build/booster_t1_webots_test/build --no-deps symlink_data

@@ -18,14 +18,14 @@ JOINT_NAMES = [
     "Left_Hip_Roll",
     "Left_Hip_Yaw",
     "Left_Knee_Pitch",
-    "Left_Ankle_Pitch",
-    "Left_Ankle_Roll",
+    "Crank_Down_Left",
+    "Crank_Up_Left",
     "Right_Hip_Pitch",
     "Right_Hip_Roll",
     "Right_Hip_Yaw",
     "Right_Knee_Pitch",
-    "Right_Ankle_Pitch",
-    "Right_Ankle_Roll",
+    "Crank_Down_Right",
+    "Crank_Up_Right",
 ]
 
 

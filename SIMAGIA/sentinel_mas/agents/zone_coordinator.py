@@ -168,7 +168,13 @@ class BDIDeliberationCycle(PeriodicBehaviour):
         # ── 2b. Announce patrol demand (Contract Net) ────────
         # We don't request a specific robot directly; we signal that this zone
         # wants patrol. The PatrolAgent auctions its time to the highest bidder.
-        if threat >= settings.THREAT_HIGH and beliefs.get("patrol_status") != "en_route":
+        # After "intruder_confirmed" the scan already found the threat; re-bidding
+        # immediately creates an infinite patrol loop.  The zone holds its beliefs
+        # (threat stays HIGH/CRITICAL) so alerts remain active, but patrol demand
+        # stops — human intervention or a new sensor event is required to re-bid.
+        patrol_status = beliefs.get("patrol_status")
+        if (threat >= settings.THREAT_HIGH
+                and patrol_status not in ("en_route", "intruder_confirmed")):
             await self.send(build_msg(
                 settings.PATROL_JID, REQUEST,
                 {"action": "patrol_wanted", "zone": self.agent.zone_id},

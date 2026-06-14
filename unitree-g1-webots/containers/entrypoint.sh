@@ -6,7 +6,9 @@ set -euo pipefail
 
 # Source base ROS 2 installation
 # shellcheck disable=SC1091
+set +u  # setup.bash may reference unset variables
 source /opt/ros/humble/setup.bash
+set -u
 
 # Source workspace install overlay if it exists
 WORKSPACE_INSTALL="${WORKSPACE_INSTALL:-/workspace/project/ros2_ws/install}"

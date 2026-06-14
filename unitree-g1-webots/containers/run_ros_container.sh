@@ -18,8 +18,8 @@ fi
 
 ensure_docker_state_dirs
 
-args=(run --name "${CONTAINER_NAME}" --rm --interactive --tty)
-append_runtime_args args
-args+=(--workdir /workspace/project/ros2_ws "${IMAGE_NAME}" bash -lc "source /opt/ros/humble/setup.bash && exec bash")
+DOCKER_RUNTIME_ARGS=(run --name "${CONTAINER_NAME}" --rm --interactive --tty)
+append_runtime_args
+DOCKER_RUNTIME_ARGS+=(--workdir /workspace/project/ros2_ws "${IMAGE_NAME}" bash -lc "source /opt/ros/humble/setup.bash && exec bash")
 
-docker "${args[@]}"
+docker "${DOCKER_RUNTIME_ARGS[@]}"

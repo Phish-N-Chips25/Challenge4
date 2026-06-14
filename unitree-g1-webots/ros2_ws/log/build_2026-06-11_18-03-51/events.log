@@ -1,0 +1,6 @@
+[0.000000] (-) TimerEvent: {}
+[0.000375] (-) JobUnselected: {'identifier': 'booster_interface'}
+[0.000758] (booster_t1_webots_test) JobQueued: {'identifier': 'booster_t1_webots_test', 'dependencies': OrderedDict([('booster_interface', '/workspace/project/.docker/ros2_install/booster_interface')])}
+[0.000834] (booster_t1_webots_test) JobStarted: {'identifier': 'booster_t1_webots_test'}
+[0.009017] (booster_t1_webots_test) JobEnded: {'identifier': 'booster_t1_webots_test', 'rc': 1}
+[0.021108] (-) EventReactorShutdown: {}

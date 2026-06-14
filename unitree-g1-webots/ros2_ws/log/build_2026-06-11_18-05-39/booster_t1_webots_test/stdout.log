@@ -1,0 +1,21 @@
+running develop
+running egg_info
+writing booster_t1_webots_test.egg-info/PKG-INFO
+writing dependency_links to booster_t1_webots_test.egg-info/dependency_links.txt
+writing entry points to booster_t1_webots_test.egg-info/entry_points.txt
+writing requirements to booster_t1_webots_test.egg-info/requires.txt
+writing top-level names to booster_t1_webots_test.egg-info/top_level.txt
+reading manifest file 'booster_t1_webots_test.egg-info/SOURCES.txt'
+writing manifest file 'booster_t1_webots_test.egg-info/SOURCES.txt'
+running build_ext
+Creating /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/python3.10/site-packages/booster-t1-webots-test.egg-link (link to .)
+Installing imu_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing joint_state_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing low_state_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing rpc_movement_client script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing simple_command_publisher script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing topic_listener script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+Installing webots_state_publisher script to /workspace/project/.docker/ros2_install/booster_t1_webots_test/lib/booster_t1_webots_test
+
+Installed /workspace/project/.docker/ros2_build/booster_t1_webots_test
+running symlink_data
