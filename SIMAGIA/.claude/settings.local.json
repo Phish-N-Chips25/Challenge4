@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"D:\\\\PyCharmProjects\\\\SIMAGIA\\\\sentinel_mas\\\\.venv\\\\Scripts\\\\python.exe\" -c \"from spade.agent import Agent; import inspect; print\\(inspect.signature\\(Agent.__init__\\)\\)\")"
+    ]
+  }
+}

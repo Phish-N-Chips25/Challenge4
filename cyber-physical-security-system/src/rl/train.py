@@ -1,5 +1,9 @@
 """
-Train the patrol agent with PPO.
+Train the patrol robot's NAVIGATION policy with PPO.
+
+The policy learns to drive the Booster T1 from its current pose to a target
+zone dispatched by the SIMAGIA multi-agent system.  Zone *selection* is the
+MAS's job (Contract Net auction); this is the low-level "go to waypoint" layer.
 
 Usage:
     python src/rl/train.py --config configs/ppo.yaml
@@ -12,8 +16,9 @@ from pathlib import Path
 import yaml
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback, CheckpointCallback
+from stable_baselines3.common.env_util import make_vec_env
 
-from env import OfficePatrolEnv
+from env import OfficeNavEnv
 
 
 def load_config(path: str) -> dict:
@@ -40,10 +45,10 @@ class TrainProgressCallback(BaseCallback):
     def _on_training_start(self) -> None:
         self._t0 = time.time()
         total = self.locals["total_timesteps"]
-        print(f"\n{'─' * 62}")
+        print(f"\n{'-' * 62}")
         print(f"  Training started  |  target: {total:,} steps")
         print(f"  Progress logged every {self.print_freq:,} steps")
-        print(f"{'─' * 62}\n")
+        print(f"{'-' * 62}\n")
 
     def _on_step(self) -> bool:
         if self.num_timesteps % self.print_freq == 0:
@@ -53,7 +58,7 @@ class TrainProgressCallback(BaseCallback):
             eta = (total - self.num_timesteps) / max(speed, 1e-6)
             pct = 100 * self.num_timesteps / total
             bar_filled = int(pct / 5)
-            bar = "█" * bar_filled + "░" * (20 - bar_filled)
+            bar = "#" * bar_filled + "." * (20 - bar_filled)
             print(
                 f"  [{bar}] {pct:5.1f}%"
                 f"  {self.num_timesteps:>7,}/{total:,}"
@@ -65,9 +70,9 @@ class TrainProgressCallback(BaseCallback):
 
     def _on_training_end(self) -> None:
         elapsed = time.time() - self._t0
-        print(f"\n{'─' * 62}")
+        print(f"\n{'-' * 62}")
         print(f"  Training complete  |  total time: {_fmt_time(elapsed)}")
-        print(f"{'─' * 62}\n")
+        print(f"{'-' * 62}\n")
 
 
 def main():
@@ -78,12 +83,16 @@ def main():
     cfg = load_config(args.config)
     alg_cfg = cfg["algorithm"]
     env_cfg = cfg["env"]
+    n_envs = alg_cfg.get("n_envs", 1)
 
-    # ── Environment ──────────────────────────────────────────────────────
-    env = OfficePatrolEnv(config=env_cfg)
-    eval_env = OfficePatrolEnv(config=env_cfg)
+    # Vectorised for throughput; navigation rollouts are cheap (no Webots).
+    env = make_vec_env(
+        OfficeNavEnv, n_envs=n_envs, env_kwargs={"config": env_cfg}
+    )
+    eval_env = make_vec_env(
+        OfficeNavEnv, n_envs=1, env_kwargs={"config": env_cfg}
+    )
 
-    # ── Callbacks ────────────────────────────────────────────────────────
     log_dir = Path("data/logs")
     log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -91,21 +100,20 @@ def main():
         eval_env,
         best_model_save_path="data/models/best",
         log_path=str(log_dir),
-        eval_freq=cfg["evaluation"]["eval_freq"],
+        eval_freq=max(cfg["evaluation"]["eval_freq"] // n_envs, 1),
         n_eval_episodes=cfg["evaluation"]["n_eval_episodes"],
         deterministic=True,
     )
     checkpoint_callback = CheckpointCallback(
-        save_freq=50_000,
+        save_freq=max(50_000 // n_envs, 1),
         save_path="data/models/checkpoints",
-        name_prefix="patrol_ppo",
+        name_prefix="nav_ppo",
         verbose=2,
     )
     progress_callback = TrainProgressCallback(
         print_freq=alg_cfg.get("progress_freq", 10_000),
     )
 
-    # ── Training ─────────────────────────────────────────────────────────
     model = PPO(
         policy=alg_cfg["policy"],
         env=env,
@@ -121,12 +129,15 @@ def main():
         device=alg_cfg.get("device", "cpu"),
     )
 
+    print(f"Training PPO navigation policy for {alg_cfg['total_timesteps']:,} timesteps "
+          f"({n_envs} parallel envs)...")
     model.learn(
         total_timesteps=alg_cfg["total_timesteps"],
         callback=[eval_callback, checkpoint_callback, progress_callback],
     )
 
-    model.save("data/models/patrol_ppo_final")
+    model.save("data/models/nav_ppo_final")
+    print("Model saved to data/models/nav_ppo_final.zip")
 
 
 if __name__ == "__main__":
