@@ -16,15 +16,17 @@ XMPP_PORT        = 5322   # client port (replaces 5222)
 XMPP_SERVER_PORT = 5326   # S2S port    (replaces 5269)
 
 # ── Zone definitions ─────────────────────────────────────────
-ZONES = ["lobby", "server_room", "lab", "corridor", "exterior"]
+ZONES = ["lobby", "server_room", "work_room_1", "work_room_2", "work_room_3", "work_room_4", "exterior"]
 
 # Sensor modalities available per zone (from the design table).
 # Used by the threat-fusion rules and to warn on impossible injections.
 ZONE_MODALITIES = {
     "lobby":       {"motion", "camera"},
     "server_room": {"motion", "camera", "cyber"},
-    "lab":         {"motion", "cyber"},
-    "corridor":    {"motion"},
+    "work_room_1": {"motion", "camera", "cyber"},
+    "work_room_2": {"motion", "camera", "cyber"},
+    "work_room_3": {"motion", "camera", "cyber"},
+    "work_room_4": {"motion", "camera", "cyber"},
     "exterior":    {"motion", "camera"},
 }
 
@@ -33,9 +35,11 @@ ZONE_MODALITIES = {
 # and to move the patrol robot between rooms.
 ZONE_POS = {
     "exterior":    (50, 13),
-    "server_room": (22, 35),
-    "lab":         (78, 35),
-    "corridor":    (50, 57),
+    "work_room_1": (12, 35),
+    "work_room_2": (33, 35),
+    "work_room_3": (55, 35),
+    "work_room_4": (75, 35),
+    "server_room": (92, 35),
     "lobby":       (50, 83),
 }
 PATROL_BASE_POS = (50, 70)      # robot dock (idle position)
@@ -92,3 +96,40 @@ THREAT_LOW    = 0
 THREAT_MEDIUM = 1
 THREAT_HIGH   = 2
 THREAT_CRITICAL = 3
+
+# ── Webots integration ───────────────────────────────────────
+# Set to True by security_supervisor.py before starting the MAS thread.
+WEBOTS_ENABLED = False
+WEBOTS_BRIDGE = None   # WebotsBridge instance, set at runtime
+
+# Webots zone name → MAS zone name
+# work_room_1..4 all aggregate into "lab"; break_room maps to "exterior".
+WEBOTS_ZONE_MAP: dict[str, str] = {
+    "lobby":        "lobby",
+    "checkpoint":   "lobby",
+    "break_room":   "exterior",
+    "work_room_1":  "work_room_1",
+    "work_room_2":  "work_room_2",
+    "work_room_3":  "work_room_3",
+    "work_room_4":  "work_room_4",
+    "datacenter":   "server_room",
+}
+
+# Webots 3D patrol positions for each MAS zone (x, y, z).
+# Derived from the zone-mark centres in sentinelmas_office.wbt.
+WEBOTS_PATROL_POSITIONS: dict[str, tuple] = {
+    "lobby":       (-5.0, -3.5, 0.0),
+    "exterior":    ( 5.0, -3.5, 0.0),
+    "work_room_1": (-8.0,  3.5, 0.0),
+    "work_room_2": (-4.0,  3.5, 0.0),
+    "work_room_3": ( 0.0,  3.5, 0.0),
+    "work_room_4": ( 4.0,  3.5, 0.0),
+    "server_room": ( 8.0,  3.5, 0.0),
+}
+WEBOTS_PATROL_BASE: tuple = (9.0, 0.0, 0.0)
+
+# Reverse map: 2D dashboard position → MAS zone name (for WebotsNavigation)
+WEBOTS_POS_TO_ZONE: dict[tuple, str] = {
+    v: k for k, v in ZONE_POS.items()
+}
+WEBOTS_POS_TO_ZONE[PATROL_BASE_POS] = "__base__"

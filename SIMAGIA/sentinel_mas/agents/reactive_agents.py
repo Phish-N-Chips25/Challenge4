@@ -55,12 +55,35 @@ class SimulatedMotionSensor(PeriodicBehaviour):
             self.agent.log(f"motion in '{zone}' -> INFORM ZC")
 
 
+class WebotsSensorBehaviour(CyclicBehaviour):
+    """Drains the WebotsBridge sensor queue and forwards events to the
+    appropriate ZoneCoordinator — active only when WEBOTS_ENABLED=True."""
+
+    async def run(self):
+        from bridges import get_bridge
+        bridge = get_bridge()
+        if bridge is None:
+            await asyncio.sleep(0.1)
+            return
+        event = bridge.get_sensor_event(timeout=0.05)
+        if event is None:
+            return
+        zone = event.get("zone")
+        if zone not in settings.ZONES:
+            return
+        msg = build_msg(settings.ZONE_COORDINATOR_JIDS[zone], INFORM, event)
+        await self.send(msg)
+        self.agent.log(f"{event.get('event')} in '{zone}' -> INFORM ZC")
+
+
 class MotionAgent(ReactiveAgent):
     name_tag = "Motion"
 
     async def setup(self):
         self.log("starting (reactive)")
-        if settings.SIMULATED_SENSORS:
+        if settings.WEBOTS_ENABLED:
+            self.add_behaviour(WebotsSensorBehaviour())
+        elif settings.SIMULATED_SENSORS:
             self.add_behaviour(SimulatedMotionSensor(period=4))
 
 
@@ -87,7 +110,13 @@ class SimulatedFaceSensor(PeriodicBehaviour):
 
 
 class ReverifyHandler(CyclicBehaviour):
-    """Respond to REQUEST reverify from a ZoneCoordinator."""
+    """Respond to REQUEST reverify from a ZoneCoordinator.
+
+    Webots mode: forwards the request to the bridge so the supervisor
+    can relay it to the physical facecam; the camera's next scan will
+    arrive automatically via WebotsSensorBehaviour.
+    Simulation mode: returns a random identity as before.
+    """
 
     async def run(self):
         msg = await self.receive(timeout=1)
@@ -97,7 +126,15 @@ class ReverifyHandler(CyclicBehaviour):
         if body.get("action") != "reverify":
             return
         zone = body.get("zone")
-        # Simulated second capture — slightly biased toward resolution
+
+        if settings.WEBOTS_ENABLED:
+            from bridges import get_bridge
+            bridge = get_bridge()
+            if bridge:
+                bridge.put_patrol_command({"action": "reverify", "zone": zone})
+            self.agent.log(f"reverify in '{zone}' -> relayed to Webots camera")
+            return
+
         identity = random.choice(["alice", "bob", "carol", "unknown"])
         reply = build_msg(str(msg.sender), INFORM, {
             "event": "face_detected", "zone": zone,
@@ -113,7 +150,7 @@ class FaceIDAgent(ReactiveAgent):
 
     async def setup(self):
         self.log("starting (reactive)")
-        if settings.SIMULATED_SENSORS:
+        if not settings.WEBOTS_ENABLED and settings.SIMULATED_SENSORS:
             self.add_behaviour(SimulatedFaceSensor(period=5))
         t = Template()
         t.set_metadata("performative", REQUEST)
@@ -145,7 +182,7 @@ class CyberSentinelAgent(ReactiveAgent):
 
     async def setup(self):
         self.log("starting (reactive)")
-        if settings.SIMULATED_SENSORS:
+        if not settings.WEBOTS_ENABLED and settings.SIMULATED_SENSORS:
             self.add_behaviour(SimulatedCyberSensor(period=6))
 
 
@@ -201,7 +238,8 @@ class StressBurstSensor(PeriodicBehaviour):
     """
 
     # Zones that can reach HIGH or above — rotation candidates
-    ROTATABLE = ["server_room", "lobby", "exterior", "lab"]
+    ROTATABLE = ["server_room", "lobby", "exterior",
+                 "work_room_1", "work_room_2", "work_room_3", "work_room_4"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -243,7 +281,7 @@ class StressBurstSensor(PeriodicBehaviour):
                  "liveness": True, "source": "stress_burst"},
             ))
 
-        elif zone == "lab":
+        elif zone in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
             # cyber + motion  →  HIGH (presence correlated with cyber anomaly)
             await self.send(build_msg(
                 settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
@@ -281,7 +319,7 @@ class StressBurstSensor(PeriodicBehaviour):
                  "liveness": True, "source": "stress_burst"},
             ))
 
-        elif zone == "lab":
+        elif zone in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
             # cyber + motion  →  HIGH
             await self.send(build_msg(
                 settings.ZONE_COORDINATOR_JIDS[zone], INFORM,

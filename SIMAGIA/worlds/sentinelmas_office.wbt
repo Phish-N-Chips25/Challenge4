@@ -22,6 +22,7 @@ WorldInfo {
     "robo de patrulha e agentes CyberSentinel nos servidores."
   ]
   title "SentinelMAS - ambiente de empresa"
+  basicTimeStep 256
 }
 Viewpoint {
   orientation 0.49851197453245555 -0.5136962365352025 -0.6982850333619659 4.389051461199381
@@ -582,6 +583,9 @@ DEF RACK_1 Robot {
     Emitter {
       channel 1
     }
+    Receiver {
+      channel 1
+    }
     Pose {
       translation 0 0 1
       children [
@@ -634,6 +638,9 @@ DEF RACK_2 Robot {
   translation 8.2 5.3 0
   children [
     Emitter {
+      channel 1
+    }
+    Receiver {
       channel 1
     }
     Pose {
@@ -690,6 +697,9 @@ DEF RACK_3 Robot {
     Emitter {
       channel 1
     }
+    Receiver {
+      channel 1
+    }
     Pose {
       translation 0 0 1
       children [
@@ -742,6 +752,9 @@ DEF RACK_4 Robot {
   translation 8.2 3.4 0
   children [
     Emitter {
+      channel 1
+    }
+    Receiver {
       channel 1
     }
     Pose {
@@ -831,11 +844,12 @@ DEF FACECAM_CHECKPOINT Robot {
   controller "face_id_agent"
   controllerArgs [
     "--gate=checkpoint"
+    "--max-dist=6"
   ]
 }
 DEF FACECAM_DATACENTER Robot {
-  translation 8 0.78 2.15
-  rotation 0 0 1 -1.5708
+  translation 8 1.5 2.15
+  rotation 0 0 1 1.5708
   children [
     Emitter {
       channel 1
@@ -872,11 +886,11 @@ DEF FACECAM_DATACENTER Robot {
   controller "face_id_agent"
   controllerArgs [
     "--gate=datacenter"
+    "--max-dist=6"
   ]
 }
 DEF PIR_LOBBY Robot {
-  translation -7.5 -1.18 2.3
-  rotation 0 0 1 -1.5708
+  translation -5 -3.5 3.0
   children [
     Emitter {
       channel 1
@@ -907,35 +921,35 @@ DEF PIR_LOBBY Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -948,8 +962,7 @@ DEF PIR_LOBBY Robot {
   ]
 }
 DEF PIR_BREAK Robot {
-  translation 2.5 -1.18 2.3
-  rotation 0 0 1 -1.5708
+  translation 5 -3.5 3.0
   children [
     Emitter {
       channel 1
@@ -980,35 +993,35 @@ DEF PIR_BREAK Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1020,81 +1033,8 @@ DEF PIR_BREAK Robot {
     "--zone=break_room"
   ]
 }
-DEF PIR_CORRIDOR Robot {
-  translation -9.78 0 2
-  children [
-    Emitter {
-      channel 1
-    }
-    Shape {
-      appearance PBRAppearance {
-        baseColor 0.9 0.9 0.88
-        roughness 0.7
-        metalness 0
-      }
-      geometry Box {
-        size 0.06 0.1 0.09
-      }
-    }
-    LED {
-      translation 0.04 0 0.02
-      children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 0.05 0.05 0.05
-            roughness 0.5
-            metalness 0
-          }
-          geometry Sphere {
-            radius 0.012
-          }
-        }
-      ]
-    }
-    DistanceSensor {
-      rotation 0 1 0 0.12
-      name "ds_center"
-      lookupTable [
-        0 0 0
-        8 8 0
-      ]
-    }
-    Pose {
-      rotation 0 0 1 0.06
-      children [
-        DistanceSensor {
-          rotation 0 1 0 0.12
-          name "ds_left"
-          lookupTable [
-            0 0 0
-            8 8 0
-          ]
-        }
-      ]
-    }
-    Pose {
-      rotation 0 0 1 -0.06
-      children [
-        DistanceSensor {
-          rotation 0 1 0 0.12
-          name "ds_right"
-          lookupTable [
-            0 0 0
-            8 8 0
-          ]
-        }
-      ]
-    }
-  ]
-  name "pir_corridor"
-  controller "motion_agent"
-  controllerArgs [
-    "--zone=corridor"
-  ]
-}
 DEF PIR_WR1 Robot {
-  translation -8 5.82 2.3
-  rotation 0 0 1 -1.5708
+  translation -8 3.5 3.0
   children [
     Emitter {
       channel 1
@@ -1125,35 +1065,35 @@ DEF PIR_WR1 Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1166,8 +1106,7 @@ DEF PIR_WR1 Robot {
   ]
 }
 DEF PIR_WR2 Robot {
-  translation -4 5.82 2.3
-  rotation 0 0 1 -1.5708
+  translation -4 3.5 3.0
   children [
     Emitter {
       channel 1
@@ -1198,35 +1137,35 @@ DEF PIR_WR2 Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1239,8 +1178,7 @@ DEF PIR_WR2 Robot {
   ]
 }
 DEF PIR_WR3 Robot {
-  translation 0 5.82 2.3
-  rotation 0 0 1 -1.5708
+  translation 0 3.5 3.0
   children [
     Emitter {
       channel 1
@@ -1271,35 +1209,35 @@ DEF PIR_WR3 Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1312,8 +1250,7 @@ DEF PIR_WR3 Robot {
   ]
 }
 DEF PIR_WR4 Robot {
-  translation 4 5.82 2.3
-  rotation 0 0 1 -1.5708
+  translation 4 3.5 3.0
   children [
     Emitter {
       channel 1
@@ -1344,35 +1281,35 @@ DEF PIR_WR4 Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.55
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.55
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1385,8 +1322,7 @@ DEF PIR_WR4 Robot {
   ]
 }
 DEF PIR_DATACENTER Robot {
-  translation 9.8 2.2 2.3
-  rotation 0 0 1 3.14159
+  translation 8 3.5 3.0
   children [
     Emitter {
       channel 1
@@ -1417,35 +1353,35 @@ DEF PIR_DATACENTER Robot {
       ]
     }
     DistanceSensor {
-      rotation 0 1 0 0.35
+      rotation 0 1 0 1.5708
       name "ds_center"
       lookupTable [
         0 0 0
-        8 8 0
+        2.5 2.5 0
       ]
     }
     Pose {
-      rotation 0 0 1 0.45
+      translation 0 1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_left"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
     }
     Pose {
-      rotation 0 0 1 -0.45
+      translation 0 -1.0 0
       children [
         DistanceSensor {
-          rotation 0 1 0 0.3
+          rotation 0 1 0 1.5708
           name "ds_right"
           lookupTable [
             0 0 0
-            8 8 0
+            2.5 2.5 0
           ]
         }
       ]
@@ -1513,7 +1449,7 @@ DEF PERSON_ALICE Robot {
   recognitionColors [
     0.13 0.55 0.13
   ]
-  controller "person"
+  controller "<none>"
   supervisor TRUE
 }
 DEF PERSON_BRUNO Robot {
@@ -1572,7 +1508,7 @@ DEF PERSON_BRUNO Robot {
   recognitionColors [
     0.15 0.3 0.8
   ]
-  controller "person"
+  controller "<none>"
   supervisor TRUE
 }
 DEF PERSON_CARLA Robot {
@@ -1631,7 +1567,7 @@ DEF PERSON_CARLA Robot {
   recognitionColors [
     0.6 0.3 0.7
   ]
-  controller "person"
+  controller "<none>"
   supervisor TRUE
 }
 DEF PERSON_INTRUDER Robot {
@@ -1689,6 +1625,242 @@ DEF PERSON_INTRUDER Robot {
   }
   recognitionColors [
     0.15 0.15 0.15
+  ]
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_INTRUDER_WR1 Robot {
+  translation -8 -9.5 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.75 0.2 0.05
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+  ]
+  name "IntruderWR1"
+  model "person_unknown"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.75 0.2 0.05
+  ]
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_INTRUDER_2 Robot {
+  translation 2 -40 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.1 0.2 0.6
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+  ]
+  name "Intruder2"
+  model "person_unknown"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.1 0.2 0.6
+  ]
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_INTRUDER_3 Robot {
+  translation 4 -40 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.1 0.4 0.1
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+  ]
+  name "Intruder3"
+  model "person_unknown"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.1 0.4 0.1
+  ]
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_INTRUDER_4 Robot {
+  translation 6 -40 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.5 0.1 0.5
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+  ]
+  name "Intruder4"
+  model "person_unknown"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.5 0.1 0.5
   ]
   controller "person"
   supervisor TRUE
@@ -1811,11 +1983,214 @@ DEF PATROL_ROBOT Robot {
       }
     ]
   }
-  recognitionColors [
-    0.1 0.3 0.9
-  ]
   controller "patrol_agent"
   supervisor TRUE
+}
+DEF FACECAM_BREAK Robot {
+  translation 5 -1.1 2.15
+  rotation 0 0 1 -1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.18
+            roughness 0.4
+            metalness 0.4
+          }
+          geometry Box {
+            size 0.14 0.07 0.07
+          }
+        }
+        Camera {
+          translation 0.08 0 0
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+  name "facecam_break_room"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=break_room"
+    "--max-dist=6"
+  ]
+}
+DEF FACECAM_WR1 Robot {
+  translation -8 1.1 2.15
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.18
+            roughness 0.4
+            metalness 0.4
+          }
+          geometry Box {
+            size 0.14 0.07 0.07
+          }
+        }
+        Camera {
+          translation 0.08 0 0
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+  name "facecam_work_room_1"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=work_room_1"
+  ]
+}
+DEF FACECAM_WR2 Robot {
+  translation -4 1.1 2.15
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.18
+            roughness 0.4
+            metalness 0.4
+          }
+          geometry Box {
+            size 0.14 0.07 0.07
+          }
+        }
+        Camera {
+          translation 0.08 0 0
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+  name "facecam_work_room_2"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=work_room_2"
+  ]
+}
+DEF FACECAM_WR3 Robot {
+  translation 0 1.1 2.15
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.18
+            roughness 0.4
+            metalness 0.4
+          }
+          geometry Box {
+            size 0.14 0.07 0.07
+          }
+        }
+        Camera {
+          translation 0.08 0 0
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+  name "facecam_work_room_3"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=work_room_3"
+  ]
+}
+DEF FACECAM_WR4 Robot {
+  translation 4 1.1 2.15
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      rotation 0 1 0 0.45
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.15 0.15 0.18
+            roughness 0.4
+            metalness 0.4
+          }
+          geometry Box {
+            size 0.14 0.07 0.07
+          }
+        }
+        Camera {
+          translation 0.08 0 0
+          fieldOfView 1.2
+          width 320
+          height 240
+          recognition Recognition {
+            maxRange 6
+          }
+        }
+      ]
+    }
+  ]
+  name "facecam_work_room_4"
+  controller "face_id_agent"
+  controllerArgs [
+    "--gate=work_room_4"
+  ]
 }
 DEF SECURITY_SUPERVISOR Robot {
   translation 0 -10.5 0.05

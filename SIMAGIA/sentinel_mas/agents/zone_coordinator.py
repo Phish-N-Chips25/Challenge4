@@ -177,7 +177,7 @@ class BDIDeliberationCycle(PeriodicBehaviour):
                 and patrol_status not in ("en_route", "intruder_confirmed")):
             await self.send(build_msg(
                 settings.PATROL_JID, REQUEST,
-                {"action": "patrol_wanted", "zone": self.agent.zone_id},
+                {"action": "patrol_wanted", "zone": self.agent.zone_id, "priority": threat},
             ))
 
         # ── 3. Plan selection (utility-weighted) ─────────────

@@ -62,22 +62,22 @@ def fuse(zone_id: str, b) -> tuple[int, str]:
             return M, "unidentified presence" if zone_id == "lobby" else "perimeter presence"
         return L, "clear"
 
-    # ── Lab (motion + cyber, NO camera → cannot verify face) ──
-    if zone_id == "lab":
-        if cyber and physical:
+    # ── Work rooms (motion + camera + cyber) ─────────────────
+    if zone_id in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
+        if cyber and physical and unknown:
             return H, "presence correlated with cyber anomaly (patrol for ID)"
+        if cyber and physical and authorized:
+            return L, "authorized employee during anomaly — benign"
+        if cyber and physical:
+            return H, "unidentified presence during cyber anomaly"
         if cyber:
             return H, "compromised workstation"
+        if physical and unknown:
+            return H, "unidentified presence in work area"
+        if physical and authorized:
+            return L, "authorized presence"
         if physical:
-            return M, "unidentified presence (no camera coverage)"
-        return L, "clear"
-
-    # ── Corridor (motion only) ───────────────────────────────
-    if zone_id == "corridor":
-        if motion >= 3:
-            return M, "suspicious loitering"
-        if physical:
-            return L, "transit"
+            return M, "unidentified presence"
         return L, "clear"
 
     # ── Fallback for any unlisted zone ───────────────────────
