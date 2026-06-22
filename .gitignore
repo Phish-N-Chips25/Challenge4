@@ -1,3 +1,12 @@
 __pycache__/
 *.pyc
 .*.wbproj
+.DS_Store
+.logs/
+.docker/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+# Vendor Booster locomotion config drop-in (proprietary, per-robot calibration)
+external/booster_runner/booster_config/
+external/booster_runner/opt_booster/
