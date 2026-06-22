@@ -73,7 +73,10 @@ class SimulatedFaceSensor(PeriodicBehaviour):
 
     async def run(self):
         if random.random() < 0.12:
-            zone = random.choice(settings.ZONES)
+            camera_zones = settings.zones_with("camera")   # a face needs a camera
+            if not camera_zones:
+                return
+            zone = random.choice(camera_zones)
             identity = random.choice(["alice", "bob", "unknown", "unknown"])
             msg = build_msg(settings.ZONE_COORDINATOR_JIDS[zone], INFORM, {
                 "event": "face_detected",
@@ -129,7 +132,10 @@ class SimulatedCyberSensor(PeriodicBehaviour):
 
     async def run(self):
         if random.random() < 0.10:
-            zone = random.choice(["server_room", "lab"])  # cyber assets live here
+            cyber_zones = settings.zones_with("cyber")   # zones with cyber assets
+            if not cyber_zones:
+                return
+            zone = random.choice(cyber_zones)
             msg = build_msg(settings.ZONE_COORDINATOR_JIDS[zone], INFORM, {
                 "event": "cyber_anomaly",
                 "zone": zone,
@@ -189,126 +195,93 @@ class StressBurstSensor(PeriodicBehaviour):
       every burst so that, across rounds, every zone gets a turn as the
       top bidder and auctions have genuine competition.
 
-    Threat-level mapping (per threat_fusion rules):
-      server_room CRITICAL → cyber + motion + unknown_face
-      server_room HIGH     → cyber only  (remote attack, no physical)
-      lobby/exterior HIGH  → motion + unknown_face
-      lab HIGH             → cyber + motion
-      corridor HIGH*       → motion_count ≥ 3  (needs multiple motion msgs)
+    Threat-level mapping (per threat_fusion rules, keyed on zone CAPABILITY):
+      cyber+camera CRITICAL → cyber + motion + unknown_face
+      cyber+camera HIGH     → cyber only  (remote attack, no physical)
+      camera-only  HIGH     → motion + unknown_face
+      cyber-only   HIGH     → cyber + motion
+      motion-only  HIGH*    → motion_count ≥ 3  (needs multiple motion msgs)
 
-    * corridor can only reach MEDIUM via threat_fusion, so it is skipped
-      from the CRITICAL slot rotation (it would never bid at HIGH anyway).
+    * motion-only zones can only reach MEDIUM via threat_fusion, so they are
+      skipped from the rotation (they would never bid at HIGH anyway).
     """
-
-    # Zones that can reach HIGH or above — rotation candidates
-    ROTATABLE = ["server_room", "lobby", "exterior", "lab"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._rotation_idx = 0          # which zone gets CRITICAL this round
+        # Rotation candidates: any zone that can reach HIGH+ — i.e. has camera
+        # OR cyber. Derived from modalities, so it tracks settings, not names.
+        self.rotatable = [z for z in settings.ZONES
+                          if {"camera", "cyber"} & settings.ZONE_MODALITIES.get(z, set())]
+
+    async def _emit(self, zone: str, event: dict):
+        event = {**event, "zone": zone, "source": "stress_burst"}
+        await self.send(build_msg(settings.ZONE_COORDINATOR_JIDS[zone], INFORM, event))
+
+    async def _motion(self, zone):
+        await self._emit(zone, {"event": "motion_detected"})
+
+    async def _cyber(self, zone, lo, hi):
+        await self._emit(zone, {"event": "cyber_anomaly",
+                                "score": round(random.uniform(lo, hi), 2)})
+
+    async def _unknown_face(self, zone, lo, hi):
+        await self._emit(zone, {"event": "face_detected", "identity": "unknown",
+                                "confidence": round(random.uniform(lo, hi), 2),
+                                "liveness": True})
 
     async def _send_critical(self, zone: str):
-        """Emit events that push *zone* to CRITICAL (or its max reachable level)."""
-        if zone == "server_room":
-            # cyber + motion + unknown_face  →  CRITICAL (line 39 threat_fusion)
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "cyber_anomaly", "zone": zone,
-                 "score": round(random.uniform(0.85, 0.99), 2),
-                 "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "face_detected", "zone": zone,
-                 "identity": "unknown",
-                 "confidence": round(random.uniform(0.80, 0.99), 2),
-                 "liveness": True, "source": "stress_burst"},
-            ))
-
-        elif zone in ("lobby", "exterior"):
-            # motion + unknown_face  →  HIGH (visual intruder / unknown approach)
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "face_detected", "zone": zone,
-                 "identity": "unknown",
-                 "confidence": round(random.uniform(0.80, 0.99), 2),
-                 "liveness": True, "source": "stress_burst"},
-            ))
-
-        elif zone == "lab":
+        """Emit events that push *zone* to CRITICAL (or its max reachable level),
+        based on which sensor modalities the zone has."""
+        mods = settings.ZONE_MODALITIES.get(zone, set())
+        has_camera, has_cyber = "camera" in mods, "cyber" in mods
+        if has_cyber and has_camera:
+            # cyber + motion + unknown_face  →  CRITICAL
+            await self._motion(zone)
+            await self._cyber(zone, 0.85, 0.99)
+            await self._unknown_face(zone, 0.80, 0.99)
+        elif has_camera:
+            # motion + unknown_face  →  HIGH (visual intruder)
+            await self._motion(zone)
+            await self._unknown_face(zone, 0.80, 0.99)
+        elif has_cyber:
             # cyber + motion  →  HIGH (presence correlated with cyber anomaly)
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "cyber_anomaly", "zone": zone,
-                 "score": round(random.uniform(0.85, 0.99), 2),
-                 "source": "stress_burst"},
-            ))
+            await self._motion(zone)
+            await self._cyber(zone, 0.85, 0.99)
 
     async def _send_high(self, zone: str):
         """Emit events that push *zone* to HIGH (but not CRITICAL)."""
-        if zone == "server_room":
+        mods = settings.ZONE_MODALITIES.get(zone, set())
+        has_camera, has_cyber = "camera" in mods, "cyber" in mods
+        if has_cyber and has_camera:
             # cyber only, no physical  →  HIGH "remote attack"
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "cyber_anomaly", "zone": zone,
-                 "score": round(random.uniform(0.75, 0.90), 2),
-                 "source": "stress_burst"},
-            ))
-
-        elif zone in ("lobby", "exterior"):
+            await self._cyber(zone, 0.75, 0.90)
+        elif has_camera:
             # motion + unknown_face  →  HIGH
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "face_detected", "zone": zone,
-                 "identity": "unknown",
-                 "confidence": round(random.uniform(0.75, 0.92), 2),
-                 "liveness": True, "source": "stress_burst"},
-            ))
-
-        elif zone == "lab":
+            await self._motion(zone)
+            await self._unknown_face(zone, 0.75, 0.92)
+        elif has_cyber:
             # cyber + motion  →  HIGH
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "cyber_anomaly", "zone": zone,
-                 "score": round(random.uniform(0.65, 0.85), 2),
-                 "source": "stress_burst"},
-            ))
+            await self._motion(zone)
+            await self._cyber(zone, 0.65, 0.85)
 
     async def run(self):
-        critical_zone = self.ROTATABLE[self._rotation_idx % len(self.ROTATABLE)]
+        if not self.rotatable:
+            return
+        critical_zone = self.rotatable[self._rotation_idx % len(self.rotatable)]
         self._rotation_idx += 1
 
         self.agent.log(
             f"=== STRESS BURST #{self._rotation_idx}: "
             f"CRITICAL slot → '{critical_zone}', "
-            f"HIGH → {[z for z in self.ROTATABLE if z != critical_zone]} ==="
+            f"HIGH → {[z for z in self.rotatable if z != critical_zone]} ==="
         )
 
         # ── 0. Reset sensor beliefs in all rotatable zones so stale physical_presence /
         #       unknown_face from previous rounds don't bleed into the new profile.
         #       We use "belief_reset" (NOT patrol_report/clear) to avoid flipping
         #       patrol_status from "en_route" to "clear" mid-mission.
-        for zone in self.ROTATABLE:
+        for zone in self.rotatable:
             await self.send(build_msg(
                 settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
                 {"event": "belief_reset", "zone": zone, "source": "stress_burst"},
@@ -319,7 +292,7 @@ class StressBurstSensor(PeriodicBehaviour):
         # ── 1. Fire the crafted threat profile
         await self._send_critical(critical_zone)
 
-        for zone in self.ROTATABLE:
+        for zone in self.rotatable:
             if zone != critical_zone:
                 await self._send_high(zone)
 

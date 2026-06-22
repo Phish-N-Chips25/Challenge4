@@ -33,6 +33,7 @@ from spade.behaviour import CyclicBehaviour, OneShotBehaviour, PeriodicBehaviour
 from spade.template import Template
 
 from config import settings
+from bridges.nav_bridge import make_navigator
 from utils import build_msg, parse_body
 from utils.messaging import (
     REQUEST, INFORM, CFP, PROPOSE, ACCEPT_PROPOSAL, REJECT_PROPOSAL,
@@ -366,9 +367,11 @@ class PatrolAgent(Agent):
         self.current_requester = None  # jid of the coordinator we're serving
         self.next_mission = None     # dict queued by AuctionBehaviour on preempt
         self.last_auction = None     # summary of the most recent auction
-        self.pos = settings.PATROL_BASE_POS   # (x, y) on the 2D map
+        self.pos = settings.PATROL_BASE_POS   # (x, y) in Webots metres
         self.phase = "idle"          # idle | traveling | scanning | returning
-        self.nav = NavigationStub()
+        # Real RL navigation policy when available (cyberpatrol env), else the
+        # legacy point-glide stub — same move()/scan_zone() interface either way.
+        self.nav = make_navigator() or NavigationStub()
         self.abort_event = asyncio.Event()   # set to interrupt current movement
 
     def log(self, text: str):
@@ -376,7 +379,7 @@ class PatrolAgent(Agent):
         dashboard_log.push("Patrol", text)
 
     async def setup(self):
-        self.log("starting (hybrid: Contract Net auctioneer + RL nav stub)")
+        self.log(f"starting (hybrid: Contract Net auctioneer + {type(self.nav).__name__})")
 
         # Listen for "patrol_wanted" announcements (REQUEST)
         demand_tmpl = Template()

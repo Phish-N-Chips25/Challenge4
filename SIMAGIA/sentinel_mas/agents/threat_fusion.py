@@ -31,11 +31,19 @@ def _flags(b):
 
 
 def fuse(zone_id: str, b) -> tuple[int, str]:
-    """Return (threat_level, interpretation) for a zone given its beliefs."""
-    cyber, physical, unknown, authorized, motion = _flags(b)
+    """Return (threat_level, interpretation) for a zone given its beliefs.
 
-    # ── Server Room (motion + camera + cyber) ────────────────
-    if zone_id == "server_room":
+    Zone-agnostic: the rules key off the zone's *capabilities* (which sensor
+    modalities it has) rather than its name, so adding/renaming zones only
+    needs a settings.ZONE_MODALITIES entry — no edits here. The four capability
+    profiles correspond to the original design's four zone archetypes."""
+    cyber, physical, unknown, authorized, motion = _flags(b)
+    mods = settings.ZONE_MODALITIES.get(zone_id, {"motion"})
+    has_camera = "camera" in mods
+    has_cyber  = "cyber" in mods
+
+    # ── Cyber + camera (e.g. datacenter) → richest, can reach CRITICAL ──
+    if has_cyber and has_camera:
         if cyber and physical and unknown:
             return C, "correlated critical incident (cyber + intruder)"
         if cyber and physical and not authorized:
@@ -52,18 +60,8 @@ def fuse(zone_id: str, b) -> tuple[int, str]:
             return M, "unidentified presence"
         return L, "clear"
 
-    # ── Lobby / Exterior (motion + camera, no cyber) ─────────
-    if zone_id in ("lobby", "exterior"):
-        if physical and unknown:
-            return H, "visual intruder" if zone_id == "lobby" else "unknown approach"
-        if physical and authorized:
-            return L, "authorized presence"
-        if physical:
-            return M, "unidentified presence" if zone_id == "lobby" else "perimeter presence"
-        return L, "clear"
-
-    # ── Lab (motion + cyber, NO camera → cannot verify face) ──
-    if zone_id == "lab":
+    # ── Cyber, NO camera (e.g. work rooms) → cannot verify a face ──
+    if has_cyber:
         if cyber and physical:
             return H, "presence correlated with cyber anomaly (patrol for ID)"
         if cyber:
@@ -72,23 +70,19 @@ def fuse(zone_id: str, b) -> tuple[int, str]:
             return M, "unidentified presence (no camera coverage)"
         return L, "clear"
 
-    # ── Corridor (motion only) ───────────────────────────────
-    if zone_id == "corridor":
-        if motion >= 3:
-            return M, "suspicious loitering"
+    # ── Camera, no cyber (e.g. lobby / break_room) → visual ID, no cyber ──
+    if has_camera:
+        if physical and unknown:
+            return H, "visual intruder"
+        if physical and authorized:
+            return L, "authorized presence"
         if physical:
-            return L, "transit"
+            return M, "unidentified presence"
         return L, "clear"
 
-    # ── Fallback for any unlisted zone ───────────────────────
-    if cyber and unknown:
-        return C, "cyber + intruder"
-    if cyber and not physical:
-        return H, "remote anomaly"
-    if unknown:
-        return M, "unidentified presence"
-    if cyber:
-        return M, "cyber anomaly"
+    # ── Motion only (e.g. corridor) → transit, loitering at best MEDIUM ──
+    if motion >= 3:
+        return M, "suspicious loitering"
     if physical:
-        return M, "presence"
+        return L, "transit"
     return L, "clear"

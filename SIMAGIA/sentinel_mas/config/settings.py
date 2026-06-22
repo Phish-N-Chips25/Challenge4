@@ -16,29 +16,52 @@ XMPP_PORT        = 5322   # client port (replaces 5222)
 XMPP_SERVER_PORT = 5326   # S2S port    (replaces 5269)
 
 # ── Zone definitions ─────────────────────────────────────────
-ZONES = ["lobby", "server_room", "lab", "corridor", "exterior"]
+# The 8 zones of the Webots office (sentinelmas_office.wbt), the single source
+# of truth shared with the RL navigation stack (env.py DEFAULT_ZONE_POS).
+ZONES = ["lobby", "break_room", "corridor",
+         "work_room_1", "work_room_2", "work_room_3", "work_room_4", "datacenter"]
 
-# Sensor modalities available per zone (from the design table).
-# Used by the threat-fusion rules and to warn on impossible injections.
+# Sensor modalities available per zone. These DRIVE the threat-fusion logic
+# (threat_fusion.py keys off capability, not zone name), so the threat model
+# follows whatever sensors a room has:
+#   motion+camera+cyber → can reach CRITICAL (the datacenter / crown jewel)
+#   motion+cyber        → HIGH  (workstations, no camera to verify a face)
+#   motion+camera       → HIGH  (public space, visual ID but no cyber assets)
+#   motion              → MEDIUM (transit only)
 ZONE_MODALITIES = {
     "lobby":       {"motion", "camera"},
-    "server_room": {"motion", "camera", "cyber"},
-    "lab":         {"motion", "cyber"},
+    "break_room":  {"motion", "camera"},
     "corridor":    {"motion"},
-    "exterior":    {"motion", "camera"},
+    "work_room_1": {"motion", "cyber"},
+    "work_room_2": {"motion", "cyber"},
+    "work_room_3": {"motion", "cyber"},
+    "work_room_4": {"motion", "cyber"},
+    "datacenter":  {"motion", "camera", "cyber"},
 }
 
-# ── 2D map layout (top-down dashboard) ───────────────────────
-# Positions on a 0..100 grid (y grows downwards), used to draw the floor plan
-# and to move the patrol robot between rooms.
+# ── 2D map layout ────────────────────────────────────────────
+# Zone-centre positions in Webots world METRES (x in [-10,10], y in [-6,6]),
+# identical to env.DEFAULT_ZONE_POS so the MAS, the planner and the policy all
+# agree on where each zone is. The dashboard transforms these into its SVG
+# viewBox for rendering (see dashboard.py).
 ZONE_POS = {
-    "exterior":    (50, 13),
-    "server_room": (22, 35),
-    "lab":         (78, 35),
-    "corridor":    (50, 57),
-    "lobby":       (50, 83),
+    "lobby":       (-5.0, -3.5),
+    "break_room":  ( 5.0, -3.5),
+    "corridor":    ( 0.0,  0.0),
+    "work_room_1": (-8.0,  3.5),
+    "work_room_2": (-4.0,  3.5),
+    "work_room_3": ( 0.0,  3.5),
+    "work_room_4": ( 4.0,  3.5),
+    "datacenter":  ( 8.0,  3.5),
 }
-PATROL_BASE_POS = (50, 70)      # robot dock (idle position)
+PATROL_BASE_POS = (9.0, 0.0)    # PATROL_ROBOT spawn/dock in sentinelmas_office.wbt
+
+
+def zones_with(modality: str) -> list[str]:
+    """Zones whose sensor suite includes `modality` (e.g. "camera", "cyber").
+    Lets reactive sensors target only the zones they can actually sense,
+    without hardcoding zone names."""
+    return [z for z in ZONES if modality in ZONE_MODALITIES.get(z, set())]
 
 # Patrol movement — lower speed = slower robot = easier to watch on the map.
 PATROL_SPEED = 3.0              # map units per second  (era 7.0 — mais lento = mais fácil de observar)
@@ -79,6 +102,17 @@ ALERT_JID             = jid("alert")
 # agree    → acceptance of a request
 # refuse   → rejection of a request
 # failure  → action failed notification
+
+# ── RL navigation layer ──────────────────────────────────────
+# Where the trained PPO policy and the RL modules (policy_runner, path_planner,
+# env, ...) live, relative to this repo's sibling cyber-physical-security-system.
+# patrol.py adds RL_DIR to sys.path and loads NAV_MODEL_PATH. Set USE_PPO_NAV=0
+# to keep the legacy NavigationStub (no model / Webots needed).
+_HERE = os.path.dirname(os.path.abspath(__file__))                       # .../config
+_REPO_ROOT = os.path.abspath(os.path.join(_HERE, "..", "..", ".."))      # .../Challenge4
+RL_DIR = os.path.join(_REPO_ROOT, "cyber-physical-security-system", "src", "rl")
+NAV_MODEL_PATH = os.path.join(RL_DIR, "data", "models", "nav_ppo_final")
+USE_PPO_NAV = os.getenv("USE_PPO_NAV", "1") == "1"
 
 # ── ROS 2 bridge ─────────────────────────────────────────────
 ROS2_ENABLED = False                 # flip when ROS2 node is up

@@ -59,6 +59,59 @@ class WebInjectorAgent(Agent):
 
 
 # ════════════════════════════════════════════════════════════
+#  Coordinate projection: Webots metres → SVG viewBox (0..100)
+# ════════════════════════════════════════════════════════════
+# ZONE_POS / patrol.pos are now in Webots metres (x∈[-10,10], y∈[-6,6], y-up).
+# The dashboard SVG draws on a 0..100 grid with y growing DOWN, so project the
+# bounding box of all zones+base into [pad, 100-pad] and flip y. Derived from
+# the actual positions, so it adapts to any layout with no hardcoded numbers.
+
+def _load_walls_raw():
+    """Wall segments (metres) from the RL office_map — the SAME geometry the
+    path planner uses, parsed from the .wbt. Soft-fails to [] (schematic only)
+    if the RL stack isn't importable here."""
+    try:
+        import sys
+        if settings.RL_DIR not in sys.path:
+            sys.path.insert(0, settings.RL_DIR)
+        from office_map import WALLS
+        return [tuple(map(float, w)) for w in WALLS]
+    except Exception as e:
+        print(f"[dashboard] wall geometry unavailable ({e!r}); drawing schematic only.")
+        return []
+
+
+_WALLS_RAW = _load_walls_raw()
+
+
+def _make_projector():
+    # Base the projection on the WALLS extent (true building bounds) so the whole
+    # floor plan fits; fall back to zones+base if no walls are available.
+    pts = list(settings.ZONE_POS.values()) + [tuple(settings.PATROL_BASE_POS)]
+    for (x1, y1, x2, y2) in _WALLS_RAW:
+        pts.append((x1, y1))
+        pts.append((x2, y2))
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    xmin, xmax, ymin, ymax = min(xs), max(xs), min(ys), max(ys)
+    padx = (xmax - xmin) * 0.04 or 1.0
+    pady = (ymax - ymin) * 0.04 or 1.0
+    xmin, xmax = xmin - padx, xmax + padx
+    ymin, ymax = ymin - pady, ymax + pady
+
+    def project(x, y):
+        sx = (x - xmin) / (xmax - xmin) * 100.0
+        sy = (1.0 - (y - ymin) / (ymax - ymin)) * 100.0   # flip: metre y-up → svg y-down
+        return round(sx, 2), round(sy, 2)
+    return project
+
+
+_PROJECT = _make_projector()
+# Project the static wall segments once.
+_PROJECTED_WALLS = [[*_PROJECT(x1, y1), *_PROJECT(x2, y2)]
+                    for (x1, y1, x2, y2) in _WALLS_RAW]
+
+
+# ════════════════════════════════════════════════════════════
 #  State + HTTP handlers
 # ════════════════════════════════════════════════════════════
 
@@ -68,7 +121,7 @@ def _build_state(zcs: dict, patrol) -> dict:
         zc = zcs.get(zid)
         b = zc.beliefs if zc else None
         get = (lambda k, d=None: b.get(k, d)) if b else (lambda k, d=None: d)
-        px, py = settings.ZONE_POS.get(zid, (50, 50))
+        px, py = _PROJECT(*settings.ZONE_POS.get(zid, (0, 0)))
         zones.append({
             "zone": zid,
             "threat": get("threat_level", 0) or 0,
@@ -83,16 +136,19 @@ def _build_state(zcs: dict, patrol) -> dict:
             "x": px, "y": py,
         })
     rpos = getattr(patrol, "pos", settings.PATROL_BASE_POS)
+    rx, ry = _PROJECT(rpos[0], rpos[1])
+    bx, by = _PROJECT(*settings.PATROL_BASE_POS)
     return {
         "zones": zones,
         "patrol": {
             "busy": bool(getattr(patrol, "busy", False)),
             "zone": getattr(patrol, "current_zone", None),
             "phase": getattr(patrol, "phase", "idle"),
-            "x": rpos[0], "y": rpos[1],
+            "x": rx, "y": ry,
             "last_auction": getattr(patrol, "last_auction", None),
         },
-        "base": {"x": settings.PATROL_BASE_POS[0], "y": settings.PATROL_BASE_POS[1]},
+        "base": {"x": bx, "y": by},
+        "walls": _PROJECTED_WALLS,
         "log": dashboard_log.snapshot(60),
         "events": {k: v["label"] for k, v in EVENTS.items()},
         "scenarios": {k: v["label"] for k, v in SCENARIOS.items()},
@@ -164,9 +220,9 @@ PAGE = r"""<!doctype html>
   #map { width: 100%; aspect-ratio: 1/1; background: #0c0e13; border-radius: 10px;
          border: 1px solid #222838; }
   .room { transition: fill .4s, stroke .4s; }
-  .roomlbl { font: 600 3.2px ui-sans-serif, sans-serif; fill: #e8ecf6; text-anchor: middle; }
-  .roomth  { font: 700 2.6px ui-sans-serif, sans-serif; text-anchor: middle; }
-  .link { stroke: #2a3142; stroke-width: 1.1; }
+  .roomlbl { font: 600 3px ui-sans-serif, sans-serif; fill: #e8ecf6; text-anchor: middle; }
+  .roomth  { font: 700 2.4px ui-sans-serif, sans-serif; text-anchor: middle; }
+  .wall { stroke: #6b7488; stroke-width: 0.9; stroke-linecap: round; }
   #robot { transition: transform .6s linear; }
   #robot.moving .ring { animation: pulse 1s ease-out infinite; }
   @keyframes pulse { from { r: 3; opacity:.7 } to { r: 7; opacity:0 } }
@@ -225,7 +281,7 @@ PAGE = r"""<!doctype html>
 const THREAT = {
   0:{l:"LOW",c:"#2e7d32"}, 1:{l:"MEDIUM",c:"#f9a825"},
   2:{l:"HIGH",c:"#ef6c00"}, 3:{l:"CRITICAL",c:"#c62828"} };
-const RW = 26, RH = 15;        // room size on the 0..100 grid
+const RW = 16, RH = 14;        // room size on the 0..100 grid (sized for 8 office zones)
 let EVENTS = {}, SCENARIOS = {}, mapBuilt = false;
 
 async function inject(zone, choice) {

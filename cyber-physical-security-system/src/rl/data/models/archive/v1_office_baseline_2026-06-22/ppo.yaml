@@ -20,20 +20,10 @@ env:
 
   base_pos: [9.0, 0.0]       # PATROL_ROBOT translation in sentinelmas_office.wbt
 
-  # TRAINING-REGION bounds only — where episodes spawn starts/goals and the
-  # out-of-bounds penalty applies. NOT part of the observation, so it is not a
-  # deployment constraint: the policy is layout-agnostic and runs in any size
-  # building. Matches sentinelmas_office.wbt here merely so training distances
-  # resemble the POC environment.
+  # Arena bounds from external Wall nodes in sentinelmas_office.wbt.
   arena:
     x: [-10.0, 10.0]         # west wall at -10, east wall at +10
     y: [  -6.0,  6.0]        # south wall at -6, north wall at +6
-
-  # Fixed reference horizon for distance normalisation in the observation.
-  # A constant length scale (NOT the arena diagonal) — this is the key to
-  # keeping the observation independent of building size. Should comfortably
-  # cover a single planner waypoint-leg.
-  norm_distance: 8.0
 
   # Robot velocity envelope — from unitree-g1-webots rpc_commands.py
   # Booster T1 safe walking limits (MOVEMENT_COMMANDS). Asymmetric vx is real.
@@ -51,10 +41,8 @@ env:
     progress: 1.0                      # potential-based reward per metre closed
     goal_reached: 50.0                 # terminal bonus for reaching the target zone
     step_penalty: 0.01                 # per-step cost (encourages directness)
-    action_smoothness_penalty: 0.15    # penalise jerky velocity changes (was 0.02 — kills jitter/loops)
+    action_smoothness_penalty: 0.02    # penalise jerky velocity changes
     out_of_bounds_penalty: 1.0         # penalty for leaving the arena
-    strafe_penalty: 0.08               # penalise lateral |vy| → turn-and-go, not crabbing
-    heading_alignment: 0.05            # reward facing the goal WHILE moving forward
 
 algorithm:
   name: "PPO"

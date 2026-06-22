@@ -63,23 +63,17 @@ DEFAULT_VEL_LIMITS = {
 class OfficeNavEnv(gym.Env):
     """Point-to-point navigation with a Booster-T1-faithful action space.
 
-    Observation (Box, 8-d, all in [-1, 1]) — LAYOUT-AGNOSTIC:
-        0   sin(heading)
-        1   cos(heading)
-        2   goal direction, forward  (body frame, UNIT vector — scale-free)
-        3   goal direction, lateral  (body frame, UNIT vector — scale-free)
-        4   distance to goal         (normalised by a FIXED horizon, not the
-                                      arena — saturates at 1.0 beyond it)
-        5   previous vx              (normalised to [-1, 1])
-        6   previous vy              (normalised to [-1, 1])
-        7   previous vyaw            (normalised to [-1, 1])
-
-    Deliberately carries NO absolute position and NO arena-derived scale, so
-    the policy is translation- and scale-invariant: a waypoint leg looks
-    identical in a closet or a warehouse. Spatial structure (where the
-    corridor/doors are) is the path planner's job, exactly like the walls —
-    the controller only ever knows "goal is THIS way, THIS far". This is what
-    makes the trained policy deployable to any building without retraining.
+    Observation (Box, 10-d, all in [-1, 1]):
+        0   x position            (normalised over arena x half-extent)
+        1   y position            (normalised over arena y half-extent)
+        2   sin(heading)
+        3   cos(heading)
+        4   goal error, forward   (body frame, normalised by arena diagonal)
+        5   goal error, lateral   (body frame, normalised by arena diagonal)
+        6   distance to goal      (normalised by arena diagonal)
+        7   previous vx           (normalised to [-1, 1])
+        8   previous vy           (normalised to [-1, 1])
+        9   previous vyaw         (normalised to [-1, 1])
 
     Action (Box, 3-d, normalised [-1, 1]): rescaled internally to the robot's
         body-frame velocity envelope (vx, vy, vyaw).  A symmetric, normalised
@@ -99,13 +93,15 @@ class OfficeNavEnv(gym.Env):
         cfg = config or {}
         self.render_mode = render_mode
 
-        # Training region bounds (Webots world metres). NOTE: this only bounds
-        # where TRAINING episodes spawn starts/goals and the out-of-bounds
-        # penalty — it is NOT baked into the observation, so it is not a
-        # deployment constraint. The trained policy runs in any size building.
+        # Arena bounds (Webots world metres, from external walls in .wbt)
         arena = cfg.get("arena", DEFAULT_ARENA)
         self._x_min, self._x_max = arena["x"]
         self._y_min, self._y_max = arena["y"]
+        self._x_half = (self._x_max - self._x_min) / 2.0   # 10.0 m
+        self._y_half = (self._y_max - self._y_min) / 2.0   # 6.0 m
+        self._diag = math.sqrt(
+            (self._x_max - self._x_min) ** 2 + (self._y_max - self._y_min) ** 2
+        )  # ~23.3 m — used for distance normalisation
 
         # Zone positions (Webots world metres)
         zone_pos = cfg.get("zone_pos", DEFAULT_ZONE_POS)
@@ -124,28 +120,17 @@ class OfficeNavEnv(gym.Env):
         self.goal_radius = cfg.get("goal_radius", 0.5)
         self._max_steps  = cfg.get("max_episode_steps", 400)
 
-        # Fixed reference horizon for distance normalisation. This is the ONE
-        # length scale the observation uses, and it is deliberately a constant
-        # (a "how far can I usefully see" range) rather than the arena diagonal
-        # — that is what keeps the observation independent of building size.
-        # The planner feeds short waypoint legs, so 8 m comfortably covers a leg.
-        self._norm_dist  = cfg.get("norm_distance", 8.0)
-
         # Reward weights
         r = cfg.get("reward", {})
         self.w_progress = r.get("progress", 1.0)
         self.r_goal     = r.get("goal_reached", 50.0)
         self.c_step     = r.get("step_penalty", 0.01)
-        self.c_smooth   = r.get("action_smoothness_penalty", 0.15)
+        self.c_smooth   = r.get("action_smoothness_penalty", 0.02)
         self.r_bounds   = r.get("out_of_bounds_penalty", 1.0)
-        # Forward-driving shaping → clean "turn-and-go" trajectories instead of
-        # curved crabbing/oscillation (see step()).
-        self.c_strafe   = r.get("strafe_penalty", 0.08)      # penalise |vy|
-        self.w_align    = r.get("heading_alignment", 0.05)   # face goal while moving
 
         # Spaces — normalised, symmetric action space (PPO best practice)
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(3,), dtype=np.float32)
-        self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(8,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(10,), dtype=np.float32)
 
         # Internal state
         self._pos         = np.zeros(2, dtype=np.float32)
@@ -169,16 +154,15 @@ class OfficeNavEnv(gym.Env):
         c, s = math.cos(-self._heading), math.sin(-self._heading)
         fwd = c * to_goal[0] - s * to_goal[1]
         lat = s * to_goal[0] + c * to_goal[1]
-        # Direction as a UNIT vector (scale-free); distance via a FIXED horizon.
-        # No absolute position, no arena-derived scale → layout-agnostic.
-        inv = 1.0 / max(dist, 1e-6)
 
         return np.array([
+            self._pos[0] / self._x_half,                    # x in [-10,10] → [-1,1]
+            self._pos[1] / self._y_half,                    # y in [-6,6]   → [-1,1]
             math.sin(self._heading),
             math.cos(self._heading),
-            fwd * inv,                                      # unit direction to goal
-            lat * inv,                                      # unit direction to goal
-            np.clip(dist / self._norm_dist, 0.0, 1.0),      # distance vs fixed horizon
+            np.clip(fwd  / self._diag, -1.0, 1.0),
+            np.clip(lat  / self._diag, -1.0, 1.0),
+            np.clip(dist / self._diag,  0.0, 1.0),
             self._prev_action[0],                           # previous (normalised) action
             self._prev_action[1],
             self._prev_action[2],
@@ -222,19 +206,12 @@ class OfficeNavEnv(gym.Env):
         self._heading = float(self.np_random.uniform(-math.pi, math.pi))
         self._prev_action[:] = 0.0
 
-        # Goal: a dispatched zone (for evaluation, as the MAS auction would
-        # provide) OR a uniformly random point in the training region. Training
-        # on arbitrary points — not just the 8 named zones — is what lets the
-        # policy generalise to ANY target the planner hands it, in any layout,
-        # rather than memorising a fixed set of destinations.
+        # Goal: a dispatched zone (as the MAS auction would provide) or random
         if options and options.get("goal_zone") in self.zone_pos:
             self._goal = self.zone_pos[options["goal_zone"]].copy()
         else:
-            margin = 0.5
-            self._goal = np.array([
-                self.np_random.uniform(self._x_min + margin, self._x_max - margin),
-                self.np_random.uniform(self._y_min + margin, self._y_max - margin),
-            ], dtype=np.float32)
+            zone = self.zones[self.np_random.integers(len(self.zones))]
+            self._goal = self.zone_pos[zone].copy()
 
         self._prev_dist = float(np.linalg.norm(self._goal - self._pos))
         return self._observe(), {}
@@ -246,24 +223,10 @@ class OfficeNavEnv(gym.Env):
 
         self._integrate(float(vx), float(vy), float(vyaw))
 
-        to_goal = self._goal - self._pos
-        dist = float(np.linalg.norm(to_goal))
+        dist = float(np.linalg.norm(self._goal - self._pos))
         reward  = self.w_progress * (self._prev_dist - dist)    # potential-based progress
         reward -= self.c_step                                    # efficiency cost
         reward -= self.c_smooth * float(np.linalg.norm(action - self._prev_action))
-
-        # Forward-driving shaping. Penalise lateral strafe so the only cheap way
-        # to move sideways is to turn and walk forward — clean turn-and-go rather
-        # than curved crabbing. action[1] is the normalised vy command.
-        reward -= self.c_strafe * abs(float(action[1]))
-
-        # Heading-alignment bonus, GATED on driving forward (vx>0) so it can't be
-        # farmed by spinning in place to face the goal while stationary.
-        if dist > self.goal_radius:
-            fwd_frac = max(0.0, float(vx) / self._v_high[0])     # 0..1 forward speed
-            goal_dir = math.atan2(float(to_goal[1]), float(to_goal[0]))
-            align = math.cos(goal_dir - self._heading)           # +1 facing goal
-            reward += self.w_align * align * fwd_frac
 
         terminated = False
         out_of_bounds = bool(
