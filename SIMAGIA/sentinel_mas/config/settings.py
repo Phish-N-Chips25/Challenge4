@@ -4,9 +4,10 @@ import os
 
 # ── Simulated sensors ────────────────────────────────────────
 # When True, the reactive agents emit random events on their own.
+# Set the env var SENTINEL_SIM=1 to enable them.
 # Set the env var SENTINEL_SIM=0 to disable them and drive the MAS
 # only through trigger.py (manual events).
-SIMULATED_SENSORS = False
+SIMULATED_SENSORS = os.getenv("SENTINEL_SIM", "0") == "1"
 
 # ── XMPP Server ──────────────────────────────────────────────
 XMPP_SERVER = "localhost"
