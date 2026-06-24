@@ -226,19 +226,16 @@ class StressBurstSensor(PeriodicBehaviour):
       every burst so that, across rounds, every zone gets a turn as the
       top bidder and auctions have genuine competition.
 
-    Threat-level mapping (per threat_fusion rules):
-      server_room CRITICAL → cyber + motion + unknown_face
+    Threat-level mapping (per threat_fusion rules / THREAT_SCORES.md):
+      server_room CRITICAL → physical + unknown  (ou unidentified + cyber)
       server_room HIGH     → cyber only  (remote attack, no physical)
-      lobby/exterior HIGH  → motion + unknown_face
-      lab HIGH             → cyber + motion
-      corridor HIGH*       → motion_count ≥ 3  (needs multiple motion msgs)
-
-    * corridor can only reach MEDIUM via threat_fusion, so it is skipped
-      from the CRITICAL slot rotation (it would never bid at HIGH anyway).
+      work_room   CRITICAL → cyber + motion + unknown_face
+      work_room   HIGH     → unknown / cyber / unidentified during cyber
+      lobby/exterior MAX   → MEDIUM (zona pública — não dispara HIGH/CRITICAL)
     """
 
     # Zones that can reach HIGH or above — rotation candidates
-    ROTATABLE = ["server_room", "lobby", "exterior",
+    ROTATABLE = ["server_room",
                  "work_room_1", "work_room_2", "work_room_3", "work_room_4"]
 
     def __init__(self, *args, **kwargs):
@@ -267,22 +264,8 @@ class StressBurstSensor(PeriodicBehaviour):
                  "liveness": True, "source": "stress_burst"},
             ))
 
-        elif zone in ("lobby", "exterior"):
-            # motion + unknown_face  →  HIGH (visual intruder / unknown approach)
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "face_detected", "zone": zone,
-                 "identity": "unknown",
-                 "confidence": round(random.uniform(0.80, 0.99), 2),
-                 "liveness": True, "source": "stress_burst"},
-            ))
-
         elif zone in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
-            # cyber + motion  →  HIGH (presence correlated with cyber anomaly)
+            # cyber + motion + unknown  →  CRITICAL
             await self.send(build_msg(
                 settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
                 {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
@@ -292,6 +275,13 @@ class StressBurstSensor(PeriodicBehaviour):
                 {"event": "cyber_anomaly", "zone": zone,
                  "score": round(random.uniform(0.85, 0.99), 2),
                  "source": "stress_burst"},
+            ))
+            await self.send(build_msg(
+                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
+                {"event": "face_detected", "zone": zone,
+                 "identity": "unknown",
+                 "confidence": round(random.uniform(0.80, 0.99), 2),
+                 "liveness": True, "source": "stress_burst"},
             ))
 
     async def _send_high(self, zone: str):
@@ -305,22 +295,8 @@ class StressBurstSensor(PeriodicBehaviour):
                  "source": "stress_burst"},
             ))
 
-        elif zone in ("lobby", "exterior"):
-            # motion + unknown_face  →  HIGH
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "motion_detected", "zone": zone, "source": "stress_burst"},
-            ))
-            await self.send(build_msg(
-                settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
-                {"event": "face_detected", "zone": zone,
-                 "identity": "unknown",
-                 "confidence": round(random.uniform(0.75, 0.92), 2),
-                 "liveness": True, "source": "stress_burst"},
-            ))
-
         elif zone in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
-            # cyber + motion  →  HIGH
+            # cyber + motion  →  HIGH (unidentified during cyber)
             await self.send(build_msg(
                 settings.ZONE_COORDINATOR_JIDS[zone], INFORM,
                 {"event": "motion_detected", "zone": zone, "source": "stress_burst"},

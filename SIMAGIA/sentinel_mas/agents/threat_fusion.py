@@ -1,16 +1,13 @@
 """Zone-aware threat fusion.
 
-Mirrors the per-zone "Possible Interactions" of the design table: each zone
-has its own sensor modalities and its own interpretation of the evidence.
-`fuse()` returns (threat_level, interpretation) so the ZoneCoordinator can
-both pick a plan (by level) and report *why* (the interpretation string).
+Rules per zone are defined in THREAT_SCORES.md.
 
 Belief flags consumed:
     cyber_anomaly     — a cyber log anomaly is active
-    physical_presence — motion/PIR (or any presence) detected
-    unknown_face      — a face was seen and did NOT match (mismatch)
+    physical_presence — motion/PIR detected
+    unknown_face      — a face was seen and did NOT match
     last_identity     — a face matched a known identity (authorized)
-    motion_count      — number of motion events since last clear (loitering)
+    motion_count      — number of motion events since last clear
 """
 
 from config import settings
@@ -22,11 +19,11 @@ C = settings.THREAT_CRITICAL
 
 
 def _flags(b):
-    cyber = bool(b.get("cyber_anomaly", False))
-    physical = bool(b.get("physical_presence", False))
-    unknown = bool(b.get("unknown_face", False))
+    cyber      = bool(b.get("cyber_anomaly", False))
+    physical   = bool(b.get("physical_presence", False))
+    unknown    = bool(b.get("unknown_face", False))
     authorized = bool(b.get("last_identity")) and not unknown
-    motion = b.get("motion_count", 0)
+    motion     = b.get("motion_count", 0)
     return cyber, physical, unknown, authorized, motion
 
 
@@ -34,61 +31,61 @@ def fuse(zone_id: str, b) -> tuple[int, str]:
     """Return (threat_level, interpretation) for a zone given its beliefs."""
     cyber, physical, unknown, authorized, motion = _flags(b)
 
-    # ── Server Room (motion + camera + cyber) ────────────────
-    if zone_id == "server_room":
-        if cyber and physical and unknown:
-            return C, "correlated critical incident (cyber + intruder)"
-        if cyber and physical and not authorized:
-            return C, "unidentified presence during cyber anomaly"
-        if cyber and authorized:
-            return L, "benign admin activity"
-        if cyber:                                   # cyber, no physical cover
-            return H, "remote attack (no physical presence)"
-        if physical and unknown:
-            return H, "physical intruder"
-        if physical and authorized:
-            return L, "authorized presence"
-        if physical:
-            return M, "unidentified presence"
-        return L, "clear"
-
-    # ── Lobby / Exterior (motion + camera, no cyber) ─────────
+    # ── Lobby / Exterior (zona pública — câmara + PIR) ───────────
     if zone_id in ("lobby", "exterior"):
-        if physical and unknown:
-            return H, "visual intruder" if zone_id == "lobby" else "unknown approach"
-        if physical and authorized:
-            return L, "authorized presence"
         if physical:
-            return M, "unidentified presence" if zone_id == "lobby" else "perimeter presence"
-        return L, "clear"
+            return M, "movimento detetado / pessoa presente"
+        return L, "sem atividade"
 
-    # ── Work rooms (motion + camera + cyber) ─────────────────
+    # ── Work Rooms (zona semi-restrita — câmara + PIR + cyber) ───
     if zone_id in ("work_room_1", "work_room_2", "work_room_3", "work_room_4"):
-        if cyber and physical and unknown:
-            return H, "presence correlated with cyber anomaly (patrol for ID)"
-        if cyber and physical and authorized:
-            return L, "authorized employee during anomaly — benign"
-        if cyber and physical:
-            return H, "unidentified presence during cyber anomaly"
-        if cyber:
-            return H, "compromised workstation"
-        if physical and unknown:
-            return H, "unidentified presence in work area"
-        if physical and authorized:
-            return L, "authorized presence"
-        if physical:
-            return M, "unidentified presence"
-        return L, "clear"
+        unidentified = physical and not unknown and not authorized
 
-    # ── Fallback for any unlisted zone ───────────────────────
+        if cyber and physical and unknown:
+            return C, "pessoa não autorizada + movimento + anomalia cibernética ativa"
+        if cyber and unknown:
+            return H, "face não reconhecida durante anomalia cibernética"
+        if cyber and unidentified:
+            return H, "presença não identificada durante anomalia cibernética"
+        if cyber and authorized:
+            return L, "funcionário autorizado presente"
+        if cyber:
+            return H, "estação de trabalho comprometida — ataque cibernético ativo"
+        if physical and unknown:
+            return H, "pessoa não autorizada + sensor de movimento"
+        if physical and authorized:
+            return L, "funcionário autorizado presente"
+        if physical:
+            return M, "movimento detetado — identidade desconhecida"
+        return L, "sem atividade"
+
+    # ── Server Room (zona crítica — câmara + PIR + cyber) ────────
+    if zone_id == "server_room":
+        unidentified = physical and not unknown and not authorized
+
+        if physical and unknown:
+            return C, "intruso confirmado no datacenter"
+        if unidentified and cyber:
+            return C, "presença não identificada + anomalia cibernética ativa no datacenter"
+        if cyber and not physical:
+            return H, "ataque remoto ativo — sem presença física"
+        if unidentified:
+            return H, "presença não identificada no datacenter — identidade por confirmar"
+        if authorized and cyber:
+            return M, "funcionário autorizado durante anomalia cibernética (possível insider)"
+        if authorized:
+            return M, "funcionário autorizado presente"
+        return L, "sem atividade"
+
+    # ── Fallback ──────────────────────────────────────────────────
     if cyber and unknown:
-        return C, "cyber + intruder"
+        return C, "anomalia cibernética + intruso"
     if cyber and not physical:
-        return H, "remote anomaly"
+        return H, "anomalia remota"
     if unknown:
-        return M, "unidentified presence"
+        return M, "presença não identificada"
     if cyber:
-        return M, "cyber anomaly"
+        return M, "anomalia cibernética"
     if physical:
-        return M, "presence"
-    return L, "clear"
+        return M, "presença"
+    return L, "sem atividade"

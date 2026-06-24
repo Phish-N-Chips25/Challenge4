@@ -18,6 +18,17 @@
 
 ---
 
+## EXTERIOR (Break Room)
+**Sensores:** Câmara facial + PIR  
+**Papel:** Zona pública exterior antes do lobby — mesmo critério que o lobby.
+
+| Score | Condição |
+|---|---|
+| LOW | Sem atividade |
+| MEDIUM | Movimento detetado / pessoa presente (autorizada ou não) |
+
+---
+
 ## WORK ROOMS (1–4)
 **Sensores:** Câmara facial + PIR + sensor cyber  
 **Papel:** Zona semi-restrita — só funcionários autorizados devem estar presentes.
