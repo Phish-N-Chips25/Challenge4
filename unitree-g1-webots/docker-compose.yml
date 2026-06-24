@@ -31,6 +31,9 @@ x-ros2-common: &ros2-common
     - ROBOT_NAME=${ROBOT_NAME:-T1_release}
   volumes:
     - .:/workspace/project
+    # RL nav code + trained model for ppo_patrol_node ("PPO drives the Booster").
+    # The policy lives in the sibling repo; mount it read-only at /workspace/rl.
+    - ../cyber-physical-security-system/src/rl:/workspace/rl:ro
   working_dir: /workspace/project/ros2_ws
   privileged: true
   shm_size: 4g
@@ -58,6 +61,7 @@ services:
       - linux
     volumes:
       - .:/workspace/project
+      - ../cyber-physical-security-system/src/rl:/workspace/rl:ro
       # X11 socket for GUI forwarding on Linux
       - /tmp/.X11-unix:/tmp/.X11-unix
     deploy:

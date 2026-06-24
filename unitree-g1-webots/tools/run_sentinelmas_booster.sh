@@ -169,7 +169,7 @@ docker exec "${CONTAINER_NAME}" pkill -f mck 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -9 -f rpc_service_node 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -f pose_file_odometry_publisher 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -f sim_lidar_pointcloud_node 2>/dev/null || true
-docker exec "${CONTAINER_NAME}" pkill -f booster_patrol_node 2>/dev/null || true
+docker exec "${CONTAINER_NAME}" pkill -f patrol_node 2>/dev/null || true
 sleep 1
 printf "Resetting runtime bridge logs after cleanup...\n"
 : > "${LOG_DIR}/booster_missions.jsonl"
@@ -329,8 +329,14 @@ done
 assert_booster_runner_healthy "${RUNNER_LOG}"
 
 # ── 8b. Start the Booster patrol node ────────────────────────────────────────
-printf "Starting Booster patrol node...\n"
-docker exec "${CONTAINER_NAME}" bash -lc '
+# Choose the patrol driver: their lidar node (default) or the PPO node
+# (USE_PPO_PATROL=1 → the trained policy drives; needs the /workspace/rl mount).
+PATROL_NODE="booster_patrol_node"
+if [[ "${USE_PPO_PATROL:-0}" == "1" ]]; then
+  PATROL_NODE="ppo_patrol_node"
+fi
+printf "Starting Booster patrol node (%s)...\n" "${PATROL_NODE}"
+docker exec --env PATROL_NODE="${PATROL_NODE}" "${CONTAINER_NAME}" bash -lc '
   set +u
   source /opt/ros/humble/setup.bash
   source /workspace/project/ros2_ws/install/setup.bash
@@ -341,7 +347,11 @@ docker exec "${CONTAINER_NAME}" bash -lc '
     export FASTDDS_DEFAULT_PROFILES_FILE="${profile}"
   fi
   export PATROL_LOG_DIR=/workspace/project/.logs
-  nohup ros2 run booster_t1_webots_test booster_patrol_node > /workspace/project/.logs/booster-patrol.log 2>&1 &
+  # Used only by ppo_patrol_node (harmless for the lidar node):
+  export PPO_RL_DIR=/workspace/rl
+  export PPO_MODEL_PATH=/workspace/rl/data/models/nav_ppo_final
+  export SENTINEL_WBT_PATH=/workspace/project/worlds/sentinelmas_office.wbt
+  nohup ros2 run booster_t1_webots_test "${PATROL_NODE}" > /workspace/project/.logs/booster-patrol.log 2>&1 &
   printf "%s\n" "$!" > /workspace/project/.logs/booster-patrol.pid
 '
 
@@ -417,7 +427,7 @@ PY
   done
   if [[ "${WEBOTS_CLEANUP_AFTER_HOLD}" != "0" && "${WEBOTS_CLEANUP_AFTER_HOLD}" != "false" ]]; then
     printf "Cleaning up monitored Webots/ROS runtime...\n"
-    docker exec "${CONTAINER_NAME}" pkill -f booster_patrol_node 2>/dev/null || true
+    docker exec "${CONTAINER_NAME}" pkill -f patrol_node 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -f pose_file_odometry_publisher 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -f sim_lidar_pointcloud_node 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -9 -f rpc_service_node 2>/dev/null || true
