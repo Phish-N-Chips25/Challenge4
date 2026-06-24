@@ -19,6 +19,24 @@ Official source trail:
 4. Download `webots_simulation.zip`.
 5. Download `booster-runner-full-0.0.10.run`.
 
+Shared robot external bundle:
+
+- https://myisepipp-my.sharepoint.com/:u:/g/personal/1252445_isep_ipp_pt/IQApkDUtz1n-RICUze9P7Tq_AUsIvdFpexjIQeeeho_KUkc?e=LnRR1t
+
+From `unitree-g1-webots/`, download the bundle with `curl`:
+
+```bash
+COOKIE_JAR="$(mktemp)"
+curl -L \
+  -c "$COOKIE_JAR" \
+  -b "$COOKIE_JAR" \
+  -o external/booster_runner/external.zip \
+  'https://myisepipp-my.sharepoint.com/:u:/g/personal/1252445_isep_ipp_pt/IQApkDUtz1n-RICUze9P7Tq_AUsIvdFpexjIQeeeho_KUkc?e=LnRR1t&download=1'
+rm -f "$COOKIE_JAR"
+```
+
+SharePoint sets a cookie during the first redirect, so plain `curl -L` may return `403 FORBIDDEN`. After downloading, extract `external.zip` and copy the required `.run` and `.zip` files into this directory.
+
 Public manual mirror for confirming filenames and sizes:
 
 - https://manuals.plus/m/00692b3719908055cd9ad4fb538b64d0e82668a893ec4f86dae52306b9e03f0b
