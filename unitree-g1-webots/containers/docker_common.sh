@@ -4,6 +4,7 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE_NAME="${IMAGE_NAME:-booster-t1-webots-ros:humble}"
 CONTAINER_NAME="${CONTAINER_NAME:-booster-t1-ros}"
+DOCKER_PLATFORM="${DOCKER_PLATFORM:-linux/amd64}"
 
 # ── Platform Detection ───────────────────────────────────────────────────────
 
@@ -57,6 +58,24 @@ auto_webots_path() {
   esac
 }
 
+load_project_env() {
+  local platform="${1:-$(detect_platform)}"
+  local env_file
+
+  for env_file in "${PROJECT_ROOT}/.env" "${PROJECT_ROOT}/.env.${platform}"; do
+    if [[ -f "${env_file}" ]]; then
+      set -a
+      # shellcheck disable=SC1090
+      source "${env_file}"
+      set +a
+    fi
+  done
+
+  IMAGE_NAME="${IMAGE_NAME:-booster-t1-webots-ros:humble}"
+  CONTAINER_NAME="${CONTAINER_NAME:-booster-t1-ros}"
+  DOCKER_PLATFORM="${DOCKER_PLATFORM:-linux/amd64}"
+}
+
 # ── Docker State Directories ─────────────────────────────────────────────────
 
 ensure_docker_state_dirs() {
@@ -98,6 +117,7 @@ append_runtime_args() {
   fi
 
   DOCKER_RUNTIME_ARGS+=(
+    --platform "${DOCKER_PLATFORM:-linux/amd64}"
     --privileged
     --shm-size 4g
     --ulimit memlock=-1:-1

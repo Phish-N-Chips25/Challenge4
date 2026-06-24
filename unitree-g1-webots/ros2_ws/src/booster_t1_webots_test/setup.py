@@ -30,7 +30,12 @@ setup(
             "low_state_listener = booster_t1_webots_test.low_state_listener:main",
             "simple_command_publisher = booster_t1_webots_test.simple_command_publisher:main",
             "webots_state_publisher = booster_t1_webots_test.webots_state_publisher:main",
+            "pose_file_odometry_publisher = booster_t1_webots_test.pose_file_odometry_publisher:main",
+            "sim_lidar_pointcloud_node = booster_t1_webots_test.sim_lidar_pointcloud_node:main",
             "rpc_movement_client = booster_t1_webots_test.rpc_movement_client:main",
+            "booster_patrol_node = booster_t1_webots_test.booster_patrol_node:main",
+            "booster_lidar_adapter = booster_t1_webots_test.booster_lidar_adapter:main",
+            "booster_localization_node = booster_t1_webots_test.booster_localization_node:main",
         ],
     },
 )

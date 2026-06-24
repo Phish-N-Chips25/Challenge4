@@ -1,12 +1,16 @@
-.venv/
+__pycache__/
+*.pyc
+.*.wbproj
+.DS_Store
 .logs/
 .docker/
-__pycache__/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+# Vendor Booster locomotion config drop-in (proprietary, per-robot calibration)
+external/booster_runner/booster_config/
+external/booster_runner/opt_booster/
 
-# User-specific environment overrides
-.env.local
-.env.*.local
-
-# Large vendor binaries
+# Vendor Booster runner binaries (huge, proprietary — never commit)
 external/booster_runner/*.run
 external/booster_runner/*.zip

@@ -8,5 +8,13 @@ topics:
   low_state:
     - /booster_t1/low_state
     - /low_state
+  odometry:
+    - /booster_t1/odom
+    - /odom
+  odometer:
+    - /booster_t1/odometer
+    - /odometer_state
+  odometry_diagnostics:
+    - /booster_t1/odometry_diagnostics
   safe_command:
     - /cmd_vel

@@ -18,6 +18,16 @@ resolve_runner() {
     return
   fi
 
+  # Prefer the simulation-capable build (see start_booster_webots_runner.sh):
+  # 0.0.11 hard-requires the unshipped /opt/booster/configs/robot_config.yaml;
+  # 0.0.10 walks with its bundled default config. Override with
+  # BOOSTER_RUNNER_PATH for a real robot or a different build.
+  local preferred="${ARTIFACT_DIR}/booster-runner-webots-full-0.0.10.run"
+  if [[ -f "${preferred}" ]]; then
+    printf '%s\n' "${preferred}"
+    return
+  fi
+
   runner="$(find "${ARTIFACT_DIR}" -maxdepth 1 -type f \
     \( -name 'booster-runner-webots-full-*.run' -o -name 'booster-runner-full-*.run' \) \
     ! -name '*7dof*' \
@@ -52,7 +62,7 @@ RUNNER="$(resolve_runner)"
 require_file "${RUNNER}"
 require_file "${WEBOTS_ZIP}"
 
-require_min_size "${RUNNER}" 90000000
+require_min_size "${RUNNER}" 80000000
 require_min_size "${WEBOTS_ZIP}" 4000000
 
 if [[ ! -x "${RUNNER}" ]]; then

@@ -6,8 +6,12 @@ from booster_t1_webots_test.rpc_commands import (
     MODE_PREPARE,
     MODE_WALKING,
     MOVEMENT_COMMANDS,
+    SAFE_PATH_COMMANDS,
+    SUPPORTED_COMMANDS,
     MovementCommand,
+    SafePathStep,
     get_movement_command,
+    get_safe_path_command,
     make_change_mode_request,
     make_move_request,
 )
@@ -45,11 +49,34 @@ class RpcCommandsTest(unittest.TestCase):
             make_move_request(stop.vx, stop.vy, stop.vyaw).body,
         )
 
+    def test_safe_dock_path_is_visible_and_uses_safe_movement_preset(self):
+        expected_path = (
+            SafePathStep(
+                command="forward",
+                duration=20.0,
+                note=(
+                    "Visible straight movement from the former PATROL_ROBOT "
+                    "dock inside the open corridor."
+                ),
+            ),
+        )
+
+        self.assertEqual(expected_path, SAFE_PATH_COMMANDS["safe_dock_path"])
+        self.assertEqual(expected_path, get_safe_path_command("safe_dock_path"))
+        self.assertIn("safe_dock_path", SUPPORTED_COMMANDS)
+        self.assertIn("safe_lobby_path", SUPPORTED_COMMANDS)
+
     def test_unknown_command_error_lists_supported_commands(self):
         with self.assertRaises(ValueError) as context:
             get_movement_command("jump")
 
         self.assertIn("forward", str(context.exception))
+
+    def test_unknown_safe_path_error_lists_supported_paths(self):
+        with self.assertRaises(ValueError) as context:
+            get_safe_path_command("unsafe_hallway")
+
+        self.assertIn("safe_dock_path", str(context.exception))
 
     def test_walking_mode_id_is_two(self):
         self.assertEqual(2, MODE_WALKING)

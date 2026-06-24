@@ -3,6 +3,9 @@ set -euo pipefail
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/docker_common.sh"
 
+PLATFORM="$(detect_platform)"
+load_project_env "${PLATFORM}"
+
 cd "${PROJECT_ROOT}"
 
 # Prefer docker compose build if docker-compose.yml exists, otherwise fallback
@@ -13,6 +16,7 @@ if [[ -f "${PROJECT_ROOT}/docker-compose.yml" ]]; then
 else
   printf 'No docker-compose.yml found — falling back to docker build...\n'
   docker build \
+    --platform "${DOCKER_PLATFORM:-linux/amd64}" \
     -t "${IMAGE_NAME}" \
     -f containers/Containerfile \
     .

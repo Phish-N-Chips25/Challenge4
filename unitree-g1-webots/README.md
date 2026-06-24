@@ -1,284 +1,123 @@
-# Booster T1 — Webots + ROS 2 Simulation Environment
+# SentinelMAS — Ambiente Webots da Empresa (Challenge 4)
 
-[![ROS 2 Humble](https://img.shields.io/badge/ROS%202-Humble-blue)](https://docs.ros.org/en/humble/)
-[![Webots R2025a](https://img.shields.io/badge/Webots-R2025a-green)](https://cyberbotics.com/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)](https://docs.docker.com/compose/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-orange)](LICENSE)
+Ambiente de simulação Webots que suporta o artigo *"SentinelMAS"* (Challenge 4):
+um robô de vigilância ciber-físico autónomo que funde telemetria digital e
+controlo de acesso físico numa única camada de raciocínio multi-agente.
 
-Simulation testbed, helper tools, and ROS 2 packages for controlling the **Booster T1** bipedal humanoid robot inside Webots. Runs on **Linux, macOS, and Windows** with Docker.
+## O ambiente
 
----
-
-## 🏗️ Architecture Overview
-
-Webots runs **natively on the host** while the ROS 2 controller stack runs inside a **Docker container**. Communication is routed over TCP.
-
-```mermaid
-graph TD
-    subgraph Host ["Host (Linux / macOS / Windows)"]
-        Webots["Webots R2025a"]
-        World["T1_break_room.wbt"]
-        Webots <-->|"Simulates Physics"| World
-    end
-
-    subgraph Container ["Docker Container: booster-t1-ros"]
-        Runner["Booster Runner<br/>mck executable"]
-        StatePub["webots_state_publisher"]
-        ROS2["ROS 2 Humble"]
-        Client["rpc_movement_client"]
-
-        Runner <-->|"TCP:1234"| Webots
-        StatePub -.->|"TCP:1234<br/>Passive"| Webots
-        Runner <-->|"RPC Service"| ROS2
-        Client -->|"/booster_rpc_service"| ROS2
-    end
-```
-
-> **Key constraint:** The biped Whole-Body Controller requires `basicTimeStep = 1ms`. Higher timesteps cause instant solver divergence and robot collapse.
-
-For the full architecture deep-dive, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
----
-
-## 📋 Prerequisites
-
-| Requirement | Linux | macOS | Windows |
-|---|---|---|---|
-| **Webots** | R2025a ([.deb](https://cyberbotics.com/)) | R2025a ([.dmg](https://cyberbotics.com/)) | R2025a ([.msi](https://cyberbotics.com/)) |
-| **Docker** | Docker Engine 24+ | Docker Desktop 4.x | Docker Desktop 4.x + WSL2 |
-| **GPU** | NVIDIA + Container Toolkit | CPU only | Optional via WSL2 |
-| **Booster Runner** | `booster-runner-webots-full-0.0.11.run` | Same (runs in container) | Same (runs in container) |
-
-> See the detailed setup guides: [Linux](docs/SETUP_LINUX.md) · [macOS](docs/SETUP_MACOS.md) · [Windows](docs/SETUP_WINDOWS.md)
-
----
-
-## 🚀 Quick Start
-
-### 1. Clone & Fetch Assets
-
-```bash
-git clone <repo-url> && cd ISEP-Challenge-Robotics
-
-# Clone Booster robot assets (meshes, URDF)
-git clone --depth 1 https://github.com/BoosterRobotics/booster_assets.git webots/assets/booster_assets
-```
-
-### 2. Place Booster Runner Binaries
-
-Download from the [Booster T1 Manual](https://www.booster.tech/open-source/) and place in `external/booster_runner/`:
-- `booster-runner-webots-full-0.0.11.run`
-- `webots_simulation.zip`
-
-```bash
-./tools/check_booster_runner_assets.sh   # Verify files are present and valid
-```
-
-### 3. Build & Run (Choose Your Platform)
-
-<details>
-<summary><b>🐧 Linux</b></summary>
-
-```bash
-# Build the container
-./containers/build_ros_container.sh
-
-# Run the simulation (walks forward for 10 seconds)
-./tools/run_host_simulation.sh forward 10.0
-```
-
-</details>
-
-<details>
-<summary><b>🍎 macOS</b></summary>
-
-```bash
-# Use macOS environment
-cp .env.macos .env.local
-
-# Build the container
-./containers/build_ros_container.sh
-
-# Start Webots manually, then run the container
-./containers/run_ros_container.sh
-```
-
-</details>
-
-<details>
-<summary><b>🪟 Windows (Git Bash / WSL2)</b></summary>
-
-```bash
-# Use Windows environment
-cp .env.windows .env.local
-
-# Build the container
-./containers/build_ros_container.sh
-
-# Start Webots manually, then run the container
-./containers/run_ros_container.sh
-```
-
-</details>
-
-Or use **Docker Compose** on any platform:
-
-```bash
-docker compose build
-docker compose up -d
-docker compose exec ros2 bash
-```
-
----
-
-## 🔌 Connection Modes
-
-### Active Mode — Official Walk Planner
-
-Starts the official Booster simulation runner for biped walking and planning.
-
-| Topic | Type | Description |
-|---|---|---|
-| `/booster_t1/joint_states` | `sensor_msgs/JointState` | Joint positions/states |
-| `/booster_t1/imu` | `sensor_msgs/Imu` | IMU orientation, acceleration, velocities |
-| `/booster_t1/low_state` | `booster_interface/LowState` | Raw low state data |
-
-**RPC Service:** `/booster_rpc_service` for high-level walk plans.
-
-### Passive Mode — Direct Webots State Bridge
-
-Lightweight connection without the walk planner. Runs `webots_state_publisher` to bridge Webots joint data to ROS 2.
-
-| Topic | Type | Description |
-|---|---|---|
-| `/joint_states` | `sensor_msgs/JointState` | Joint positions (12 leg joints) |
-| `/booster_t1/joint_states` | `sensor_msgs/JointState` | Same, namespaced |
-
----
-
-## 🏃 Running Simulations
-
-### All-in-One Script (Active Mode)
-
-```bash
-./tools/run_host_simulation.sh <command> <duration>
-```
-
-**Examples:**
-
-```bash
-./tools/run_host_simulation.sh forward 20.0    # Walk forward 20s
-./tools/run_host_simulation.sh backward 5.0    # Walk backward 5s
-./tools/run_host_simulation.sh turn_left 10.0  # Turn left 10s
-```
-
-### Supported Movement Commands
-
-| Command | vx | vy | vyaw | Description |
-|---|---|---|---|---|
-| `forward` | 0.7 | 0.0 | 0.0 | Walk forward (tuned speed) |
-| `backward` | -0.1 | 0.0 | 0.0 | Walk backward |
-| `left` | 0.0 | 0.1 | 0.0 | Strafe left |
-| `right` | 0.0 | -0.1 | 0.0 | Strafe right |
-| `turn_left` | 0.0 | 0.0 | 0.2 | Rotate left |
-| `turn_right` | 0.0 | 0.0 | -0.2 | Rotate right |
-| `stop` | 0.0 | 0.0 | 0.0 | Stop all movement |
-
-### Manual RPC Client
-
-```bash
-ros2 run booster_t1_webots_test rpc_movement_client --command forward --duration 5.0
-```
-
-Options:
-- `--duration <float>`: seconds to execute (default: `1.0`)
-- `--no-prepare`: skip stand-up sequence (use when robot is already walking)
-- `--service-name <name>`: RPC service name (default: `/booster_rpc_service`)
-
----
-
-## 📈 Telemetry
-
-### Launch All Listeners
-
-```bash
-# Enter the running container
-./containers/enter_ros_container.sh
-
-# Build and launch
-cd /workspace/project/ros2_ws
-source /opt/ros/humble/setup.bash
-colcon build --symlink-install
-source install/setup.bash
-ros2 launch booster_t1_webots_test booster_t1_break_room.launch.py
-```
-
-### Echo Raw Topics
-
-```bash
-ros2 topic echo /booster_t1/joint_states
-ros2 topic echo /booster_t1/imu
-```
-
----
-
-## 📁 Project Structure
+Planta de uma empresa (20 m × 12 m) com as seguintes zonas, todas ligadas por
+um corredor central:
 
 ```
-ISEP-Challenge-Robotics/
-├── containers/              # Docker build & run scripts
-│   ├── Containerfile        # ROS 2 Humble container definition
-│   ├── entrypoint.sh        # Container entrypoint (ROS 2 + env setup)
-│   ├── docker_common.sh     # Shared Docker helpers (platform detection)
-│   ├── build_ros_container.sh
-│   ├── run_ros_container.sh
-│   ├── enter_ros_container.sh
-│   └── start_webots_state_bridge.sh
-├── docs/                    # Documentation
-│   ├── ARCHITECTURE.md      # System architecture deep-dive
-│   ├── SETUP_LINUX.md       # Linux setup guide
-│   ├── SETUP_MACOS.md       # macOS setup guide
-│   ├── SETUP_WINDOWS.md     # Windows setup guide
-│   ├── API_REFERENCE.md     # ROS 2 message/service reference
-│   ├── DOCKER_REFERENCE.md  # Docker infrastructure reference
-│   ├── CONTRIBUTING.md      # Contributor guide
-│   └── DEBUGGING.md         # Troubleshooting guide
-├── external/                # Vendor dependencies (git-ignored)
-│   └── booster_runner/      # Official Booster simulation binaries
-├── ros2_ws/src/             # ROS 2 workspace
-│   ├── booster_ros2_interface/  # Custom message/service definitions
-│   └── booster_t1_webots_test/  # Listener nodes, RPC client, state publisher
-├── tools/                   # Host-side automation scripts
-│   ├── run_host_simulation.sh
-│   ├── start_booster_webots_runner.sh
-│   └── check_booster_runner_assets.sh
-├── webots/                  # Webots simulation files
-│   ├── worlds/              # .wbt world files
-│   └── assets/              # Robot meshes & URDF (git-ignored)
-├── docker-compose.yml       # Multi-platform Docker Compose
-├── .env                     # Default environment variables
-├── .env.linux               # Linux-specific overrides
-├── .env.macos               # macOS-specific overrides
-└── .env.windows             # Windows-specific overrides
++--------+--------+--------+--------+------------+
+| Sala   | Sala   | Sala   | Sala   | Datacenter |
+| Trab. 1| Trab. 2| Trab. 3| Trab. 4| [cam+PIR]  |
++--p-----+--p-----+--p-----+--p-----+----p-------+
+|              C O R R E D O R   [PIR]   (doca)  |
++------p--------------------+------p-------------+
+|  LOBBY (entrada)  [PIR]   |  Sala de convívio  |
+|  [câmara checkpoint]      |  [PIR]             |
++-------==------------------+--------------------+
+        entrada
 ```
 
----
+- **Lobby (entrada)** — receção, sofá de espera; os funcionários entram aqui.
+- **Checkpoint facial** — porta lobby→corredor controlada por uma câmara de
+  reconhecimento facial (`FACECAM_CHECKPOINT`).
+- **4 salas de trabalho** — cada uma com 2 secretárias, monitores, teclados e
+  cadeiras de escritório.
+- **Datacenter** — 4 racks de servidores, consola; o acesso é controlado por
+  uma segunda câmara de reconhecimento facial (`FACECAM_DATACENTER`) e apenas
+  pessoal autorizado (Bruno) pode entrar.
+- **Sala de convívio** — mesa, cadeiras, sofá.
+- **Sensores de movimento (PIR)** em todas as zonas (8 sensores), tal como no
+  artigo, aproximados por `DistanceSensor`s do Webots.
+- **Robô de patrulha** com farol, câmara de reconhecimento e doca no corredor.
 
-## 📚 Documentation
+## Mapeamento artigo ↔ simulação
 
-| Document | Description |
-|---|---|
-| [Architecture](docs/ARCHITECTURE.md) | System topology, data flows, physics constraints |
-| [Linux Setup](docs/SETUP_LINUX.md) | Ubuntu 22.04/24.04 with Docker + NVIDIA GPU |
-| [macOS Setup](docs/SETUP_MACOS.md) | Docker Desktop, Apple Silicon support |
-| [Windows Setup](docs/SETUP_WINDOWS.md) | WSL2 + Docker Desktop |
-| [API Reference](docs/API_REFERENCE.md) | All 20 messages, 2 services, RPC commands |
-| [Docker Reference](docs/DOCKER_REFERENCE.md) | Container scripts, env vars, volumes |
-| [Contributing](docs/CONTRIBUTING.md) | Dev workflow, code style, PR checklist |
-| [Debugging](docs/DEBUGGING.md) | Troubleshooting per platform |
+| Agente no artigo            | Controlador Webots                      |
+|-----------------------------|-----------------------------------------|
+| MotionAgent (PIR)           | `controllers/motion_agent`             |
+| FaceIDAgent (ArcFace)       | `controllers/face_id_agent`            |
+| CyberSentinelAgent          | `controllers/cyber_sentinel_agent`     |
+| PatrolAgent (Nav2 + PPO)    | `controllers/patrol_agent`             |
+| ZoneCoordinator + AlertAgent| `controllers/security_supervisor`      |
+| StaffRequestAgent           | ação `staff_request` em `person`       |
 
----
+Notas de fidelidade:
 
-## 📄 License
+- O **reconhecimento facial** usa o nó `Recognition` da câmara do Webots como
+  proxy do pipeline ArcFace/InsightFace: o campo `model` de cada pessoa faz o
+  papel do embedding e a galeria de funcionários enrolados está em
+  `face_id_agent.py`. Caras fora da galeria são rejeitadas como `UNKNOWN`
+  (open-set), exatamente como descrito no artigo.
+- Os **PIR** são `DistanceSensor`s em leque com calibração de linha de base —
+  a mesma aproximação referida na secção de seleção do simulador do artigo.
+- O **CyberSentinelAgent** corre em cada rack e avalia o fluxo de comandos do
+  servidor contra regras mapeadas em técnicas **MITRE ATT&CK** (T1485, T1490,
+  T1059.x, T1003.x). Ao detetar um comando malicioso lança um `CYBER_ALERT` e
+  o supervisor **tranca todas as portas** (`canBeOpen = FALSE`) — lockdown.
+- A **navegação** do robô e o movimento das pessoas são cinemáticos
+  (waypoints pelo corredor), um proxy simples da pilha ROS 2 / Nav2 + política
+  PPO do artigo. No sistema real, o raciocínio do `security_supervisor` corre
+  descentralizado em SPADE sobre FIPA-ACL; aqui está centralizado num único
+  supervisor por simplicidade de simulação.
+- As mensagens entre agentes (JSON sobre `Emitter`/`Receiver`, canal 1) fazem
+  o papel das *beliefs* tipadas FIPA-ACL.
 
-Apache 2.0 — see individual packages for details.
+## Como executar
+
+1. Instalar o [Webots R2023b](https://cyberbotics.com) (ou mais recente).
+2. Abrir `worlds/sentinelmas_office.wbt`.
+3. Premir play. O guião corre sozinho (~4 min); o estado do sistema e o
+   registo de eventos aparecem como overlay na janela 3D e nas consolas.
+
+> Os PROTOs standard (paredes, portas, mobiliário) são descarregados
+> automaticamente via `EXTERNPROTO`, pelo que é necessária ligação à internet
+> na primeira execução.
+
+## Guião da demonstração
+
+| t (s) | Evento |
+|-------|--------|
+| 2–35  | Alice, Bruno e Carla entram no lobby; o checkpoint facial valida cada um e abre a porta. Alice vai para a sala de trabalho 2, Carla para a sala de convívio. |
+| ~25   | Bruno é validado também na câmara do datacenter (único autorizado) e entra. |
+| 45    | Um **intruso** entra no lobby. A câmara do checkpoint não o encontra na galeria → acesso **negado** + alerta de intrusão. |
+| ~55   | O supervisor **despacha o robô de patrulha**; o intruso força a porta e dirige-se ao datacenter pelo corredor. |
+| ~75   | O robô interceta o intruso no corredor, **detém-no** (a pessoa fica imobilizada), verifica a identidade no local com a própria câmara e guarda-o. |
+| 110   | O agente do **rack_2** deteta um comando malicioso (`powershell -enc …` → T1059.001): LED do rack fica vermelho, `CYBER_ALERT` é emitido. |
+| ~112  | **LOCKDOWN**: todas as portas são trancadas, funcionários abrigam-se no lugar, o robô é enviado a investigar o datacenter. |
+| ~125  | O robô reporta quem está presente no datacenter → escalação para o operador; o lockdown é levantado pouco depois. |
+| ~250  | Carla faz um **pedido de assistência** (StaffRequestAgent) — arbitrado pela mesma via dos alertas autónomos; o robô responde e regressa à doca. |
+
+## Estrutura do repositório
+
+```
+worlds/
+  sentinelmas_office.wbt        # planta da empresa, sensores, robôs, pessoas
+controllers/
+  common/zones.py               # zonas, portas e rotas pelo corredor
+  person/                       # funcionários e intruso (guiões de movimento)
+  face_id_agent/                # câmaras de reconhecimento facial (2 gates)
+  motion_agent/                 # sensores PIR (1 por zona)
+  cyber_sentinel_agent/         # agente de telemetria de cada servidor
+  patrol_agent/                 # robô de patrulha (deter / investigar / assistir)
+  security_supervisor/          # coordenação, portas, lockdown, alertas, HUD
+```
+
+## Protocolo de mensagens (canal 1)
+
+| Tipo            | Origem → Destino                | Conteúdo |
+|-----------------|---------------------------------|----------|
+| `FACE`          | face_id_agent → supervisor      | gate, identidade, modelo |
+| `ACCESS_REQUEST`/`_GRANTED`/`_DENIED` | pessoa ↔ supervisor | nome, gate |
+| `MOTION`        | motion_agent → supervisor       | zona |
+| `CYBER_ALERT`   | cyber_sentinel → supervisor     | host, comando, técnica ATT&CK |
+| `LOCKDOWN`/`LOCKDOWN_CLEAR` | supervisor → todos  | motivo |
+| `DISPATCH`      | supervisor → patrol_agent       | tipo, alvo, posição, motivo |
+| `TARGET_POS`    | supervisor → patrol_agent       | posição atual do alvo |
+| `DETAIN`/`DETAINED` | patrol_agent → pessoa/supervisor | nome, verificação facial |
+| `REPORT`/`ASSIST_DONE` | patrol_agent → supervisor | zona, presentes |
+| `STAFF_REQUEST` | pessoa → supervisor             | nome, posição |

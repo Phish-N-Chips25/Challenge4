@@ -1,7 +1,13 @@
+import io
 import unittest
+from contextlib import redirect_stderr
+from unittest.mock import patch
 
 from booster_t1_webots_test.rpc_commands import API_CHANGE_MODE, API_MOVE
-from booster_t1_webots_test.rpc_movement_client import build_arg_parser, run_command_sequence
+from booster_t1_webots_test.rpc_movement_client import (
+    build_arg_parser,
+    run_command_sequence,
+)
 
 
 class FakeRpcClient:
@@ -14,16 +20,16 @@ class FakeRpcClient:
 
 
 class RpcMovementClientTest(unittest.TestCase):
-    def test_parser_defaults_to_forward_for_one_second(self):
+    def test_parser_defaults_to_safe_dock_path_for_one_second(self):
         args = build_arg_parser().parse_args([])
 
-        self.assertEqual(args.command, "forward")
+        self.assertEqual(args.command, "safe_dock_path")
         self.assertEqual(args.duration, 1.0)
         self.assertEqual(args.service_name, "/booster_rpc_service")
         self.assertTrue(args.prepare)
 
     def test_parser_rejects_negative_duration(self):
-        with self.assertRaises(SystemExit):
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
             build_arg_parser().parse_args(["--duration", "-1"])
 
     def test_sequence_prepares_walks_moves_and_stops(self):
@@ -47,6 +53,26 @@ class RpcMovementClientTest(unittest.TestCase):
         run_command_sequence(client, command_name="stop", duration=0.0, prepare=False)
 
         self.assertEqual(client.requests, [(API_MOVE, '{"vx":0.0,"vy":0.0,"vyaw":0.0}')])
+
+    def test_safe_dock_path_prepares_moves_visibly_and_stops(self):
+        client = FakeRpcClient()
+
+        with patch("booster_t1_webots_test.rpc_movement_client.time.sleep") as sleep:
+            run_command_sequence(
+                client,
+                command_name="safe_dock_path",
+                duration=99.0,
+                prepare=True,
+            )
+
+        self.assertEqual(len(client.requests), 4)
+        self.assertEqual(client.requests[0][0], API_CHANGE_MODE)
+        self.assertIn('"mode":1', client.requests[0][1])
+        self.assertEqual(client.requests[1][0], API_CHANGE_MODE)
+        self.assertIn('"mode":2', client.requests[1][1])
+        self.assertEqual(client.requests[2], (API_MOVE, '{"vx":0.2,"vy":0.0,"vyaw":0.0}'))
+        self.assertEqual(client.requests[3], (API_MOVE, '{"vx":0.0,"vy":0.0,"vyaw":0.0}'))
+        sleep.assert_any_call(20.0)
 
 
 if __name__ == "__main__":

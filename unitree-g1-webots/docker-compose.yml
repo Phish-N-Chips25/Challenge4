@@ -14,6 +14,7 @@
 
 # ── Shared build/runtime config via YAML anchor ──────────────────────────────
 x-ros2-common: &ros2-common
+  platform: ${DOCKER_PLATFORM:-linux/amd64}
   build:
     context: .
     dockerfile: containers/Containerfile
@@ -25,7 +26,7 @@ x-ros2-common: &ros2-common
     - DISPLAY=${DISPLAY:-}
     - QT_X11_NO_MITSHM=1
     - MAKEFLAGS=-j4
-    - WEBOTS_HOST_IP=${WEBOTS_HOST_IP:-127.0.0.1}
+    - WEBOTS_HOST_IP=${WEBOTS_HOST_IP:-host.docker.internal}
     - WEBOTS_PORT=${WEBOTS_PORT:-1234}
     - ROBOT_NAME=${ROBOT_NAME:-T1_release}
   volumes:
