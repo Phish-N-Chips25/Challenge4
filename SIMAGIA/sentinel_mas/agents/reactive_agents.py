@@ -18,6 +18,7 @@ from spade.behaviour import CyclicBehaviour, PeriodicBehaviour
 from spade.template import Template
 
 from config import settings
+from bridges.face_bridge import make_face_recognizer, make_frame_source
 from utils import build_msg, parse_body
 from utils.messaging import INFORM, REQUEST
 import dashboard_log
@@ -89,6 +90,46 @@ class SimulatedFaceSensor(PeriodicBehaviour):
             self.agent.log(f"face '{identity}' in '{zone}' -> INFORM ZC")
 
 
+class RealFaceSensor(PeriodicBehaviour):
+    """Real perception: 'sees' a frame in a camera-equipped zone, runs the
+    trained InsightFace model, and reports the identity to that zone's
+    coordinator — same INFORM contract as SimulatedFaceSensor, real results.
+    A recognised intruder ('unknown') is the genuine threat trigger.
+
+    Inference runs in a thread executor so it never blocks the SPADE loop.
+    The frame source is injected, so swapping the faces/ pool for live Webots
+    camera frames later needs no change here."""
+
+    def __init__(self, recognizer, source, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._rec = recognizer
+        self._src = source
+
+    async def run(self):
+        camera_zones = settings.zones_with("camera")
+        if not camera_zones:
+            return
+        zone = random.choice(camera_zones)
+        frame = self._src.capture(zone)
+        if frame is None:
+            return
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, self._rec.recognize, frame)
+        if not result["has_face"]:
+            return
+        identity = result["identity"]
+        await self.send(build_msg(settings.ZONE_COORDINATOR_JIDS[zone], INFORM, {
+            "event": "face_detected",
+            "zone": zone,
+            "identity": identity,
+            "confidence": round(result["confidence"], 2),
+            "liveness": True,
+        }))
+        tag = "authorized" if result["authorized"] else "UNKNOWN"
+        self.agent.log(f"FaceID '{identity}' [{tag}] in '{zone}' "
+                       f"(score={result['confidence']:.2f}) -> INFORM ZC")
+
+
 class ReverifyHandler(CyclicBehaviour):
     """Respond to REQUEST reverify from a ZoneCoordinator."""
 
@@ -116,7 +157,13 @@ class FaceIDAgent(ReactiveAgent):
 
     async def setup(self):
         self.log("starting (reactive)")
-        if settings.SIMULATED_SENSORS:
+        # Prefer the REAL trained model; fall back to the simulated sensor only
+        # if it can't load (missing ML deps / DB) and simulated sensors are on.
+        recognizer = make_face_recognizer()
+        if recognizer is not None:
+            self.add_behaviour(RealFaceSensor(recognizer, make_frame_source(), period=5))
+            self.log("REAL InsightFace recognition active (faces/ pool, camera zones)")
+        elif settings.SIMULATED_SENSORS:
             self.add_behaviour(SimulatedFaceSensor(period=5))
         t = Template()
         t.set_metadata("performative", REQUEST)

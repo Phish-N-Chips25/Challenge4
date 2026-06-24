@@ -281,7 +281,6 @@ PAGE = r"""<!doctype html>
 const THREAT = {
   0:{l:"LOW",c:"#2e7d32"}, 1:{l:"MEDIUM",c:"#f9a825"},
   2:{l:"HIGH",c:"#ef6c00"}, 3:{l:"CRITICAL",c:"#c62828"} };
-const RW = 16, RH = 14;        // room size on the 0..100 grid (sized for 8 office zones)
 let EVENTS = {}, SCENARIOS = {}, mapBuilt = false;
 
 async function inject(zone, choice) {
@@ -291,20 +290,17 @@ async function inject(zone, choice) {
 
 function buildMap(s) {
   const svg = document.getElementById("map");
-  const NS = "http://www.w3.org/2000/svg";
   let h = "";
-  // links from corridor to the other rooms (floor-plan feel)
-  const corr = s.zones.find(z => z.zone === "corridor");
-  if (corr) s.zones.forEach(z => {
-    if (z.zone !== "corridor")
-      h += `<line class="link" x1="${corr.x}" y1="${corr.y}" x2="${z.x}" y2="${z.y}"/>`;
+  // actual office walls (real floor plan, from the .wbt geometry the planner uses)
+  (s.walls || []).forEach(w => {
+    h += `<line class="wall" x1="${w[0]}" y1="${w[1]}" x2="${w[2]}" y2="${w[3]}"/>`;
   });
-  // rooms
+  // zone markers (threat-coloured dot + label + level), placed at zone centres
   s.zones.forEach(z => {
-    h += `<rect id="rm-${z.zone}" class="room" x="${z.x-RW/2}" y="${z.y-RH/2}" width="${RW}" height="${RH}" rx="2.5"
-            fill="#2e7d32" fill-opacity="0.16" stroke="#2e7d32" stroke-width="0.7"/>
-          <text class="roomlbl" x="${z.x}" y="${z.y-1.5}">${z.zone.replace("_"," ")}</text>
-          <text class="roomth" id="th-${z.zone}" x="${z.x}" y="${z.y+3.5}" fill="#2e7d32">LOW</text>`;
+    h += `<circle id="rm-${z.zone}" class="room" cx="${z.x}" cy="${z.y}" r="1.8"
+            fill="#2e7d32" stroke="#0c0e13" stroke-width="0.4"/>
+          <text class="roomlbl" x="${z.x}" y="${z.y-2.6}">${z.zone.replace("_"," ")}</text>
+          <text class="roomth" id="th-${z.zone}" x="${z.x}" y="${z.y+4}" fill="#2e7d32">LOW</text>`;
   });
   // base marker
   h += `<circle cx="${s.base.x}" cy="${s.base.y}" r="1.4" fill="#39405a"/>`;
@@ -325,8 +321,7 @@ function updateMap(s) {
     const t = THREAT[z.threat] || THREAT[0];
     const rm = document.getElementById("rm-"+z.zone);
     const th = document.getElementById("th-"+z.zone);
-    if (rm) { rm.setAttribute("fill", t.c); rm.setAttribute("stroke", t.c);
-              rm.setAttribute("fill-opacity", z.threat ? 0.30 : 0.14); }
+    if (rm) { rm.setAttribute("fill", t.c); }
     if (th) { th.textContent = t.l; th.setAttribute("fill", t.c); }
   });
   const robot = document.getElementById("robot");

@@ -21,7 +21,19 @@ from config import settings
 
 
 def make_navigator():
-    """Return a PPONavigator, or None to signal "fall back to NavigationStub"."""
+    """Return the active navigator, or None to signal "fall back to NavigationStub".
+
+    Selection order:
+      1. USE_BOOSTER_BRIDGE → dispatch real missions to the Booster T1 over the
+         JSONL seam (SIMAGIA decides, on-robot PPO drives). Off by default.
+      2. USE_PPO_NAV        → simulate movement in-process with the trained PPO.
+      3. else               → None (caller keeps NavigationStub).
+    """
+    if settings.USE_BOOSTER_BRIDGE:
+        from bridges.booster_mission_bridge import BoosterBridgeNavigator
+        print(f"[nav_bridge] Booster mission bridge ON — dispatching to "
+              f"{settings.BOOSTER_LOG_DIR}")
+        return BoosterBridgeNavigator(settings.BOOSTER_LOG_DIR, settings.ZONE_POS)
     if not settings.USE_PPO_NAV:
         return None
     try:

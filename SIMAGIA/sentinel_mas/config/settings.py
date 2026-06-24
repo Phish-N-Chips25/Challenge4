@@ -114,6 +114,31 @@ RL_DIR = os.path.join(_REPO_ROOT, "cyber-physical-security-system", "src", "rl")
 NAV_MODEL_PATH = os.path.join(RL_DIR, "data", "models", "nav_ppo_final")
 USE_PPO_NAV = os.getenv("USE_PPO_NAV", "1") == "1"
 
+# ── Booster T1 integration (SIMAGIA decides, on-robot PPO drives) ──
+# When ON, the patrol agent dispatches missions to the Booster stack via the
+# shared JSONL seam (.logs/booster_missions.jsonl) instead of simulating
+# movement in-process. OFF by default — has no effect on the standalone PPO
+# demo. BOOSTER_LOG_DIR must point at the SAME .logs/ the Booster patrol node
+# reads/writes (currently the unitree-g1-webots subproject's .logs/).
+USE_BOOSTER_BRIDGE = os.getenv("USE_BOOSTER_BRIDGE", "0") == "1"
+BOOSTER_LOG_DIR = os.getenv(
+    "BOOSTER_LOG_DIR",
+    os.path.join(_REPO_ROOT, "unitree-g1-webots", ".logs"),
+)
+
+# ── Face recognition (perception reactive agent) ──────────────
+# The trained InsightFace model (alt1.py) and its embeddings DB. The
+# FaceIDAgent uses it for REAL recognition when the ML deps (insightface,
+# opencv-python, scikit-learn, onnxruntime) are installed; otherwise it
+# soft-falls-back to the simulated face sensor. Faces are only recognised in
+# zones with a camera (ZONE_MODALITIES). Image source today is the faces/ pool;
+# a live Webots camera feed can replace it later without touching the agent.
+_SIMAGIA_DIR = os.path.abspath(os.path.join(_HERE, "..", ".."))   # .../SIMAGIA
+FACE_MODEL_DIR = _SIMAGIA_DIR                                      # holds alt1.py
+FACE_DB_PKL = os.path.join(_SIMAGIA_DIR, ".cache", "alt1", "base_de_dados.pkl")
+FACE_POOL_DIR = os.path.join(_SIMAGIA_DIR, "faces")
+USE_FACE_RECOGNITION = os.getenv("USE_FACE_RECOGNITION", "1") == "1"
+
 # ── ROS 2 bridge ─────────────────────────────────────────────
 ROS2_ENABLED = False                 # flip when ROS2 node is up
 ROS2_CMD_VEL_TOPIC  = "/cmd_vel"
