@@ -41,13 +41,17 @@ PAUSE_AT   = 60     # steps to pause at final waypoint before looping
 #
 # ═══════════════════════════════════════════════════════════════
 SCENARIO = {
-    "Alice":     {"active": False, "delay":  0, "destination": "work_room_1"},
-    "Bruno":     {"active": False, "delay":  0, "destination": "work_room_2"},
-    "Carla":     {"active": False, "delay":  0, "destination": "server_room"},
-    "Intruder":  {"active": True,  "delay":  0, "destination": "server_room"},
-    "Intruder2": {"active": True,  "delay": 30, "destination": "work_room_1"},
-    "Intruder3": {"active": False, "delay":  0, "destination": "work_room_3"},
-    "Intruder4": {"active": False, "delay":  0, "destination": "work_room_4"},
+    # ── Pessoas autorizadas (nomes = pastas em pessoas_permitidas/) ──
+    "Arsénio":    {"active": False, "delay":  0, "destination": "work_room_1"},
+    "César":      {"active": False, "delay":  0, "destination": "work_room_2"},
+    "Gonçalo":    {"active": False, "delay":  0, "destination": "work_room_3"},
+    "Rui Soares": {"active": False, "delay":  0, "destination": "work_room_4"},
+    "Rynalde":    {"active": False, "delay":  0, "destination": "server_room"},
+    # ── Intrusos ──────────────────────────────────────────────────────
+    "Intruder":   {"active": False,  "delay":  0, "destination": "server_room"},
+    "Intruder2":  {"active": True,  "delay": 30, "destination": "work_room_1"},
+    "Intruder3":  {"active": False, "delay":  0, "destination": "work_room_3"},
+    "Intruder4":  {"active": False, "delay":  0, "destination": "work_room_4"},
 }
 # ═══════════════════════════════════════════════════════════════
 
@@ -71,13 +75,15 @@ _DEST_WAYPOINTS = {
 
 # Each character starts at a slightly different X so they don't overlap
 _START_X = {
-    "Alice":     -5.0,
-    "Bruno":     -3.5,
-    "Carla":     -6.5,
-    "Intruder":  -5.0,
-    "Intruder2": -4.5,
-    "Intruder3": -5.5,
-    "Intruder4": -4.0,
+    "Arsénio":    -5.0,
+    "César":      -3.5,
+    "Gonçalo":    -6.5,
+    "Rui Soares": -4.8,
+    "Rynalde":    -6.0,
+    "Intruder":   -5.0,
+    "Intruder2":  -4.5,
+    "Intruder3":  -5.5,
+    "Intruder4":  -4.0,
 }
 
 _OFF_SCENE = (0.0, -40.0, 0.0)   # far off-map spawn point

@@ -1393,7 +1393,7 @@ DEF PIR_DATACENTER Robot {
     "--zone=datacenter"
   ]
 }
-DEF PERSON_ALICE Robot {
+DEF PERSON_ARSENIO Robot {
   translation -5 -7.5 0
   rotation 0 0 1 1.5708
   children [
@@ -1434,9 +1434,43 @@ DEF PERSON_ALICE Robot {
         }
       ]
     }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/arsenio.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/arsenio.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
   ]
-  name "Alice"
-  model "employee_alice"
+  name "Arsénio"
+  model "employee_arsenio"
   boundingObject Pose {
     translation 0 0 0.92
     children [
@@ -1449,10 +1483,10 @@ DEF PERSON_ALICE Robot {
   recognitionColors [
     0.13 0.55 0.13
   ]
-  controller "<none>"
+  controller "person"
   supervisor TRUE
 }
-DEF PERSON_BRUNO Robot {
+DEF PERSON_CESAR Robot {
   translation -3.5 -8 0
   rotation 0 0 1 1.5708
   children [
@@ -1493,9 +1527,43 @@ DEF PERSON_BRUNO Robot {
         }
       ]
     }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/cesar.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/cesar.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
   ]
-  name "Bruno"
-  model "employee_bruno"
+  name "César"
+  model "employee_cesar"
   boundingObject Pose {
     translation 0 0 0.92
     children [
@@ -1508,10 +1576,10 @@ DEF PERSON_BRUNO Robot {
   recognitionColors [
     0.15 0.3 0.8
   ]
-  controller "<none>"
+  controller "person"
   supervisor TRUE
 }
-DEF PERSON_CARLA Robot {
+DEF PERSON_GONCALO Robot {
   translation -6.5 -8.5 0
   rotation 0 0 1 1.5708
   children [
@@ -1552,9 +1620,43 @@ DEF PERSON_CARLA Robot {
         }
       ]
     }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/goncalo.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/goncalo.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
   ]
-  name "Carla"
-  model "employee_carla"
+  name "Gonçalo"
+  model "employee_goncalo"
   boundingObject Pose {
     translation 0 0 0.92
     children [
@@ -1567,7 +1669,193 @@ DEF PERSON_CARLA Robot {
   recognitionColors [
     0.6 0.3 0.7
   ]
-  controller "<none>"
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_RUI_SOARES Robot {
+  translation -4.8 -8.2 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.8 0.5 0.1
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/rui_soares.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/rui_soares.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+  ]
+  name "Rui Soares"
+  model "employee_rui_soares"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.8 0.5 0.1
+  ]
+  controller "person"
+  supervisor TRUE
+}
+DEF PERSON_RYNALDE Robot {
+  translation -6.0 -8.8 0
+  rotation 0 0 1 1.5708
+  children [
+    Emitter {
+      channel 1
+    }
+    Receiver {
+      channel 1
+    }
+    Pose {
+      translation 0 0 0.95
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.1 0.6 0.6
+            roughness 0.85
+            metalness 0
+          }
+          geometry Capsule {
+            height 0.95
+            radius 0.18
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.75 0.6
+            roughness 1
+            metalness 0
+          }
+          geometry Sphere {
+            radius 0.13
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/rynalde.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/rynalde.jpeg"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+  ]
+  name "Rynalde"
+  model "employee_rynalde"
+  boundingObject Pose {
+    translation 0 0 0.92
+    children [
+      Cylinder {
+        height 1.8
+        radius 0.25
+      }
+    ]
+  }
+  recognitionColors [
+    0.1 0.6 0.6
+  ]
+  controller "person"
   supervisor TRUE
 }
 DEF PERSON_INTRUDER Robot {
@@ -1607,6 +1895,40 @@ DEF PERSON_INTRUDER Robot {
           }
           geometry Sphere {
             radius 0.13
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder1.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder1.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
           }
         }
       ]
@@ -1670,6 +1992,40 @@ DEF PERSON_INTRUDER_WR1 Robot {
         }
       ]
     }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder2.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder2.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
   ]
   name "IntruderWR1"
   model "person_unknown"
@@ -1725,6 +2081,40 @@ DEF PERSON_INTRUDER_2 Robot {
           }
           geometry Sphere {
             radius 0.13
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder2.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder2.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
           }
         }
       ]
@@ -1788,6 +2178,40 @@ DEF PERSON_INTRUDER_3 Robot {
         }
       ]
     }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder3.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder3.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
   ]
   name "Intruder3"
   model "person_unknown"
@@ -1843,6 +2267,40 @@ DEF PERSON_INTRUDER_4 Robot {
           }
           geometry Sphere {
             radius 0.13
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder4.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.2 0 1.72
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              url "../faces/intruder4.png"
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.34 0.38
           }
         }
       ]

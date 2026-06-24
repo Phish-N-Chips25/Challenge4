@@ -1,47 +1,62 @@
-"""Webots controller for FaceID cameras (Camera + Recognition API).
+"""Webots controller for FaceID cameras.
 
-Uses the Webots Recognition API to detect people in the camera's field of
-view.  Maps the recognised object's model name to a MAS identity and sends
-a face_detected event to the security_supervisor via Emitter.
+Captures raw BGRA frames from the Webots camera and sends them to the
+MAS dashboard (/api/recognize_face) which runs InsightFace in the main
+Python process. Returns identity + confidence to the MAS via emitter.
 
-Also listens for reverify commands from the supervisor (relayed from the
-ZoneCoordinator) and triggers an immediate fresh scan.
+Only uses stdlib (urllib, json, struct) — no heavy ML dependencies needed
+in the Webots Python environment.
 
 Arguments (controllerArgs in the .wbt):
     --gate=GATE_NAME   e.g. --gate=checkpoint  --gate=work_room_1
-
-Gate → MAS zone mapping lives in the supervisor; the camera just tags
-events with the gate name and lets the supervisor translate.
 """
 
 import json
-import math
+import struct
 import sys
+import threading
+import urllib.error
+import urllib.request
 from controller import Robot
 
-TIME_STEP = 256       # ms — must match WorldInfo.basicTimeStep
-RECOGNITION_PERIOD = TIME_STEP * 4   # run recognition every 1024 ms
-SCAN_COOLDOWN = 10   # steps between repeated face events (~2.5 s)
-DEFAULT_MAX_DIST = 6.0  # metres — ignore people outside this range
+TIME_STEP      = 256   # ms — must match WorldInfo.basicTimeStep
+SCAN_COOLDOWN  = 40    # steps between recognition requests (~10 s)
+DASHBOARD_URL  = "http://localhost:8081"
 
-# Webots model name → MAS identity string
-IDENTITY_MAP: dict[str, str] = {
-    "employee_alice": "alice",
-    "employee_bruno": "bob",
-    "employee_carla": "carla",
-}
+# Shared state for async recognition (background thread → main loop)
+_pending  = False          # True while a request is in-flight
+_result   = None           # latest result dict, or None
+_lock     = threading.Lock()
+
+
+def _recognize_bg(img_bytes: bytes, w: int, h: int) -> None:
+    """Runs in a background thread — never blocks the Webots step."""
+    global _pending, _result
+    header  = w.to_bytes(4, "big") + h.to_bytes(4, "big")
+    payload = header + img_bytes
+    req = urllib.request.Request(
+        DASHBOARD_URL + "/api/recognize_face",
+        data=payload,
+        headers={"Content-Type": "application/octet-stream"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5.0) as resp:
+            resultado = json.loads(resp.read())
+    except Exception:
+        resultado = {"reason": "service_unavailable"}
+    with _lock:
+        _result  = resultado
+        _pending = False
 
 
 def main():
     robot = Robot()
 
-    gate     = "checkpoint"
-    max_dist = DEFAULT_MAX_DIST
+    gate = "checkpoint"
     for arg in sys.argv[1:]:
         if arg.startswith("--gate="):
             gate = arg.split("=", 1)[1]
-        elif arg.startswith("--max-dist="):
-            max_dist = float(arg.split("=", 1)[1])
 
     emitter = robot.getDevice("emitter")
     emitter.setChannel(1)
@@ -52,9 +67,10 @@ def main():
 
     camera = robot.getDevice("camera")
     camera.enable(TIME_STEP)
-    camera.recognitionEnable(RECOGNITION_PERIOD)
 
-    cooldown = 0
+    global _pending, _result
+
+    cooldown   = 0
     force_scan = False
 
     while robot.step(TIME_STEP) != -1:
@@ -70,38 +86,56 @@ def main():
             finally:
                 receiver.nextPacket()
 
+        # ── Check if a background recognition result arrived ─────
+        with _lock:
+            resultado = _result
+            _result   = None
+
+        if resultado is not None:
+            reason = resultado.get("reason", "ok")
+            if reason not in ("sem_rosto", "imagem_invalida",
+                              "base_vazia", "service_unavailable"):
+                identity   = resultado.get("matched_name") if resultado.get("allowed") else "unknown"
+                score      = resultado.get("score") or 0.0
+                confidence = round(score if identity != "unknown" else 0.80, 2)
+                emitter.send(json.dumps({
+                    "type":           "sensor",
+                    "event":          "face_detected",
+                    "zone":           gate,
+                    "identity":       identity,
+                    "confidence":     confidence,
+                    "liveness":       True,
+                    "reverification": force_scan,
+                }))
+            force_scan = False
+            cooldown = SCAN_COOLDOWN
+
+        # ── Fire new recognition request (non-blocking) ──────────
         if cooldown > 0 and not force_scan:
             cooldown -= 1
             continue
 
-        objects = camera.getRecognitionObjects()
-        if not objects:
-            force_scan = False
+        with _lock:
+            already_pending = _pending
+
+        if already_pending:
+            continue  # previous request still in-flight
+
+        img_bytes = camera.getImage()
+        if not img_bytes:
             continue
 
-        for obj in objects:
-            pos  = obj.getPosition()
-            dist = math.sqrt(pos[0]**2 + pos[1]**2 + pos[2]**2)
-            if dist > max_dist:
-                continue   # too far — likely through a doorway into another room
+        w = camera.getWidth()
+        h = camera.getHeight()
 
-            model = obj.getModel()
-            identity = IDENTITY_MAP.get(model, "unknown")
-            confidence = 0.95 if identity != "unknown" else 0.80
-
-            payload = json.dumps({
-                "type":       "sensor",
-                "event":      "face_detected",
-                "zone":       gate,       # supervisor translates to MAS zone
-                "identity":   identity,
-                "confidence": confidence,
-                "liveness":   True,
-                "reverification": force_scan,
-            })
-            emitter.send(payload)
-
-        force_scan = False
-        cooldown = SCAN_COOLDOWN
+        with _lock:
+            _pending = True
+        t = threading.Thread(
+            target=_recognize_bg,
+            args=(bytes(img_bytes), w, h),
+            daemon=True,
+        )
+        t.start()
 
 
 if __name__ == "__main__":

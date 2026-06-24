@@ -13,11 +13,21 @@ Then launch Webots and press Play.
 
 import asyncio
 import json
+import os
+import sys
 from collections import deque
 from contextlib import suppress
 from datetime import datetime
 
 import loguru
+import numpy as np
+
+# alt1.py lives one level up (SIMAGIA/)
+_SIMAGIA = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _SIMAGIA not in sys.path:
+    sys.path.insert(0, _SIMAGIA)
+
+from alt1 import validar_pessoa_detalhes, precarregar_recursos_alt1
 from aiohttp import web
 from pyjabber.server import Server, Parameters
 from spade.container import Container
@@ -42,12 +52,14 @@ WEBOTS_ROOMS = [
 
 _ROOM_LABEL = {
     "lobby":       "Lobby",
+    "checkpoint":  "Lobby",
     "break_room":  "Break Room",
     "work_room_1": "Sala de Trabalho 1",
     "work_room_2": "Sala de Trabalho 2",
     "work_room_3": "Sala de Trabalho 3",
     "work_room_4": "Sala de Trabalho 4",
     "datacenter":  "Datacenter",
+    "server_room": "Datacenter",
 }
 
 # Webots room → MAS zone (for threat level lookup and bridge injection)
@@ -251,6 +263,23 @@ async def handle_patrol_arrived(request):
     return web.Response(text="ok")
 
 
+async def handle_recognize_face(request):
+    """Receives raw BGRA frame from face_id_agent and returns InsightFace result."""
+    data = await request.read()
+    if len(data) < 8:
+        return web.json_response({"reason": "payload_too_small"})
+    w = int.from_bytes(data[0:4], "big")
+    h = int.from_bytes(data[4:8], "big")
+    expected = w * h * 4
+    if len(data) - 8 < expected:
+        return web.json_response({"reason": "payload_incomplete"})
+    bgra = np.frombuffer(data[8:8 + expected], dtype=np.uint8).reshape((h, w, 4))
+    bgr  = bgra[:, :, :3]
+    loop     = asyncio.get_event_loop()
+    resultado = await loop.run_in_executor(None, validar_pessoa_detalhes, bgr)
+    return web.json_response(resultado)
+
+
 async def handle_scan_result(request):
     try:
         data = await request.json()
@@ -306,6 +335,7 @@ async def _start_dashboard(zcs, patrol, bridge, port=PORT):
     app.router.add_post("/api/patrol_arrived",   handle_patrol_arrived)
     app.router.add_post("/api/patrol_preempted", handle_patrol_preempted)
     app.router.add_post("/api/scan_result",      handle_scan_result)
+    app.router.add_post("/api/recognize_face",   handle_recognize_face)
 
     runner = web.AppRunner(app)
     await runner.setup()
@@ -318,6 +348,13 @@ async def _start_dashboard(zcs, patrol, bridge, port=PORT):
 
 async def _mas_main():
     global _bridge
+
+    # Pre-load InsightFace model + face DB before Webots connects
+    print("[FaceRec] a carregar modelo InsightFace...", flush=True)
+    loop = asyncio.get_event_loop()
+    n = await loop.run_in_executor(None, precarregar_recursos_alt1)
+    print(f"[FaceRec] BD com {n} pessoa(s) carregada.", flush=True)
+
     _bridge = WebotsBridge()
 
     settings.WEBOTS_ENABLED    = True
