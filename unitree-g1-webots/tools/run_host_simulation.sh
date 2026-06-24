@@ -83,8 +83,14 @@ cp "${PROJECT_ROOT}/webots/worlds/T1_break_room.wbt" "${PROJECT_ROOT}/.docker/bo
 
 # 2. Start Webots on host
 printf "Starting Webots on host with T1_break_room.wbt...\n"
+WORLD_FILE="${PROJECT_ROOT}/.docker/booster_runner/webots_simulation/worlds/T1_break_room.wbt"
+# Windows Webots is a native .exe and cannot resolve WSL '/mnt/c/...' paths —
+# convert to a Windows path (C:\...). On Linux/macOS the path is used as-is.
+if [[ "${PLATFORM}" == "windows" ]] && command -v wslpath >/dev/null 2>&1; then
+  WORLD_FILE="$(wslpath -w "${WORLD_FILE}")"
+fi
 "${WEBOTS_BIN}" --batch --stdout --stderr --mode=fast "--port=${WEBOTS_PORT}" --extern-urls \
-  "${PROJECT_ROOT}/.docker/booster_runner/webots_simulation/worlds/T1_break_room.wbt" \
+  "${WORLD_FILE}" \
   > "${LOG_DIR}/host-webots-break-room.log" 2>&1 &
 WEBOTS_PID=$!
 echo "${WEBOTS_PID}" > "${LOG_DIR}/host-webots-break-room.pid"
