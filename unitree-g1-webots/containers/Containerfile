@@ -69,6 +69,7 @@ RUN apt-get update && apt-get install -y \
 # CPU-only torch keeps the image lean; PPO inference is a tiny MLP. Installed
 # before stable-baselines3 so SB3 reuses the CPU build instead of pulling CUDA.
 RUN pip3 install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+ && pip3 install --no-cache-dir "numpy>=2,<3" \
  && pip3 install --no-cache-dir stable-baselines3 gymnasium pyyaml
 
 WORKDIR /workspace/project/ros2_ws
