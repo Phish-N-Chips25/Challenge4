@@ -239,7 +239,7 @@ def main(argv=None):
         siny = 2.0 * (q.w * q.z + q.x * q.y)
         cosy = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
         yaw = math.atan2(siny, cosy)
-        machine.update_pose(Pose2D(p.x, p.y, yaw), time.time())
+        machine.update_pose(Pose2D(p.x, p.y, yaw))
 
     node.create_subscription(Odometry, "/booster_t1/odom", odom_callback, 10)
 
