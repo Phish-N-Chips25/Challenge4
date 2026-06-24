@@ -14,3 +14,4 @@ external/booster_runner/opt_booster/
 # Vendor Booster runner binaries (huge, proprietary — never commit)
 external/booster_runner/*.run
 external/booster_runner/*.zip
+.env.local
