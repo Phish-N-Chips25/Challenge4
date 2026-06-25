@@ -35,6 +35,16 @@ WorldInfo {
         0.4
       ]
     }
+    ContactProperties {
+      material1 "booster"
+      material2 "room_door"
+      coulombFriction [
+        0
+      ]
+      bounce 0
+      bounceVelocity 0
+      softness 0.9
+    }
   ]
 }
 Viewpoint {
@@ -141,6 +151,7 @@ Wall {
 DEF DOOR_ENTRANCE Door {
   translation -5 -6 0
   name "porta entrada"
+  solidName "room_door"
   size 1 0.2 2.4
   position -1.0
 }
@@ -176,6 +187,7 @@ Wall {
 DEF DOOR_CHECKPOINT Door {
   translation -5 -1 0
   name "porta checkpoint"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -186,6 +198,7 @@ Wall {
 DEF DOOR_BREAK Door {
   translation 5 -1 0
   name "porta sala convivio"
+  solidName "room_door"
   size 1 0.2 2.4
   position -1.0
 }
@@ -204,6 +217,7 @@ Wall {
 DEF DOOR_WR1 Door {
   translation -8 1 0
   name "porta sala trabalho 1"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -214,6 +228,7 @@ Wall {
 DEF DOOR_WR2 Door {
   translation -4 1 0
   name "porta sala trabalho 2"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -224,6 +239,7 @@ Wall {
 DEF DOOR_WR3 Door {
   translation 0 1 0
   name "porta sala trabalho 3"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -234,6 +250,7 @@ Wall {
 DEF DOOR_WR4 Door {
   translation 4 1 0
   name "porta sala trabalho 4"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -244,6 +261,7 @@ Wall {
 DEF DOOR_DATACENTER Door {
   translation 8 1 0
   name "porta datacenter"
+  solidName "room_door"
   size 1 0.2 2.4
 }
 Wall {
@@ -3444,6 +3462,7 @@ DEF BOOSTER_T1 Robot {
     }
   ]
   name "T1_release"
+  solidName "booster"
   boundingObject USE Trunk
   physics Physics {
     density -1
