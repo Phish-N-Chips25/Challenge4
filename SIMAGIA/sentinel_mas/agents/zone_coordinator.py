@@ -46,12 +46,16 @@ class PerceptionListener(CyclicBehaviour):
 
         if event == "face_detected":
             if body.get("identity") == "unknown":
-                self.agent.beliefs.update("unknown_face", True)
                 self.agent.beliefs.update("physical_presence", True)
+                # Only mark unknown if we haven't already identified someone in
+                # this zone — bad angle / low-confidence frames shouldn't
+                # override a confirmed identity (sticky identity per zone).
+                if not self.agent.beliefs.get("last_identity"):
+                    self.agent.beliefs.update("unknown_face", True)
             else:
                 self.agent.beliefs.update("physical_presence", True)
                 self.agent.beliefs.update("last_identity", body.get("identity"))
-                # Identity resolved ->withdraw the unknown_face belief
+                # Identity resolved — withdraw unknown_face belief
                 self.agent.beliefs.remove("unknown_face")
 
         elif event == "motion_detected":
@@ -68,13 +72,16 @@ class PerceptionListener(CyclicBehaviour):
         elif event == "patrol_report":
             self.agent.beliefs.update("patrol_status", body.get("status"))
             if body.get("status") == "clear":
-                # Patrol confirmed zone is clear ->reset to baseline
+                # Patrol confirmed zone is clear -> reset to baseline
                 self.agent.beliefs.update("threat_level", settings.THREAT_LOW)
                 self.agent.beliefs.remove("cyber_anomaly")
                 self.agent.beliefs.remove("unknown_face")
                 self.agent.beliefs.remove("physical_presence")
                 self.agent.beliefs.remove("alerted_level")
                 self.agent.beliefs.update("motion_count", 0)
+                # Prevent loop: if patrol cleared the zone but a low-confidence
+                # face is still present, sticky identity blocks re-dispatch.
+                self.agent.beliefs.update("last_identity", "__cleared__")
 
         elif event == "belief_reset":
             # Stress-test hook: clears sensor beliefs WITHOUT touching patrol_status.

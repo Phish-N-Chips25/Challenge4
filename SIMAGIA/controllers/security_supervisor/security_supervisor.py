@@ -16,19 +16,19 @@ Start order:
     2. Open Webots and press Play.
 """
 
+import http.client
 import json
 import math
-import urllib.request
-import urllib.error
-import os
-import sys
+import queue
+import threading
+import time
 
 from controller import Supervisor
 
-TIME_STEP = 256    # ms — must match WorldInfo.basicTimeStep
-PATROL_SPEED   = 0.7   # m/s for teleport interpolation
-CMD_POLL_STEP  = 3     # check for patrol commands every N steps (~0.4 s sim)
-DASHBOARD_URL  = "http://localhost:8081"
+TIME_STEP    = 256   # ms — must match WorldInfo.basicTimeStep
+PATROL_SPEED = 0.7   # m/s for teleport interpolation
+DASHBOARD_HOST = "localhost"
+DASHBOARD_PORT = 8081
 
 # Webots zone name → MAS zone name
 _ZONE_MAP = {
@@ -46,7 +46,7 @@ _ZONE_MAP = {
 _PATROL_POS = {
     "lobby":       (-5.0, -3.5, 0.0),
     "exterior":    ( 5.0, -3.5, 0.0),
-    "work_room_1": (-8.0,  5.5, 0.0),   # beyond desk (y=4.5) so camera faces intruder
+    "work_room_1": (-8.0,  5.5, 0.0),
     "work_room_2": (-4.0,  5.5, 0.0),
     "work_room_3": ( 0.0,  5.5, 0.0),
     "work_room_4": ( 4.0,  5.5, 0.0),
@@ -74,28 +74,63 @@ _GATE_CAM = {
 }
 
 
-# ── HTTP helpers ──────────────────────────────────────────────────────────
+# ── Non-blocking HTTP ─────────────────────────────────────────────────────
 
-def _post(path: str, payload: dict) -> bool:
-    data = json.dumps(payload).encode()
-    req  = urllib.request.Request(
-        DASHBOARD_URL + path,
-        data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
+_post_queue: queue.Queue = queue.Queue()
+_cmd_queue:  queue.Queue = queue.Queue()  # FIFO — never overwrites
+
+
+def _post_worker():
+    """Background thread: drain post queue using a persistent connection."""
+    conn = None
+    while True:
+        try:
+            path, payload = _post_queue.get(timeout=1.0)
+        except queue.Empty:
+            continue
+        data = json.dumps(payload).encode()
+        for attempt in range(3):
+            try:
+                if conn is None:
+                    conn = http.client.HTTPConnection(DASHBOARD_HOST, DASHBOARD_PORT, timeout=1.0)
+                conn.request("POST", path, data, {"Content-Type": "application/json"})
+                conn.getresponse().read()
+                break
+            except Exception:
+                conn = None
+                if attempt < 2:
+                    time.sleep(0.05)
+
+
+def _cmd_poll_worker():
+    """Background thread: poll /api/patrol_cmd every 100 ms, enqueue each command."""
+    conn = None
+    while True:
+        try:
+            if conn is None:
+                conn = http.client.HTTPConnection(DASHBOARD_HOST, DASHBOARD_PORT, timeout=1.0)
+            conn.request("GET", "/api/patrol_cmd")
+            r = conn.getresponse()
+            raw = r.read()
+            if raw:
+                data = json.loads(raw)
+                if data:
+                    _cmd_queue.put(data)
+        except Exception:
+            conn = None
+        time.sleep(0.1)
+
+
+def _post(path: str, payload: dict) -> None:
+    """Non-blocking POST — queued to background thread."""
+    _post_queue.put((path, payload))
+
+
+def _take_cmd() -> dict | None:
+    """Return the next patrol command from the FIFO queue (non-blocking)."""
     try:
-        with urllib.request.urlopen(req, timeout=0.5):
-            return True
-    except Exception:
-        return False
-
-
-def _get_json(path: str):
-    try:
-        with urllib.request.urlopen(DASHBOARD_URL + path, timeout=0.5) as r:
-            return json.loads(r.read())
-    except Exception:
+        return _cmd_queue.get_nowait()
+    except queue.Empty:
         return None
 
 
@@ -131,6 +166,10 @@ class PatrolNav:
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main():
+    # Start background HTTP threads
+    threading.Thread(target=_post_worker,     daemon=True).start()
+    threading.Thread(target=_cmd_poll_worker, daemon=True).start()
+
     supervisor = Supervisor()
 
     receiver = supervisor.getDevice("receiver")
@@ -143,7 +182,6 @@ def main():
     patrol_node = supervisor.getFromDef("PATROL_ROBOT")
     nav         = PatrolNav(patrol_node)
 
-    # All possible intruder DEF names — collect whichever exist in this world
     _ALL_INTRUDER_DEFS = [
         "PERSON_INTRUDER",
         "PERSON_INTRUDER_WR1",
@@ -157,7 +195,6 @@ def main():
         if n is not None:
             intruder_nodes.append(n)
 
-    # Zone bounding boxes  {zone: ((xmin, ymin), (xmax, ymax))}
     _ZONE_BBOX = {
         "lobby":       ((-10, -7), (-2,  0)),
         "exterior":    (( -2, -7), ( 9,  0)),
@@ -195,13 +232,12 @@ def main():
             print(f"[Supervisor] intruso exilado de '{zone}'", flush=True)
 
     dt    = TIME_STEP / 1000.0
-    state = "idle"      # idle | moving | scanning
-    step  = 0
+    state = "idle"
 
-    print("[Supervisor] started — connecting to dashboard at", DASHBOARD_URL, flush=True)
+    print("[Supervisor] started — connecting to dashboard at",
+          f"http://{DASHBOARD_HOST}:{DASHBOARD_PORT}", flush=True)
 
     while supervisor.step(TIME_STEP) != -1:
-        step += 1
 
         # ── 1. Read incoming sensor/report messages ───────────────
         while receiver.getQueueLength() > 0:
@@ -217,8 +253,6 @@ def main():
             if msg_type == "sensor":
                 raw_zone = data.get("zone", "")
                 mas_zone = _ZONE_MAP.get(raw_zone, raw_zone)
-                # Send both the MAS zone (for agent routing) and the original
-                # Webots room name (for per-room display in the dashboard)
                 _post("/api/webots_event", {
                     **data,
                     "zone":        mas_zone,
@@ -232,7 +266,6 @@ def main():
                     mas_zone    = _ZONE_MAP.get(raw_zone, raw_zone)
                     webots_room = _MAS_TO_WEBOTS_ROOM.get(mas_zone, raw_zone)
 
-                    # Camera fallback: position-based detection overrides "clear"
                     if result == "clear" and _intruders_in_zone(mas_zone):
                         result = "intruder_confirmed"
                         print(f"[Supervisor] câmara falhou — intruso confirmado por posição em '{mas_zone}'", flush=True)
@@ -246,7 +279,6 @@ def main():
 
                     if result == "intruder_confirmed":
                         _remove_intruders_in_zone(mas_zone)
-                        webots_room = _MAS_TO_WEBOTS_ROOM.get(mas_zone, raw_zone)
                         _post("/api/webots_event", {
                             "type":        "sensor",
                             "event":       "patrol_report",
@@ -257,33 +289,28 @@ def main():
 
         # ── 2. Navigation step ────────────────────────────────────
         if state == "moving":
-            # Check for cancel or relay commands even while in motion
-            if step % CMD_POLL_STEP == 0:
-                cmd = _get_json("/api/patrol_cmd")
-                if cmd:
-                    if cmd.get("action") == "cancel":
-                        nav.set_target(None)      # freeze robot where it is
-                        state = "idle"
-                        _post("/api/patrol_preempted", {"zone": getattr(nav, "_current_zone", "")})
-                        print("[Supervisor] patrol preempted mid-flight", flush=True)
-                        continue
-                    elif cmd.get("action") == "relay_cyber":
-                        emitter.send(json.dumps({
-                            "event": "cyber_anomaly",
-                            "zone": cmd.get("zone", "datacenter"),
-                        }))
-                        print(f"[Supervisor] cyber relay → {cmd.get('zone')}", flush=True)
-
+            # Cancel check BEFORE nav.step — same order as original sync version.
+            # If cancel arrives first, skip moving so patrol_arrived is never sent.
+            cmd = _take_cmd()
+            if cmd:
+                if cmd.get("action") == "cancel":
+                    nav.set_target(None)
+                    state = "idle"
+                    _post("/api/patrol_preempted", {"zone": getattr(nav, "_current_zone", "")})
+                    print("[Supervisor] patrol preempted mid-flight", flush=True)
+                    continue
+                elif cmd.get("action") == "relay_cyber":
+                    emitter.send(json.dumps({
+                        "event": "cyber_anomaly",
+                        "zone": cmd.get("zone", "datacenter"),
+                    }))
             if nav.step(dt):
                 state = "idle"
                 _post("/api/patrol_arrived", {"zone": getattr(nav, "_current_zone", "")})
-            continue    # don't read new commands while moving
-
-        # ── 3. Poll dashboard for patrol commands (idle only) ─────
-        if step % CMD_POLL_STEP != 0:
             continue
 
-        cmd = _get_json("/api/patrol_cmd")
+        # ── 3. Process latest patrol command (idle) ───────────────
+        cmd = _take_cmd()
         if not cmd:
             continue
 

@@ -192,6 +192,18 @@ class AuctionBehaviour(PeriodicBehaviour):
         if agent.phase == "scanning":
             return
 
+        # Recall: if current mission zone threat resolved (e.g. authorized face
+        # confirmed while patrol was travelling), abort travel and return to base.
+        if agent.busy and agent.phase == "traveling" and agent.current_zone:
+            zc = agent.zone_coordinators.get(agent.current_zone)
+            if zc and zc.beliefs.get("threat_level", 0) < settings.THREAT_HIGH:
+                agent.log(
+                    f"RECALL '{agent.current_zone}': threat resolved — returning to base"
+                )
+                zc.beliefs.remove("patrol_status")
+                agent.abort_event.set()
+                return
+
         # Merge XMPP-delivered bids with direct ZC belief snapshot
         demands = self._live_demands(agent)
         if not demands:

@@ -4,119 +4,137 @@ Each person follows a route built from SCENARIO config below.
 All characters share this single controller file; the robot's
 NAME field (set in the .wbt) selects which scenario entry to use.
 
-Authorization is implicit in the character name:
-  Alice / Bruno / Carla  → recognised employee (face cam identifies them)
-  Intruder               → unknown person (triggers alert + patrol dispatch)
+Supports single-room destinations and multi-room looping routes.
 """
 
 import math
 from controller import Supervisor
 
-TIME_STEP = 256     # ms — must match WorldInfo.basicTimeStep
-SPEED      = 0.6    # m/s  — walking pace
-THRESHOLD  = 0.15   # m    — distance to consider a waypoint reached
-PAUSE_AT   = 60     # steps to pause at final waypoint before looping
+TIME_STEP    = 256    # ms — must match WorldInfo.basicTimeStep
+SPEED        = 0.6    # m/s — walking pace
+THRESHOLD    = 0.15   # m   — distance to consider a waypoint reached
+PAUSE_IN_ROOM = 45   # steps to pause inside each room before moving on (~12 s)
 
 
 # ═══════════════════════════════════════════════════════════════
-#  SCENARIO CONFIG — edita aqui para configurar o cenário
+#  SCENARIO CONFIG
 # ═══════════════════════════════════════════════════════════════
 #
-#  active      : True  = entra em cena
-#                False = fica fora do mapa (não aparece)
+#  active  : True = entra em cena
+#  delay   : segundos antes de começar a andar
+#  route   : lista de salas a visitar em loop
+#             ["work_room_1"]                    — fica numa sala
+#             ["work_room_1", "work_room_2"]     — vai entre duas salas
+#             ["work_room_1", "work_room_3", "server_room"]  — percurso
 #
-#  delay       : segundos a aguardar antes de começar a andar (0 = imediato)
-#
-#  destination : sala de destino após passar pelo lobby/checkpoint
-#                "lobby"       — fica no lobby
-#                "work_room_1" — Sala de Trabalho 1
-#                "work_room_2" — Sala de Trabalho 2
-#                "work_room_3" — Sala de Trabalho 3
-#                "work_room_4" — Sala de Trabalho 4
-#                "server_room" — Datacenter
-#
-#  Autorização (câmera de reconhecimento facial):
-#    Alice / Bruno / Carla  → funcionário reconhecido → sem alerta
-#    Intruder               → pessoa NÃO reconhecida  → alerta + patrulha
+#  Salas disponíveis: lobby, work_room_1..4, server_room
 #
 # ═══════════════════════════════════════════════════════════════
 SCENARIO = {
-    # ── Pessoas autorizadas (nomes = pastas em pessoas_permitidas/) ──
-    "Arsénio":    {"active": False, "delay":  0, "destination": "work_room_1"},
-    "César":      {"active": False, "delay":  0, "destination": "work_room_2"},
-    "Gonçalo":    {"active": False, "delay":  0, "destination": "work_room_3"},
-    "Rui Soares": {"active": False, "delay":  0, "destination": "work_room_4"},
-    "Rynalde":    {"active": False, "delay":  0, "destination": "server_room"},
-    # ── Intrusos ──────────────────────────────────────────────────────
-    "Intruder":   {"active": False,  "delay":  0, "destination": "server_room"},
-    "Intruder2":  {"active": True,  "delay": 30, "destination": "work_room_1"},
-    "Intruder3":  {"active": False, "delay":  0, "destination": "work_room_3"},
-    "Intruder4":  {"active": False, "delay":  0, "destination": "work_room_4"},
+    "Arsénio":    {"active": False, "delay":  0, "route": ["work_room_1"]},
+    "César":      {"active": False, "delay":  0, "route": ["work_room_2"]},
+    "Gonçalo":    {"active": False, "delay":  0, "route": ["work_room_3"]},
+    "Rui Soares": {"active": False, "delay":  0, "route": ["work_room_4"]},
+    "Rynalde":    {"active": False, "delay":  0, "route": ["server_room"]},
+    "Intruder":   {"active": True,  "delay":  0, "route": ["work_room_2"]},
+    "Intruder2":  {"active": False, "delay":  0, "route": ["work_room_1"]},
+    "Intruder3":  {"active": False, "delay":  0, "route": ["work_room_4"]},
+    "Intruder4":  {"active": False, "delay":  0, "route": ["work_room_2"]},
 }
 # ═══════════════════════════════════════════════════════════════
 
 
-# ── Internal route building ────────────────────────────────────
-# Door / corridor waypoints (from building geometry)
-_COMMON_ENTRY = [
-    (-5.0, -6.0, 0.0),   # entrance door (south wall gap)
-    (-5.0, -3.5, 0.0),   # lobby centre  (PIR + facecam)
-    (-5.0, -1.0, 0.0),   # checkpoint door
-]
+# ── Geometry ───────────────────────────────────────────────────
 
-_DEST_WAYPOINTS = {
-    "lobby":       [],
-    "work_room_1": [(-8.0,  1.0, 0.0), (-8.0,  4.5, 0.0)],
-    "work_room_2": [(-4.0,  1.0, 0.0), (-4.0,  4.5, 0.0)],
-    "work_room_3": [( 0.0,  1.0, 0.0), ( 0.0,  4.5, 0.0)],
-    "work_room_4": [( 4.0,  1.0, 0.0), ( 4.0,  4.5, 0.0)],
-    "server_room": [( 8.0,  0.0, 0.0), ( 8.0,  1.0, 0.0), ( 8.0,  3.5, 0.0)],
-}
-
-# Each character starts at a slightly different X so they don't overlap
 _START_X = {
     "Arsénio":    -5.0,
     "César":      -3.5,
     "Gonçalo":    -6.5,
     "Rui Soares": -4.8,
     "Rynalde":    -6.0,
-    "Intruder":   -5.0,
-    "Intruder2":  -4.5,
-    "Intruder3":  -5.5,
-    "Intruder4":  -4.0,
+    "Intruder":   -3.0,
+    "Intruder2":  -7.0,
+    "Intruder3":  -4.5,
+    "Intruder4":  -6.0,
 }
 
-_OFF_SCENE = (0.0, -40.0, 0.0)   # far off-map spawn point
+_OFF_SCENE = (0.0, -40.0, 0.0)
+
+# Corridor-level waypoint for each room (transition point between rooms)
+_CORRIDOR = {
+    "lobby":       (-5.0, -1.0, 0.0),
+    "work_room_1": (-8.0,  1.0, 0.0),
+    "work_room_2": (-4.0,  1.0, 0.0),
+    "work_room_3": ( 0.0,  1.0, 0.0),
+    "work_room_4": ( 4.0,  1.0, 0.0),
+    "server_room": ( 8.0,  0.0, 0.0),
+}
+
+# Deep waypoint inside each room (where person stops)
+_DEEP = {
+    "lobby":       (-5.0, -3.5, 0.0),
+    "work_room_1": (-8.0,  4.5, 0.0),
+    "work_room_2": (-4.0,  4.5, 0.0),
+    "work_room_3": ( 0.0,  4.5, 0.0),
+    "work_room_4": ( 4.0,  4.5, 0.0),
+    "server_room": ( 8.0,  3.5, 0.0),
+}
 
 
-def _build_route(name: str) -> list[tuple]:
-    cfg  = SCENARIO.get(name)
+def _build_route(name: str):
+    """Returns (waypoints, loop_start, pause_indices).
+
+    loop_start    : index to reset wp_idx to after the last waypoint
+    pause_indices : set of waypoint indices where person pauses in room
+    """
+    cfg = SCENARIO.get(name)
     if cfg is None or not cfg.get("active", False):
-        return [_OFF_SCENE]
+        return [_OFF_SCENE], 0, set()
 
-    dest = cfg.get("destination", "lobby")
-    sx   = _START_X.get(name, -5.0)
-    start = [(sx, -9.5, 0.0)]
-    dest_wps = [tuple(wp) for wp in _DEST_WAYPOINTS.get(dest, [])]
+    rooms  = cfg.get("route", ["lobby"])
+    sx     = _START_X.get(name, -5.0)
+    wps    = [(sx, -9.5, 0.0)]
+    pauses = set()
 
-    if dest == "lobby":
-        # Only goes as far as lobby centre, skips the checkpoint
-        return start + [(-5.0, -6.0, 0.0), (-5.0, -3.5, 0.0)]
+    if rooms == ["lobby"]:
+        wps += [(sx, -6.0, 0.0), (-5.0, -3.5, 0.0)]
+        pauses.add(len(wps) - 1)
+        return wps, 1, pauses
 
-    return start + [tuple(wp) for wp in _COMMON_ENTRY] + dest_wps
+    # Initial entry: each character walks their own lane through the lobby
+    # and converges at the checkpoint door (-5.0, -1.0).
+    wps += [(sx, -6.0, 0.0), (-5.0, -3.5, 0.0), (-5.0, -1.0, 0.0)]
+
+    # First room: enter directly from checkpoint
+    first = rooms[0]
+    wps.append(_CORRIDOR[first])
+    wps.append(_DEEP[first])
+    pauses.add(len(wps) - 1)
+
+    loop_start = len(wps) - 1  # stay at last waypoint forever
+
+    # Subsequent rooms: exit previous, enter next
+    for i, room in enumerate(rooms[1:], 1):
+        prev = rooms[i - 1]
+        wps.append(_CORRIDOR[prev])   # exit previous room to corridor
+        wps.append(_CORRIDOR[room])   # walk to next room's corridor
+        wps.append(_DEEP[room])       # go deep into room
+        pauses.add(len(wps) - 1)
+
+    return wps, loop_start, pauses
 
 
 def main():
     robot = Supervisor()
     name  = robot.getName()
 
-    route = _build_route(name)
+    route, loop_start, pause_indices = _build_route(name)
 
     self_node   = robot.getSelf()
     translation = self_node.getField("translation")
 
-    cfg        = SCENARIO.get(name, {})
-    dt         = TIME_STEP / 1000.0
+    cfg         = SCENARIO.get(name, {})
+    dt          = TIME_STEP / 1000.0
     delay_steps = int(cfg.get("delay", 0) / dt) if cfg.get("active") else 0
 
     wp_idx = 0
@@ -129,11 +147,12 @@ def main():
             delay_steps -= 1
             continue
 
-        if wp_idx >= len(route):
-            continue
-
         if pause > 0:
             pause -= 1
+            continue
+
+        if wp_idx >= len(route):
+            wp_idx = loop_start
             continue
 
         target  = route[wp_idx]
@@ -146,9 +165,9 @@ def main():
         dist = math.hypot(dx, dy)
 
         if dist < THRESHOLD:
+            if wp_idx in pause_indices:
+                pause = PAUSE_IN_ROOM
             wp_idx += 1
-            if wp_idx >= len(route):
-                pause = PAUSE_AT
             continue
 
         move  = min(SPEED * dt, dist)

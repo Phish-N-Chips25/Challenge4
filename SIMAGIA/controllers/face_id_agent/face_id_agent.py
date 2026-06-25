@@ -20,7 +20,7 @@ import urllib.request
 from controller import Robot
 
 TIME_STEP      = 256   # ms — must match WorldInfo.basicTimeStep
-SCAN_COOLDOWN  = 40    # steps between recognition requests (~10 s)
+SCAN_COOLDOWN  = 1     # steps between recognition requests (~0.25 s)
 DASHBOARD_URL  = "http://localhost:8081"
 
 # Shared state for async recognition (background thread → main loop)
@@ -97,7 +97,7 @@ def main():
                               "base_vazia", "service_unavailable"):
                 identity   = resultado.get("matched_name") if resultado.get("allowed") else "unknown"
                 score      = resultado.get("score") or 0.0
-                confidence = round(score if identity != "unknown" else 0.80, 2)
+                confidence = round(score, 2)
                 emitter.send(json.dumps({
                     "type":           "sensor",
                     "event":          "face_detected",

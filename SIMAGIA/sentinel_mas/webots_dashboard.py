@@ -17,6 +17,7 @@ import os
 import sys
 from collections import deque
 from contextlib import suppress
+from functools import partial
 from datetime import datetime
 
 import loguru
@@ -79,11 +80,13 @@ _CYBER_ROOMS = {"datacenter", "work_room_1", "work_room_2", "work_room_3", "work
 
 # ── State ──────────────────────────────────────────────────────────────────
 
-_room_events: dict[str, deque] = {r: deque(maxlen=8) for r in WEBOTS_ROOMS}
-_activity:    deque             = deque(maxlen=150)
-_bridge:      WebotsBridge | None = None
-_zcs:         dict              = {}
-_patrol:      PatrolAgent | None  = None
+_room_events:    dict[str, deque] = {r: deque(maxlen=8) for r in WEBOTS_ROOMS}
+_activity:       deque             = deque(maxlen=150)
+_bridge:         WebotsBridge | None = None
+_zcs:            dict              = {}
+_patrol:         PatrolAgent | None  = None
+_zone_identity:  dict[str, str]    = {}  # webots_room → last confirmed identity
+_preempted_from: str | None        = None  # zone interrupted by last preemption
 
 
 def _ts() -> str:
@@ -108,8 +111,10 @@ def _push(webots_room: str, event: dict) -> None:
         identity = event.get("identity", "?")
         conf     = int(event.get("confidence", 0) * 100)
         if identity == "unknown":
-            _log("alert", f"Pessoa NÃO reconhecida em {label} (conf. {conf}%)")
+            if not _zone_identity.get(webots_room):
+                _log("alert", f"Pessoa NÃO reconhecida em {label} (conf. {conf}%)")
         else:
+            _zone_identity[webots_room] = identity
             _log("ok", f"Pessoa identificada: {identity} em {label} (conf. {conf}%)")
     elif ev == "cyber_anomaly":
         score  = event.get("score", "?")
@@ -118,6 +123,7 @@ def _push(webots_room: str, event: dict) -> None:
     elif ev == "patrol_report":
         status = event.get("status", "?")
         if status == "clear":
+            _zone_identity.pop(webots_room, None)
             _log("ok", f"Patrulha: {label} está LIMPA")
         elif status == "intruder_confirmed":
             _log("critical", f"Patrulha: INTRUSO CONFIRMADO em {label}!")
@@ -228,24 +234,30 @@ async def handle_patrol_cmd(request):
 
 
 async def handle_patrol_preempted(request):
+    global _preempted_from
     try:
         data = await request.json()
     except Exception:
         data = {}
     zone  = data.get("zone", "")
-    label = _ROOM_LABEL.get(zone, _room_label_from_mas(zone))
-    _log("alert", f"Patrulha REDIRECCIONADA — missão em {label} interrompida (prioridade mais alta)")
+    _preempted_from = zone
     return web.Response(text="ok")
 
 
 async def handle_patrol_moving(request):
+    global _preempted_from
     try:
         data = await request.json()
     except Exception:
         return web.Response(status=400, text="bad json")
-    zone  = data.get("zone", "?")
-    label = _room_label_from_mas(zone)
-    _log("robot", f"Robot de patrulha a deslocar-se para {label}…")
+    zone     = data.get("zone", "?")
+    to_label = _room_label_from_mas(zone)
+    if _preempted_from:
+        from_label   = _ROOM_LABEL.get(_preempted_from, _room_label_from_mas(_preempted_from))
+        _preempted_from = None
+        _log("alert", f"Patrulha REDIRECCIONADA: {from_label} → {to_label}")
+    else:
+        _log("robot", f"Robot de patrulha a deslocar-se para {to_label}…")
     return web.Response(text="ok")
 
 
@@ -276,7 +288,8 @@ async def handle_recognize_face(request):
     bgra = np.frombuffer(data[8:8 + expected], dtype=np.uint8).reshape((h, w, 4))
     bgr  = bgra[:, :, :3]
     loop     = asyncio.get_event_loop()
-    resultado = await loop.run_in_executor(None, validar_pessoa_detalhes, bgr)
+    fn = partial(validar_pessoa_detalhes, threshold=0.35)
+    resultado = await loop.run_in_executor(None, fn, bgr)
     return web.json_response(resultado)
 
 
