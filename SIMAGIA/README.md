@@ -30,7 +30,7 @@ entre os coordenadores — ver secção dedicada abaixo.
                                └───────────────────────┘
 ```
 
-As 5 zonas: `lobby`, `server_room`, `lab`, `corridor`, `exterior`.
+As 8 zonas: `lobby`, `break_room`, `corridor`, `work_room_1`, `work_room_2`, `work_room_3`, `work_room_4`, `datacenter`.
 
 ---
 
@@ -69,7 +69,7 @@ python main.py --web
 ```
 
 Abre **http://localhost:8080** no browser. Vês:
-- uma **planta 2D vista de cima** com as 5 salas (coloridas pelo nível de ameaça)
+- uma **planta 2D vista de cima** com as 8 salas (coloridas pelo nível de ameaça)
   e o **robô de patrulha a deslocar-se** entre elas (base → zona → inspeciona →
   regressa), com a fase atual (`traveling`/`scanning`/`returning`);
 - um **cartão por zona** (ameaça, interpretação, crenças ativas) com botões para
@@ -87,7 +87,7 @@ cliente XMPP. A velocidade do robô e o tempo de inspeção são ajustáveis em
 python main.py
 ```
 
-Arranca o servidor XMPP + os 11 agentes. Os sensores reativos geram eventos
+Arranca o servidor XMPP + os agentes. Os sensores reativos geram eventos
 **simulados** aleatoriamente, por isso vês o sistema a reagir sozinho.
 `Ctrl+C` para parar.
 
@@ -129,13 +129,13 @@ cada cenário isolado e limpo.
 ## Lógica de fusão de ameaça (por zona)
 
 A fusão é **sensível à zona** — cada zona tem as suas modalidades de sensor e a
-sua interpretação das evidências, espelhando a tabela de desenho. Implementada em
+sua interpretação das evidências. Implementada em
 [`threat_fusion.py`](sentinel_mas/agents/threat_fusion.py); modalidades por zona em
 [`settings.py`](sentinel_mas/config/settings.py) (`ZONE_MODALITIES`).
 
 | Zona | Modalidades | Evidência | Nível | Interpretação |
 |------|-------------|-----------|-------|---------------|
-| **server_room** | motion, camera, cyber | cyber + motion + rosto desconhecido | `CRITICAL` | correlated critical incident |
+| **datacenter** | motion, camera, cyber | cyber + motion + rosto desconhecido | `CRITICAL` | correlated critical incident |
 | | | cyber + motion (sem face autorizada) | `CRITICAL` | unidentified presence during anomaly |
 | | | cyber + face autorizada | `LOW` | benign admin activity |
 | | | cyber só (sem presença) | `HIGH` | remote attack |
@@ -143,13 +143,14 @@ sua interpretação das evidências, espelhando a tabela de desenho. Implementad
 | **lobby** | motion, camera | motion + rosto desconhecido | `HIGH` | visual intruder |
 | | | motion + face autorizada | `LOW` | authorized presence |
 | | | motion só | `MEDIUM` | unidentified presence |
-| **lab** | motion, cyber | cyber + motion | `HIGH` | presence correlated w/ anomaly (patrulha p/ ID) |
+| **break_room** | motion, camera | motion + rosto desconhecido | `HIGH` | visual intruder |
+| | | motion + face autorizada | `LOW` | authorized presence |
+| | | motion só | `MEDIUM` | unidentified presence |
+| **work_room_1–4** | motion, cyber | cyber + motion | `HIGH` | presence correlated w/ anomaly (patrulha p/ ID) |
 | | (sem camera) | cyber só | `HIGH` | compromised workstation |
 | | | motion só | `MEDIUM` | unidentified presence (sem camera) |
 | **corridor** | motion | motion sustentado (≥3) | `MEDIUM` | suspicious loitering |
 | | | motion pontual | `LOW` | transit |
-| **exterior** | motion, camera | motion + rosto desconhecido | `HIGH` | unknown approach |
-| | | motion só | `MEDIUM` | perimeter presence |
 
 Bursts de eventos correlacionados são fundidos **atomicamente**: a deliberação
 espera ~0.4s após a última perceção, para ver o conjunto completo em vez de
@@ -169,7 +170,7 @@ E os planos disponíveis (selecionados por utilidade, o mais alto ganha):
 
 ## Negociação entre coordenadores (Contract Net Protocol)
 
-Há **um só robô de patrulha** para 5 zonas — um recurso escasso. Quando várias
+Há **um só robô de patrulha** para 8 zonas — um recurso escasso. Quando várias
 zonas o querem ao mesmo tempo, ele é alocado por **leilão** (FIPA Contract Net),
 em vez de "quem pede primeiro ganha". O `PatrolAgent` é o leiloeiro da sua
 própria disponibilidade. Implementado em
@@ -179,10 +180,10 @@ própria disponibilidade. Implementado em
 ```
 ZC (ameaça ≥ HIGH) ──REQUEST patrol_wanted──▶ Patrol       (anuncia interesse)
 Patrol (livre, há procura) ──CFP──▶ todos os ZCs           (call-for-proposals)
-ZC_server_room ──PROPOSE bid=3──▶ Patrol                   (licita = nível de ameaça)
-ZC_lab         ──PROPOSE bid=2──▶ Patrol
-Patrol ──ACCEPT-PROPOSAL──▶ ZC_server_room                 (maior bid ganha)
-Patrol ──REJECT-PROPOSAL──▶ ZC_lab                         (rejeita os restantes)
+ZC_datacenter  ──PROPOSE bid=3──▶ Patrol                   (licita = nível de ameaça)
+ZC_work_room_1 ──PROPOSE bid=2──▶ Patrol
+Patrol ──ACCEPT-PROPOSAL──▶ ZC_datacenter                  (maior bid ganha)
+Patrol ──REJECT-PROPOSAL──▶ ZC_work_room_1                 (rejeita os restantes)
 Patrol ──(executa missão na zona vencedora)──▶ patrol_report
 ```
 
@@ -194,8 +195,8 @@ Patrol ──(executa missão na zona vencedora)──▶ patrol_report
 - Se a navegação falhar, a zona volta a poder licitar (não fica presa).
 
 **Para veres:** dispara duas zonas em alta ao mesmo tempo, ex.: combo `b` no
-`server_room` (CRITICAL) e evento `4` no `lab` (HIGH). No terminal vês o
-`CFP → PROPOSE → winner` e o robô a ir primeiro ao server_room; o lab espera e é
+`datacenter` (CRITICAL) e evento `4` no `work_room_1` (HIGH). No terminal vês o
+`CFP → PROPOSE → winner` e o robô a ir primeiro ao datacenter; o work_room_1 espera e é
 servido a seguir.
 
 ---
@@ -221,21 +222,21 @@ multi-modalidade da tabela. Em cada um, escreves a escolha e depois a zona.
 
 | Combo | Eventos | Resultado típico |
 |-------|---------|------------------|
-| `a` | motion + face mismatch | intruder → `HIGH` (lobby: visual intruder) |
-| `b` | cyber + motion (sem face) | `CRITICAL` no server_room (presença durante anomalia) |
+| `a` | motion + face mismatch | intruder → `HIGH` (lobby/break_room: visual intruder) |
+| `b` | cyber + motion (sem face) | `CRITICAL` no datacenter (presença durante anomalia) |
 | `c` | cyber + motion + face mismatch | `CRITICAL` correlated incident |
 | `d` | cyber + face autorizada | `LOW` benign admin (sem escalada) |
 | `e` | cyber só | `HIGH` remote attack / compromised workstation |
 
-> A severidade depende da zona — ex.: o combo `b` é CRÍTICO no `server_room`,
-> mas no `lab` (sem camera) só consegues motion+cyber via eventos 1+4. Vê a
+> A severidade depende da zona — ex.: o combo `b` é CRÍTICO no `datacenter`,
+> mas numa work_room (sem camera) só consegues motion+cyber via eventos 1+4. Vê a
 > tabela de fusão por zona acima.
 
 ### Exemplos rápidos
-- **Incidente crítico correlacionado:** combo `c` no `server_room` → `*** ALERT *** threat=3`.
-- **Admin benigno:** combo `d` no `server_room` → fica `LOW`, sem patrulha nem alerta.
+- **Incidente crítico correlacionado:** combo `c` no `datacenter` → `*** ALERT *** threat=3`.
+- **Admin benigno:** combo `d` no `datacenter` → fica `LOW`, sem patrulha nem alerta.
 - **Loitering:** evento `1` três vezes no `corridor` → `suspicious loitering` (MEDIUM).
-- **Workstation comprometida:** evento `4` no `lab` → `compromised workstation` (HIGH) → patrulha.
+- **Workstation comprometida:** evento `4` numa `work_room` → `compromised workstation` (HIGH) → patrulha.
 - **De-escalar:** evento `6` na zona → volta a `LOW` e limpa as crenças.
 
 ---
@@ -287,4 +288,3 @@ Usa `Ctrl+C` no terminal (não feches a janela à força), para libertar a porta
 O `PatrolAgent` usa um *stub* de navegação. A integração real (PPO via
 stable-baselines3 + tópicos ROS2 `/cmd_vel`, `/odom`, `/scan`) liga-se quando
 `ROS2_ENABLED = True` em [`config/settings.py`](sentinel_mas/config/settings.py).
-```
