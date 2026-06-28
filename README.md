@@ -108,8 +108,8 @@ config (see §4):
 ```bash
 # in WSL2 Ubuntu:
 cd unitree-g1-webots
-./tools/run_sentinelmas_booster.sh                 # lidar patrol node (their nav)
-USE_PPO_PATROL=1 ./tools/run_sentinelmas_booster.sh  # PPO drives (Part 2)
+./tools/run_sentinelmas_booster.sh                  # PPO drives (default)
+USE_PPO_PATROL=0 ./tools/run_sentinelmas_booster.sh # lidar patrol node
 ```
 
 ---

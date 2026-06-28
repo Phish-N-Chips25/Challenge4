@@ -14,59 +14,39 @@ This guide runs **all three layers** together: SIMAGIA decides → PPO navigates
 
 ---
 
-## Step 1 — Build & start the Docker container
+## Start everything
+
+Run this from the repository root:
 
 ```bash
-cd unitree-g1-webots
-./containers/build_ros_container.sh
-docker compose up -d ros2
+./scripts/run_fullstack.py
 ```
 
-This builds `booster-t1-webots-ros:humble` (ROS 2 Humble + torch + SB3) and starts it. The container bind-mounts both `unitree-g1-webots` (as `/workspace/project`) and `../cyber-physical-security-system/src/rl` (as `/workspace/rl`, read-only).
+The launcher replaces the old terminal-by-terminal sequence. It:
 
-Verify:
-```bash
-docker exec booster-t1-ros ls /workspace/rl/policy_runner.py
-```
+1. Checks the repo layout, Docker, Docker Compose, Webots, Booster assets, and SIMAGIA Python.
+2. Uses the existing `.venv-simagia310` or `SIMALGIA_PYTHON` when available, and skips `pip install` when `spade`, `aiohttp`, `loguru`, and `pyjabber` already import.
+3. Starts/reuses the Booster Docker container first (`docker compose up -d ros2`).
+4. Verifies the RL mount (`/workspace/rl/policy_runner.py`).
+5. Runs `unitree-g1-webots/tools/run_sentinelmas_booster.sh`, which starts Webots, Booster runner, ROS bridge, odometry, lidar, and PPO patrol.
+6. Starts SIMAGIA with `USE_BOOSTER_BRIDGE=1 python main.py --web` and writes logs to `unitree-g1-webots/.logs/simagia.log`.
 
----
-
-## Step 2 — Launch the Booster stack (Webots + ROS 2)
+Useful options:
 
 ```bash
-cd unitree-g1-webots
-USE_PPO_PATROL=1 ./tools/run_sentinelmas_booster.sh safe_dock_path
+./scripts/run_fullstack.py --dry-run                  # print the plan without starting anything
+./scripts/run_fullstack.py --detach                   # leave SIMAGIA running and return
+./scripts/run_fullstack.py --rebuild-booster          # force Docker image rebuild
+./scripts/run_fullstack.py --simagia-python /path/to/python
+./scripts/run_fullstack.py --no-install-simagia-deps  # check imports only
 ```
-
-What this does (all automated by the script):
-
-1. **Extracts** vendor assets to `.docker/`
-2. **Builds** the ROS 2 workspace (`colcon build`)
-3. **Launches Webots** on the host with `worlds/sentinelmas_office.wbt`
-4. **Starts the Booster runner** (`mck` locomotion engine + DDS) inside the container
-5. **Starts the ROS bridge** (`rpc_service_node` — ROS ↔ DDS)
-6. **Starts odometry publisher** (Webots pose → `/booster_t1/odom`)
-7. **Starts simulated lidar** (`sim_lidar_pointcloud_node`)
-8. **Starts `ppo_patrol_node`** (PPO-driven mission patrol — reads missions from JSONL, drives robot via RPC)
-9. **Sends `safe_dock_path`** movement as a demo (robot walks forward 20s)
 
 Watch logs in separate terminals:
 ```bash
 tail -f unitree-g1-webots/.logs/booster-patrol.log     # PPO patrol node
 tail -f unitree-g1-webots/.logs/booster-webots-runner.log  # locomotion engine
 tail -f unitree-g1-webots/.logs/host-webots-sentinelmas.log # Webots
-```
-
----
-
-## Step 3 — Start SIMAGIA (perception + decision)
-
-In a **new terminal** (on the host, not inside Docker):
-
-```bash
-conda activate cyberpatrol
-cd SIMAGIA/sentinel_mas
-USE_BOOSTER_BRIDGE=1 python main.py --web
+tail -f unitree-g1-webots/.logs/simagia.log            # SIMAGIA
 ```
 
 Key env vars for the bridge mode:
@@ -82,7 +62,7 @@ Open `http://localhost:8080` for the live dashboard — you'll see the office ma
 
 ---
 
-## Step 4 — Watch the pipeline in action
+## Watch the pipeline in action
 
 1. **SIMAGIA** generates sensor events (motion/camera/cyber) in random zones
 2. **Threat fusion** escalates — when a zone hits HIGH/CRITICAL, a **Contract Net auction** runs
@@ -120,7 +100,10 @@ Zone coordinates for reference:
 ## Shutdown
 
 ```bash
-# Stop SIMAGIA — Ctrl+C in its terminal
+# Foreground run: Ctrl+C stops SIMAGIA.
+
+# Detached run:
+kill "$(cat unitree-g1-webots/.logs/simagia.pid)"
 
 # Stop Webots + container processes
 cd unitree-g1-webots
@@ -156,4 +139,4 @@ docker stop booster-t1-ros
 
 ## Known caveat
 
-The `run_sentinelmas_booster.sh` script sends a final `rpc_movement_client` command after launching the patrol node. When `USE_PPO_PATROL=1`, this causes an RPC collision (two consumers calling `/booster_rpc_service`). It does **not** crash the system but can slow robot movement. To avoid it, set `WEBOTS_HOLD_SECONDS=60` and inject missions manually instead.
+`run_sentinelmas_booster.sh` now starts PPO patrol by default and skips the final manual `rpc_movement_client` command. Set `USE_PPO_PATROL=0` for the lidar patrol node, or `BOOSTER_SEND_MANUAL_COMMAND=1` only when you deliberately want to send a manual RPC command after startup.

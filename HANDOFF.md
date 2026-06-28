@@ -128,16 +128,16 @@ The RL code is bind-mounted read-only from `../cyber-physical-security-system/sr
 
 ## 4. Running the System
 
-### Quick Start (PPO mode, patrol then dock movement)
+### Quick Start (PPO mode, default)
 
 ```bash
-USE_PPO_PATROL=1 ./tools/run_sentinelmas_booster.sh safe_dock_path
+./tools/run_sentinelmas_booster.sh
 ```
 
-### Quick Start (Lidar mode, default patrol)
+### Quick Start (Lidar/manual mode)
 
 ```bash
-./tools/run_sentinelmas_booster.sh safe_dock_path
+USE_PPO_PATROL=0 ./tools/run_sentinelmas_booster.sh safe_dock_path
 ```
 
 ### What the script does (in order):
@@ -152,14 +152,14 @@ USE_PPO_PATROL=1 ./tools/run_sentinelmas_booster.sh safe_dock_path
 | 6 | ROS bridge | Starts `rpc_service_node` (ROS ↔ DDS bridge) |
 | 7 | Odometry publisher | `pose_file_odometry_publisher` reads Webots JSON → `/booster_t1/odom` |
 | 8 | Lidar simulator | `sim_lidar_pointcloud_node` publishes fake point cloud |
-| 9 | Patrol node | Launches `ppo_patrol_node` (if `USE_PPO_PATROL=1`) or `booster_patrol_node` |
-| 10 | Movement command | Sends `safe_dock_path` via `rpc_movement_client` (20s forward at 0.2 m/s) |
+| 9 | Patrol node | Launches `ppo_patrol_node` by default, or `booster_patrol_node` with `USE_PPO_PATROL=0` |
+| 10 | Movement command | Skipped by default in PPO mode; set `BOOSTER_SEND_MANUAL_COMMAND=1` for the manual `rpc_movement_client` |
 
 ### Running with Mission Injection (demonstrates PPO driving)
 
 ```bash
 # Terminal 1: Start infrastructure
-USE_PPO_PATROL=1 ./tools/run_sentinelmas_booster.sh safe_dock_path
+./tools/run_sentinelmas_booster.sh
 
 # Wait for "PPO patrol node started" in .logs/booster-patrol.log
 
@@ -194,7 +194,8 @@ tail -f unitree-g1-webots/.logs/booster-patrol.log
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `USE_PPO_PATROL` | (unset) | Set to `1` to use PPO-driven navigation |
+| `USE_PPO_PATROL` | `1` | PPO-driven navigation by default; set `0` for the lidar patrol node |
+| `BOOSTER_SEND_MANUAL_COMMAND` | unset | Skips manual RPC movement in PPO mode; set `1` to force `rpc_movement_client` after startup |
 | `WEBOTS_PORT` | `1234` | Webots external controller port |
 | `ROBOT_NAME` | `T1_release` | Webots robot name |
 | `SERVICE_TIMEOUT` | `120` | Seconds to wait for services |
@@ -565,8 +566,8 @@ machine.update_pose(Pose2D(p.x, p.y, yaw))
 
 The PPO adapter's own `update_pose()` (line 80) accepts a `now` parameter, but the state machine's method does not.
 
-### Known Limitation: PPO Adapter RPC Collision
+### PPO Adapter RPC Ownership
 
-When running `run_sentinelmas_booster.sh`, the script launches both the PPO patrol node AND a separate `rpc_movement_client` that sends manual movement commands. The PPO adapter and the movement client both call the same `/booster_rpc_service`, causing `status=502` errors for one of them. This does **not** crash the system but slows robot progress.
+When running `run_sentinelmas_booster.sh` in the default PPO mode, the script starts `ppo_patrol_node` and skips the separate `rpc_movement_client` command. This keeps `/booster_rpc_service` owned by the PPO adapter during mission navigation.
 
-To avoid this: either (a) run the infrastructure script with `WEBOTS_HOLD_SECONDS` and inject missions manually, or (b) modify the script to skip the movement command when `USE_PPO_PATROL=1`.
+Only set `BOOSTER_SEND_MANUAL_COMMAND=1` when you deliberately want a manual RPC command after startup; doing that can still contend with the PPO controller.
