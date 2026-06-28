@@ -4,13 +4,13 @@ import './App.css'
 const slideMeta = [
   'Opening',
   'Problem',
-  'Team 10',
+  'Timeline',
   'Architecture',
   'Elements',
   'Decision model',
   'Navigation',
   'Demo',
-  'Proof',
+  'Status',
   'Close',
 ]
 
@@ -235,6 +235,13 @@ function App() {
 
   return (
     <main ref={deckRef} className="presentation" aria-label="SentinelMAS pitch deck" tabIndex={0}>
+      <header className="deck-header" aria-hidden="true">
+        <span className="deck-header-brand">
+          <img className="deck-header-logo" src="team/logo.jpg" alt="" />
+          Phish&apos;N&apos;Chips25 · Team 10
+        </span>
+        <span className="deck-header-challenge">Challenge 4</span>
+      </header>
       <div className="slides" style={transform}>
         <section className={slideClass(0, 'slide-hero')}>
           <div className="slide-inner hero-grid">
@@ -282,16 +289,22 @@ function App() {
         </section>
 
         <section className={slideClass(2, 'slide-silver')}>
-          <div className="slide-inner research-layout">
+          <div className="slide-inner research-layout timeline-combined">
             <div>
-              <p className="eyebrow">Team 10 — four-week journey</p>
-              <h2>We turned one research question into an integrated cyber-physical system.</h2>
+              <p className="eyebrow">June build · July hardening</p>
+              <h2>Four June weeks built the pipeline; July hardened it into a complete system.</h2>
             </div>
             <div className="timeline-grid">
-              <div><span>Week 1</span><strong>Problem framed</strong><p>One platform across cybersecurity, physical security, and autonomous robotics.</p></div>
-              <div><span>Week 2</span><strong>State of the art</strong><p>Surveyed cyber detection, face recognition, patrol robotics, and multi-agent coordination.</p></div>
-              <div><span>Week 3</span><strong>Architecture designed</strong><p>Connected perception, decision-making, navigation, and the robot into one flow.</p></div>
-              <div><span>Week 4</span><strong>Integrated and tested</strong><p>Built the end-to-end loop and measured where it already works.</p></div>
+              <div><span>Week 1</span><strong>RL foundation</strong><p>Docker/Python setup, PPO training config, and first patrol environment.</p></div>
+              <div><span>Week 2</span><strong>MAS + Webots</strong><p>SIMAGIA agents, Contract Net auctions, the office world, and Booster T1 assets.</p></div>
+              <div><span>Week 3</span><strong>Policy validated</strong><p>First office PPO baseline, used to harden route safety.</p></div>
+              <div><span>Week 4</span><strong>Final integration</strong><p>Face ID, threat fusion, PPO navigation, JSONL missions, ROS 2, and Webots.</p></div>
+            </div>
+            <p className="eyebrow july-label">July · Delivered</p>
+            <div className="ask-grid">
+              <div><strong>Booster locomotion</strong><span>Integrated the Booster T1 stack with full locomotion and ran the complete patrol loop in Webots.</span></div>
+              <div><strong>System integrated &amp; tested</strong><span>Validated simultaneous cyber and physical alerts, multiple intruders, and auction load end to end.</span></div>
+              <div><strong>Documented &amp; reported</strong><span>Final report, architecture docs, and setup guides completed for handoff and deployment.</span></div>
             </div>
           </div>
         </section>
@@ -377,19 +390,14 @@ function App() {
         <section className={slideClass(7, 'slide-light')}>
           <div className="slide-inner video-layout">
             <div>
-              <p className="eyebrow">Live demos</p>
-              <h2>Two recorded runs: the decision layer, then the robot.</h2>
+              <p className="eyebrow">Live demo</p>
+              <h2>One recorded run: decision layer, navigation, and the robot.</h2>
             </div>
-            <div className="video-grid">
+            <div className="video-grid video-grid-single">
               <VideoSlot
-                caption="Perception, threat fusion, auction, dashboard movement"
-                fileName="sentinelmas-dashboard-demo.mp4"
-                label="SIMAGIA dashboard"
-              />
-              <VideoSlot
-                caption="Webots office, Booster T1, PPO mission dispatch"
-                fileName="booster-webots-demo.mp4"
-                label="Booster Webots run"
+                caption="Perception, threat fusion, auction, PPO navigation, and Webots mission dispatch"
+                fileName="recording.mp4"
+                label="SentinelMAS run"
               />
             </div>
           </div>
@@ -398,8 +406,8 @@ function App() {
         <section className={slideClass(8, 'slide-silver')}>
           <div className="slide-inner proof-layout">
             <div>
-              <p className="eyebrow">What works today</p>
-              <h2>Most of the pipeline is already integrated and measurable.</h2>
+              <p className="eyebrow">Ready for tomorrow</p>
+              <h2>The full software loop works; the remaining blocker is vendor calibration.</h2>
             </div>
             <div className="proof-grid">
               <Metric value="0.82+" label="known staff face scores" tone="green" />
@@ -408,10 +416,10 @@ function App() {
               <Metric value="8" label="shared office zones" tone="orange" />
             </div>
             <div className="status-strip">
-              <span>MAS auction: ready</span>
+              <span>Software pipeline: working</span>
               <span>Face bridge: verified</span>
-              <span>PPO: validated</span>
-              <span>T1 Webots: renders and connects</span>
+              <span>PPO+A*: validated</span>
+              <span>Booster walking: blocked by /opt/booster vendor config</span>
             </div>
           </div>
         </section>
@@ -419,15 +427,15 @@ function App() {
         <section className={slideClass(9, 'slide-close')}>
           <div className="slide-inner close-layout worked-layout final-team-layout">
             <p className="eyebrow">Team 10 / Challenge 4</p>
-            <h2>Built by Phish'N'Chips25 for autonomous cyber-physical security.</h2>
+            <h2>From scattered alerts to coordinated robot response.</h2>
             <div className="worked-grid final-team-grid">
-              <div><span>Challenge 4 member</span><strong>Arsenio Ferraz</strong><p>Team 10 contributor across Challenges 1-4.</p></div>
-              <div><span>Challenge 4 member</span><strong>Cesar Vieira</strong><p>Team 10 contributor across Challenges 1-4.</p></div>
-              <div><span>Challenge 4 member</span><strong>Rui Soares</strong><p>Team 10 contributor across Challenges 1-4.</p></div>
-              <div><span>Challenge 4 member</span><strong>Goncalo Jesus</strong><p>Team 10 contributor across Challenges 2-4.</p></div>
-              <div><span>Challenge 4 member</span><strong>Rynalde Serejo</strong><p>Team 10 contributor across Challenges 3-4.</p></div>
+              <div><strong>Arsénio Ferraz</strong><p>Nº 1010137</p></div>
+              <div><strong>César Vieira</strong><p>Nº 1241523</p></div>
+              <div><strong>Rui Soares</strong><p>Nº 1221283</p></div>
+              <div><strong>Gonçalo Jesus</strong><p>Nº 1220822</p></div>
+              <div><strong>Rynalde Serejo</strong><p>Nº 1252445</p></div>
             </div>
-            <p className="punchline">From scattered alerts to coordinated action.</p>
+            <p className="punchline">Perception decides the threat. SIMAGIA chooses the mission. PPO drives the response.</p>
           </div>
         </section>
       </div>
