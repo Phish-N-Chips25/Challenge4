@@ -390,7 +390,7 @@ function App() {
         <section className={slideClass(7, 'slide-light')}>
           <div className="slide-inner video-layout">
             <div>
-              <p className="eyebrow">Live demo</p>
+              <p className="eyebrow">Demo · recorded run</p>
               <h2>One recorded run: decision layer, navigation, and the robot.</h2>
             </div>
             <div className="video-grid video-grid-single">
@@ -406,8 +406,9 @@ function App() {
         <section className={slideClass(8, 'slide-silver')}>
           <div className="slide-inner proof-layout">
             <div>
-              <p className="eyebrow">Ready for tomorrow</p>
-              <h2>The full software loop works; the remaining blocker is vendor calibration.</h2>
+              <p className="eyebrow">What we validated</p>
+              <h2>The full loop runs end to end — perception, decision, navigation, and a walking robot.</h2>
+              <p className="supporting">Honest scope: detaining a moving target still uses the lidar planner, the whole system runs in Webots simulation, and it coordinates a single patrol robot over a curated face set.</p>
             </div>
             <div className="proof-grid">
               <Metric value="0.82+" label="known staff face scores" tone="green" />
@@ -418,8 +419,8 @@ function App() {
             <div className="status-strip">
               <span>Software pipeline: working</span>
               <span>Face bridge: verified</span>
-              <span>PPO+A*: validated</span>
-              <span>Booster walking: blocked by /opt/booster vendor config</span>
+              <span>PPO + A*: validated</span>
+              <span>Booster: walking in Webots</span>
             </div>
           </div>
         </section>
