@@ -44,6 +44,9 @@ ASSIST_TIME = 5.0
 GUARD_TIME = 10.0
 DETAIN_DISTANCE = 0.95          # m — close enough to detain the target
 PURSUIT_REPLAN_PERIOD = 1.0
+PURSUIT_REPLAN_MIN_DELTA = 0.4  # m — only rebuild the route if the target moved
+                                # this far; smaller jitter keeps the live route so
+                                # waypoint progress through a doorway is not lost
 MISSION_POLL_PERIOD = 1.0
 PATROL_TICK_PERIOD = 0.1
 
@@ -75,6 +78,7 @@ class PatrolStateMachine:
     target_pos_file_offset: int = 0
     last_pursuit_replan: float = 0.0
     pursuit_target_xy: tuple[float, float] | None = None
+    last_replan_target_xy: tuple[float, float] | None = None
     last_pose_log_at: float = -1e9
     last_logged_move: tuple[float, float, float] | None = None
     last_logged_stop_reason: str | None = None
@@ -131,6 +135,7 @@ class PatrolStateMachine:
             # robot replans toward the live TARGET_POS updates.
             self._enter_state("pursue", self.state_entered_at)
             self.pursuit_target_xy = target
+            self.last_replan_target_xy = target
             self.last_pursuit_replan = time.time()
         else:
             self._enter_state("navigate", self.state_entered_at)
@@ -223,19 +228,48 @@ class PatrolStateMachine:
             self._enter_state("guard", now)
             return
 
-        # Replan route toward latest target position
+        # Replan route toward latest target position. Two guards keep the robot
+        # from losing doorway progress: skip the rebuild entirely when the target
+        # has barely moved, and when we do rebuild, carry the waypoint progress
+        # across any unchanged leading (approach/door) waypoints instead of
+        # rewinding to the corridor-side approach point behind the robot.
         if now - self.last_pursuit_replan >= PURSUIT_REPLAN_PERIOD:
             self.last_pursuit_replan = now
-            start = (self.pose.x, self.pose.y)
-            self.waypoints = safe_route(start, self.pursuit_target_xy)
-            self.waypoint_index = 0
-            self._log(
-                f"REPLAN pursuit target=({self.pursuit_target_xy[0]:.3f},"
-                f"{self.pursuit_target_xy[1]:.3f}) route_len={len(self.waypoints)} "
-                f"waypoints={self._waypoint_summary()}"
-            )
+            moved = self.last_replan_target_xy is None or math.hypot(
+                self.pursuit_target_xy[0] - self.last_replan_target_xy[0],
+                self.pursuit_target_xy[1] - self.last_replan_target_xy[1],
+            ) >= PURSUIT_REPLAN_MIN_DELTA
+            if moved or not self.waypoints:
+                start = (self.pose.x, self.pose.y)
+                new_waypoints = safe_route(start, self.pursuit_target_xy)
+                self.waypoint_index = self._carried_waypoint_index(new_waypoints)
+                self.waypoints = new_waypoints
+                self.last_replan_target_xy = self.pursuit_target_xy
+                self._log(
+                    f"REPLAN pursuit target=({self.pursuit_target_xy[0]:.3f},"
+                    f"{self.pursuit_target_xy[1]:.3f}) route_len={len(self.waypoints)} "
+                    f"resume_index={self.waypoint_index} "
+                    f"waypoints={self._waypoint_summary()}"
+                )
 
         self._tick_navigate(now)
+
+    def _carried_waypoint_index(self, new_waypoints: list[Waypoint]) -> int:
+        """Map the current waypoint progress onto a freshly built route.
+
+        Counts how many leading waypoints are identical between the old and new
+        routes; if the robot's progress lies within that shared prefix, keep it
+        so a replan never sends the robot back through a doorway it already
+        crossed. Otherwise the route diverged early, so restart from its head.
+        """
+        shared = 0
+        for old_wp, new_wp in zip(self.waypoints, new_waypoints):
+            if old_wp.xy != new_wp.xy:
+                break
+            shared += 1
+        if self.waypoint_index <= shared:
+            return min(self.waypoint_index, max(len(new_waypoints) - 1, 0))
+        return 0
 
     def _tick_onsite(self, now: float) -> None:
         elapsed = now - self.state_entered_at

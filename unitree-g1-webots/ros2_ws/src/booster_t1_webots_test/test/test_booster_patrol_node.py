@@ -8,6 +8,7 @@ from booster_t1_webots_test.booster_patrol_node import (
     DETAIN_DISTANCE,
     GUARD_TIME,
     INVESTIGATE_TIME,
+    PURSUIT_REPLAN_PERIOD,
     PatrolStateMachine,
 )
 from booster_t1_webots_test.navigation_manager import NavigationStatus
@@ -391,6 +392,61 @@ class PursuitTargetUpdateTest(unittest.TestCase):
 
             # pursuit_target_xy should remain None
             self.assertIsNone(machine.pursuit_target_xy)
+
+
+class PursueReplanTest(unittest.TestCase):
+    """Pursuit replanning must not throw away waypoint progress at a doorway.
+
+    Regression: in pursue state the route was rebuilt every PURSUIT_REPLAN_PERIOD
+    with waypoint_index hard-reset to 0. At a door the index-0 waypoint is the
+    corridor-side approach point *behind* the robot, so each replan yanked the
+    robot back out of the doorway — it could never cross into the room (e.g. the
+    datacenter) and ping-ponged on the threshold forever.
+    """
+
+    def _pursue_machine(self, tmp):
+        machine = PatrolStateMachine(
+            rpc=FakeRpc(), status_path=Path(tmp) / "status.jsonl"
+        )
+        # Start from the corridor dock, chase an intruder inside the datacenter.
+        machine.update_pose(Pose2D(9.0, 0.0, 3.14159))
+        machine.start_mission(
+            Mission(kind="detain", x=7.53, y=2.55, target="Intruder")
+        )
+        self.assertEqual("pursue", machine.state)
+        # safe_route through the datacenter door: approach (8,0.2) then cross
+        # (8,1.35) then the target.
+        self.assertEqual((8.0, 0.2), machine.waypoints[0].xy)
+        self.assertEqual((8.0, 1.35), machine.waypoints[1].xy)
+        # The robot has already cleared the corridor approach wp and is on the
+        # threshold heading for the door-cross wp.
+        machine.waypoint_index = 1
+        machine.update_pose(Pose2D(8.0, 0.7, 1.5708))
+        return machine
+
+    def test_static_target_does_not_reset_waypoint_progress(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            machine = self._pursue_machine(tmp)
+            door_wp = machine.waypoints[1].xy
+            # A full replan period elapses with the intruder position unchanged.
+            machine.tick(machine.last_pursuit_replan + PURSUIT_REPLAN_PERIOD + 0.1)
+            # Progress preserved: still heading for the door-cross wp, not
+            # rewound to the corridor approach wp.
+            self.assertEqual(1, machine.waypoint_index)
+            self.assertEqual(door_wp, machine.waypoints[machine.waypoint_index].xy)
+
+    def test_moved_target_replans_but_keeps_cleared_prefix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            machine = self._pursue_machine(tmp)
+            # Intruder moves deeper into the datacenter — a real replan is needed
+            # (the final target waypoint changes), but the shared leading door
+            # waypoints must not send the robot back to the corridor.
+            machine.pursuit_target_xy = (6.8, 4.0)
+            machine.tick(machine.last_pursuit_replan + PURSUIT_REPLAN_PERIOD + 0.1)
+            self.assertGreaterEqual(machine.waypoint_index, 1)
+            self.assertNotEqual(
+                (8.0, 0.2), machine.waypoints[machine.waypoint_index].xy
+            )
 
 
 if __name__ == "__main__":
