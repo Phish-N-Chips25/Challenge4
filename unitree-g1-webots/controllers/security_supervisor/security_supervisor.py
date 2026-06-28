@@ -27,6 +27,7 @@ from controller import Supervisor
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "common"))
 from zones import DOORS, GATE_DOOR, zone_of, route  # noqa: E402
+from heading import yaw_from_orientation  # noqa: E402
 from pathlib import Path as _Path
 
 EMPLOYEES = {"Alice", "Bruno", "Carla"}
@@ -309,10 +310,11 @@ def main():
         active_mission_target = (x, y)
 
     def booster_yaw():
-        rx, ry, rz, angle = active_robot.getField("rotation").getSFRotation()
-        if abs(rz) >= max(abs(rx), abs(ry), 1e-9):
-            return math.atan2(math.sin(rz * angle), math.cos(rz * angle))
-        return 0.0
+        # Yaw from the full orientation matrix, not the axis-angle Z component:
+        # the walking biped tilts every gait step, and rz*angle collapses under
+        # that tilt (worst near the corridor headings the robot operates in),
+        # corrupting the closed-loop heading the patrol/PPO navigation drives.
+        return yaw_from_orientation(active_robot.getOrientation())
 
     def write_booster_pose_file(now, x, y, z):
         os.makedirs(os.path.dirname(pose_file), exist_ok=True)
