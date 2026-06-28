@@ -37,6 +37,7 @@ setup(
             "ppo_patrol_node = booster_t1_webots_test.ppo_patrol_node:main",
             "booster_lidar_adapter = booster_t1_webots_test.booster_lidar_adapter:main",
             "booster_localization_node = booster_t1_webots_test.booster_localization_node:main",
+            "booster_camera_node = booster_t1_webots_test.booster_camera_node:main",
         ],
     },
 )

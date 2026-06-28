@@ -49,8 +49,8 @@ def main():
     receiver.enable(timestep)
     beacon = robot.getDevice("beacon")
     camera = robot.getDevice("patrol_camera")
-    camera.enable(timestep * 2)
-    camera.recognitionEnable(timestep * 2)
+    camera.enable(32)
+    camera.recognitionEnable(32)
 
     missions = []          # fila de missoes ordenada por prioridade
     mission = None         # missao ativa

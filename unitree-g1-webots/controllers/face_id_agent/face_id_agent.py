@@ -39,8 +39,8 @@ def main():
             gate = arg.split("=", 1)[1]
 
     camera = robot.getDevice("camera")
-    camera.enable(timestep * 2)
-    camera.recognitionEnable(timestep * 2)
+    camera.enable(32)
+    camera.recognitionEnable(32)
     emitter = robot.getDevice("emitter")
 
     last_report = {}  # model -> instante do ultimo relatorio

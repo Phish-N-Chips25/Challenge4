@@ -29,7 +29,7 @@ def main():
     sensors = []
     for sensor_name in ("ds_center", "ds_left", "ds_right"):
         sensor = robot.getDevice(sensor_name)
-        sensor.enable(timestep)
+        sensor.enable(32)
         sensors.append(sensor)
     led = robot.getDevice("led")
     emitter = robot.getDevice("emitter")
