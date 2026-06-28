@@ -48,10 +48,29 @@ from pathlib import Path
 from .booster_patrol_node import PatrolStateMachine
 from .navigation_manager import NavigationStatus
 from .patrol_types import Pose2D
+from .precision_control import PrecisionLimits, shape_velocity
 
 # Distance (m) at which a waypoint counts as reached. TUNE: on the real biped,
 # a slightly larger radius avoids hovering/oscillating at the exact point.
 PPO_ARRIVE_DISTANCE = 0.40
+
+
+def _limits_from_env() -> PrecisionLimits:
+    """Build the precision-layer envelope, overridable via BOOSTER_PPO_* env."""
+    def f(name: str, default: float) -> float:
+        try:
+            return float(os.environ.get(name, "") or default)
+        except ValueError:
+            return default
+
+    return PrecisionLimits(
+        turn_in_place=f("BOOSTER_PPO_TURN_IN_PLACE", PrecisionLimits.turn_in_place),
+        max_vx=f("BOOSTER_PPO_MAX_VX", PrecisionLimits.max_vx),
+        max_vyaw=f("BOOSTER_PPO_MAX_VYAW", PrecisionLimits.max_vyaw),
+        walk_yaw=f("BOOSTER_PPO_WALK_YAW", PrecisionLimits.walk_yaw),
+        turn_kp=f("BOOSTER_PPO_TURN_KP", PrecisionLimits.turn_kp),
+        slow_radius=f("BOOSTER_PPO_SLOW_RADIUS", PrecisionLimits.slow_radius),
+    )
 
 
 class PPONavAdapter:
@@ -64,12 +83,18 @@ class PPONavAdapter:
     then sent over RPC.
     """
 
-    def __init__(self, rpc, navigator, logger=None, arrive_distance=PPO_ARRIVE_DISTANCE):
+    def __init__(self, rpc, navigator, logger=None, arrive_distance=PPO_ARRIVE_DISTANCE,
+                 limits: PrecisionLimits | None = None):
         self.rpc = rpc
         self.nav = navigator           # policy_runner.PPONavigator
         self.env = navigator._env      # OfficeNavEnv — obs encoding + action rescale
         self.logger = logger or (lambda _m: None)
         self.arrive_distance = arrive_distance
+        # Deterministic precision layer applied on top of the PPO command so the
+        # physics biped tracks the planned waypoints (stop-turn-go, no crabbing,
+        # speed caps). See precision_control.shape_velocity.
+        self.limits = limits or PrecisionLimits()
+        self._was_turning: bool | None = None
         self.pose: Pose2D | None = None
         # previous *normalised* action — obs slots 7..9 (kept so the policy sees
         # the same action-history feature it was trained with).
@@ -109,7 +134,20 @@ class PPONavAdapter:
         )
         self._prev_norm = tuple(float(v) for v in norm)
         vx, vy, vyaw = (float(v) for v in self.env._rescale_action(norm))
-        self.rpc.move(vx, vy, vyaw)
+
+        # Precision layer: shape the policy command into a stop-turn-go motion the
+        # physics gait can track precisely (align before moving, no crabbing,
+        # capped/slowed speeds) instead of arcing into walls.
+        shaped = shape_velocity(self.pose, target, vx, vy, vyaw, self.limits)
+        if shaped.turning_in_place != self._was_turning:
+            self._was_turning = shaped.turning_in_place
+            mode = "turn_in_place" if shaped.turning_in_place else "walk"
+            self.logger(
+                f"[ppo_precision] mode={mode} target=({target[0]:.2f},{target[1]:.2f}) "
+                f"policy=({vx:.2f},{vy:.2f},{vyaw:.2f}) "
+                f"shaped=({shaped.vx:.2f},{shaped.vy:.2f},{shaped.vyaw:.2f})"
+            )
+        self.rpc.move(shaped.vx, shaped.vy, shaped.vyaw)
         return NavigationStatus.RUNNING
 
 
@@ -208,7 +246,14 @@ def main(argv=None):
     log_info(f"Loading PPO navigator from {model_path} (RL dir {rl_dir})...")
     from policy_runner import PPONavigator   # noqa: E402 (sys.path set above)
     navigator = PPONavigator(model_path)
-    adapter = PPONavAdapter(rpc, navigator, logger=log_info)
+    limits = _limits_from_env()
+    log_info(
+        "PPO precision limits "
+        f"turn_in_place={limits.turn_in_place:.2f} max_vx={limits.max_vx:.2f} "
+        f"max_vyaw={limits.max_vyaw:.2f} walk_yaw={limits.walk_yaw:.2f} "
+        f"turn_kp={limits.turn_kp:.2f} slow_radius={limits.slow_radius:.2f}"
+    )
+    adapter = PPONavAdapter(rpc, navigator, logger=log_info, limits=limits)
     log_info("PPO navigator ready.")
 
     # ── Stand up + enter walking mode (needs the vendor /opt/booster config) ──

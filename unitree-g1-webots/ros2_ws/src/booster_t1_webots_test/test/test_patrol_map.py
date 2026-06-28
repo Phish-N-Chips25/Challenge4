@@ -6,6 +6,7 @@ from booster_t1_webots_test.patrol_map import (
     DOOR_ARRIVE_DISTANCE,
     DOOR_FORWARD_SPEED,
     DOOR_WAYPOINTS,
+    ZONE_ARRIVE_DISTANCE,
     zone_of,
     safe_route,
 )
@@ -80,6 +81,36 @@ class SafeRouteTest(unittest.TestCase):
             if zone_name == "corridor":
                 continue
             self.assertIn(zone_name, DOOR_WAYPOINTS, f"missing door for {zone_name}")
+
+
+class ZoneArrivalToleranceTest(unittest.TestCase):
+    """The robot should stop a bit inside the room, not on the exact point."""
+
+    def test_room_target_uses_loose_arrival(self):
+        # Loose enough to not chase the exact coordinate, but well inside a room.
+        self.assertGreater(ZONE_ARRIVE_DISTANCE, DOOR_ARRIVE_DISTANCE)
+
+    def test_final_room_waypoint_is_loose(self):
+        route = safe_route(DOCK, (5.0, -3.5))  # break_room centre
+        final = route[-1]
+        self.assertEqual((5.0, -3.5), final.xy)
+        self.assertEqual(ZONE_ARRIVE_DISTANCE, final.arrive_distance)
+
+    def test_door_threading_stays_precise(self):
+        # The room-side door waypoint must keep its tight tolerance so the
+        # robot threads the opening before the loose final arrival can trigger.
+        route = safe_route(DOCK, (5.0, -3.5))
+        inside = next(wp for wp in route if wp.xy == (5.0, -1.7))
+        self.assertEqual(DOOR_ARRIVE_DISTANCE, inside.arrive_distance)
+
+    def test_same_room_target_is_loose(self):
+        route = safe_route((5.0, -2.0), (5.0, -3.5))
+        self.assertEqual(1, len(route))
+        self.assertEqual(ZONE_ARRIVE_DISTANCE, route[0].arrive_distance)
+
+    def test_corridor_target_keeps_default_arrival(self):
+        route = safe_route(DOCK, (0.0, 0.0))
+        self.assertIsNone(route[-1].arrive_distance)
 
 
 if __name__ == "__main__":

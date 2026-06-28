@@ -41,6 +41,13 @@ DOOR_WAYPOINTS = {
 DOOR_ARRIVE_DISTANCE = 0.28
 DOOR_FORWARD_SPEED = 0.50
 
+# Final-target arrival tolerance for a room destination. The mission point is a
+# zone centre (or a person's position); the robot only needs to get a bit
+# inside the room near it, not chase the exact coordinate. The robot always
+# threads the room-side door waypoint (tight DOOR_ARRIVE_DISTANCE) first, so by
+# the time this loose radius can trigger it is already inside the room.
+ZONE_ARRIVE_DISTANCE = 1.0
+
 
 def zone_of(x, y):
     """Return the zone name containing point (x, y), or None if outside."""
@@ -63,7 +70,7 @@ def safe_route(start, target):
     dst = zone_of(tx, ty)
 
     if src == dst and src is not None:
-        return [Waypoint(tx, ty, f"direct to target in {src}")]
+        return [_target_waypoint(tx, ty, dst, f"direct to target in {src}")]
 
     points: list[Waypoint] = []
 
@@ -84,9 +91,21 @@ def safe_route(start, target):
         ])
 
     # Final target
-    points.append(Waypoint(tx, ty, "safe route"))
+    points.append(_target_waypoint(tx, ty, dst, "safe route"))
 
     return points
+
+
+def _target_waypoint(tx: float, ty: float, dst: str | None, note: str) -> Waypoint:
+    """Final mission waypoint.
+
+    A room destination gets the loose ZONE_ARRIVE_DISTANCE so the robot stops a
+    bit inside the room rather than chasing the exact point; corridor / outside
+    targets (e.g. the dock) keep the default tight arrival.
+    """
+    if dst not in (None, "corridor"):
+        return Waypoint(tx, ty, note, arrive_distance=ZONE_ARRIVE_DISTANCE)
+    return Waypoint(tx, ty, note)
 
 
 def _door_waypoint(point: tuple[float, float], note: str) -> Waypoint:
