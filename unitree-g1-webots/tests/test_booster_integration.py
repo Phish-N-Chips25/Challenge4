@@ -106,6 +106,26 @@ class BoosterIntegrationTest(unittest.TestCase):
         missing = [str(path) for path in required_paths if not path.exists()]
         self.assertEqual([], missing)
 
+    def test_runner_uses_ppo_patrol_by_default_and_skips_manual_rpc(self):
+        script = (ROOT / "tools" / "run_sentinelmas_booster.sh").read_text(encoding="utf-8")
+
+        self.assertIn('USE_PPO_PATROL="${USE_PPO_PATROL:-1}"', script)
+        self.assertIn('PATROL_NODE="ppo_patrol_node"', script)
+        self.assertIn('if [[ "${USE_PPO_PATROL}" == "0"', script)
+        self.assertIn('PATROL_NODE="booster_patrol_node"', script)
+        self.assertIn("PPO patrol controls movement", script)
+        self.assertIn('BOOSTER_SEND_MANUAL_COMMAND="${BOOSTER_SEND_MANUAL_COMMAND:-}"', script)
+        self.assertIn('SEND_MANUAL_COMMAND=0', script)
+        self.assertIn('if [[ "${SEND_MANUAL_COMMAND}" != "1" ]]', script)
+        self.assertIn("rpc_movement_client", script)
+
+        default_idx = script.index('USE_PPO_PATROL="${USE_PPO_PATROL:-1}"')
+        ppo_idx = script.index('PATROL_NODE="ppo_patrol_node"')
+        skip_idx = script.index("PPO patrol controls movement")
+        manual_idx = script.index("rpc_movement_client")
+        self.assertLess(default_idx, ppo_idx)
+        self.assertLess(skip_idx, manual_idx)
+
     def test_docker_configuration_targets_booster_runner_runtime(self):
         compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
         docker_common = (ROOT / "containers" / "docker_common.sh").read_text(encoding="utf-8")

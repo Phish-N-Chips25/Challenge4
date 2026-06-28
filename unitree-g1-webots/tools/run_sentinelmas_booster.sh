@@ -46,6 +46,8 @@ WEBOTS_MODE="${WEBOTS_MODE:-realtime}"
 LOG_DIR="${CHALLENGE_ROOT}/.logs"
 RUNNER_LOG="${LOG_DIR}/booster-webots-runner.log"
 SERVICE_TIMEOUT="${SERVICE_TIMEOUT:-120}"
+USE_PPO_PATROL="${USE_PPO_PATROL:-1}"
+BOOSTER_SEND_MANUAL_COMMAND="${BOOSTER_SEND_MANUAL_COMMAND:-}"
 
 mkdir -p "${LOG_DIR}"
 printf "Resetting runtime bridge logs in %s...\n" "${LOG_DIR}"
@@ -169,6 +171,8 @@ docker exec "${CONTAINER_NAME}" pkill -f mck 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -9 -f rpc_service_node 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -f pose_file_odometry_publisher 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -f sim_lidar_pointcloud_node 2>/dev/null || true
+docker exec "${CONTAINER_NAME}" pkill -f ppo_patrol_node 2>/dev/null || true
+docker exec "${CONTAINER_NAME}" pkill -f booster_patrol_node 2>/dev/null || true
 docker exec "${CONTAINER_NAME}" pkill -f patrol_node 2>/dev/null || true
 sleep 1
 printf "Resetting runtime bridge logs after cleanup...\n"
@@ -329,11 +333,11 @@ done
 assert_booster_runner_healthy "${RUNNER_LOG}"
 
 # ── 8b. Start the Booster patrol node ────────────────────────────────────────
-# Choose the patrol driver: their lidar node (default) or the PPO node
-# (USE_PPO_PATROL=1 → the trained policy drives; needs the /workspace/rl mount).
-PATROL_NODE="booster_patrol_node"
-if [[ "${USE_PPO_PATROL:-0}" == "1" ]]; then
-  PATROL_NODE="ppo_patrol_node"
+# PPO is the default patrol driver. Set USE_PPO_PATROL=0 only when you need the
+# lidar NavigationManager for detain/dynamic-target experiments.
+PATROL_NODE="ppo_patrol_node"
+if [[ "${USE_PPO_PATROL}" == "0" || "${USE_PPO_PATROL}" == "false" ]]; then
+  PATROL_NODE="booster_patrol_node"
 fi
 printf "Starting Booster patrol node (%s)...\n" "${PATROL_NODE}"
 docker exec --env PATROL_NODE="${PATROL_NODE}" "${CONTAINER_NAME}" bash -lc '
@@ -367,28 +371,42 @@ until grep -Fq "Walking mode ready." "${LOG_DIR}/booster-patrol.log" 2>/dev/null
   sleep 1
 done
 
-# ── 9. Send movement command ────────────────────────────────────────────────
-printf "Sending Booster command: %s (duration argument: %s seconds)...\n" "${COMMAND}" "${DURATION}"
-docker exec --interactive \
-  --env BOOSTER_COMMAND="${COMMAND}" \
-  --env BOOSTER_DURATION="${DURATION}" \
-  "${CONTAINER_NAME}" bash -lc '
-  set -euo pipefail
-  set +u
-  source /opt/ros/humble/setup.bash
-  set -u
-  set +u
-  source /workspace/project/ros2_ws/install/setup.bash
-  set -u
-  profile=$(find /tmp -maxdepth 3 -name "fastdds_profile.xml" 2>/dev/null | head -n 1)
-  if [[ -n "${profile}" ]]; then
-    export FASTRTPS_DEFAULT_PROFILES_FILE="${profile}"
-    export FASTDDS_DEFAULT_PROFILES_FILE="${profile}"
+# ── 9. Optional manual movement command ─────────────────────────────────────
+SEND_MANUAL_COMMAND="${BOOSTER_SEND_MANUAL_COMMAND}"
+if [[ -z "${SEND_MANUAL_COMMAND}" ]]; then
+  if [[ "${PATROL_NODE}" == "ppo_patrol_node" ]]; then
+    SEND_MANUAL_COMMAND=0
+  else
+    SEND_MANUAL_COMMAND=1
   fi
-  ros2 run booster_t1_webots_test rpc_movement_client --command "${BOOSTER_COMMAND}" --duration "${BOOSTER_DURATION}" --no-prepare
-'
+fi
 
-printf "\nDone! The Booster T1 executed '%s'.\n" "${COMMAND}"
+if [[ "${SEND_MANUAL_COMMAND}" != "1" ]]; then
+  printf "PPO patrol controls movement; skipping manual Booster command '%s'.\n" "${COMMAND}"
+  printf "Inject DISPATCH missions into %s/booster_missions.jsonl, or set BOOSTER_SEND_MANUAL_COMMAND=1 to run the manual RPC client.\n" "${LOG_DIR}"
+else
+  printf "Sending Booster command: %s (duration argument: %s seconds)...\n" "${COMMAND}" "${DURATION}"
+  docker exec --interactive \
+    --env BOOSTER_COMMAND="${COMMAND}" \
+    --env BOOSTER_DURATION="${DURATION}" \
+    "${CONTAINER_NAME}" bash -lc '
+    set -euo pipefail
+    set +u
+    source /opt/ros/humble/setup.bash
+    set -u
+    set +u
+    source /workspace/project/ros2_ws/install/setup.bash
+    set -u
+    profile=$(find /tmp -maxdepth 3 -name "fastdds_profile.xml" 2>/dev/null | head -n 1)
+    if [[ -n "${profile}" ]]; then
+      export FASTRTPS_DEFAULT_PROFILES_FILE="${profile}"
+      export FASTDDS_DEFAULT_PROFILES_FILE="${profile}"
+    fi
+    ros2 run booster_t1_webots_test rpc_movement_client --command "${BOOSTER_COMMAND}" --duration "${BOOSTER_DURATION}" --no-prepare
+  '
+
+  printf "\nDone! The Booster T1 executed '%s'.\n" "${COMMAND}"
+fi
 if kill -0 "${WEBOTS_PID}" >/dev/null 2>&1; then
   printf "Webots is still running (PID %s). Kill with: kill %s\n" "${WEBOTS_PID}" "${WEBOTS_PID}"
 else
@@ -427,6 +445,8 @@ PY
   done
   if [[ "${WEBOTS_CLEANUP_AFTER_HOLD}" != "0" && "${WEBOTS_CLEANUP_AFTER_HOLD}" != "false" ]]; then
     printf "Cleaning up monitored Webots/ROS runtime...\n"
+    docker exec "${CONTAINER_NAME}" pkill -f ppo_patrol_node 2>/dev/null || true
+    docker exec "${CONTAINER_NAME}" pkill -f booster_patrol_node 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -f patrol_node 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -f pose_file_odometry_publisher 2>/dev/null || true
     docker exec "${CONTAINER_NAME}" pkill -f sim_lidar_pointcloud_node 2>/dev/null || true
