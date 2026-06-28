@@ -4,7 +4,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "DoorNoCol.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/tables/protos/Desk.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/tables/protos/Table.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/chairs/protos/OfficeChair.proto"
@@ -176,7 +176,7 @@ Wall {
   name "wall south west"
   size 4.5 0.2 2.4
 }
-DEF DOOR_ENTRANCE Door {
+DEF DOOR_ENTRANCE DoorNoCol {
   hidden translation_5 0.5804486477485722 0.47826203543193097 2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.4900040750071848
   translation -5 -6 0
@@ -211,7 +211,7 @@ Wall {
   name "wall corridor south 1"
   size 4.5 0.2 2.4
 }
-DEF DOOR_CHECKPOINT Door {
+DEF DOOR_CHECKPOINT DoorNoCol {
   hidden translation_5 0.0010007868031929323 5.7591741268597785e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation -5 -1 0
@@ -224,7 +224,7 @@ Wall {
   name "wall corridor south 2"
   size 9 0.2 2.4
 }
-DEF DOOR_BREAK Door {
+DEF DOOR_BREAK DoorNoCol {
   hidden translation_5 0.5804486477485722 0.47826203543193097 2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.4900040750071848
   translation 5 -1 0
@@ -242,7 +242,7 @@ Wall {
   name "wall corridor north 1"
   size 1.5 0.2 2.4
 }
-DEF DOOR_WR1 Door {
+DEF DOOR_WR1 DoorNoCol {
   hidden translation_5 0.0010007868031929323 5.7591741268597785e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation -8 1 0
@@ -255,7 +255,7 @@ Wall {
   name "wall corridor north 2"
   size 3 0.2 2.4
 }
-DEF DOOR_WR2 Door {
+DEF DOOR_WR2 DoorNoCol {
   hidden translation_5 0.0010007868031930434 5.759174126693245e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation -4 1 0
@@ -268,7 +268,7 @@ Wall {
   name "wall corridor north 3"
   size 3 0.2 2.4
 }
-DEF DOOR_WR3 Door {
+DEF DOOR_WR3 DoorNoCol {
   hidden translation_5 0.0010007868031930434 5.759174126721001e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation 0 1 0
@@ -281,7 +281,7 @@ Wall {
   name "wall corridor north 4"
   size 3 0.2 2.4
 }
-DEF DOOR_WR4 Door {
+DEF DOOR_WR4 DoorNoCol {
   hidden translation_5 0.0010007868031929323 5.7591741268597785e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation 4 1 0
@@ -294,7 +294,7 @@ Wall {
   name "wall corridor north 5"
   size 3 0.2 2.4
 }
-DEF DOOR_DATACENTER Door {
+DEF DOOR_DATACENTER DoorNoCol {
   hidden translation_5 0.0010007868031929323 5.759174126998556e-06 -2.220446049250313e-16
   hidden rotation_5 0 0 -1 1.0490290481179132e-05
   translation 8 1 0
@@ -1501,15 +1501,7 @@ DEF PERSON_ALICE Robot {
   ]
   name "Alice"
   model "employee_alice"
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder {
-        height 1.8
-        radius 0.25
-      }
-    ]
-  }
+  boundingObject NULL
   recognitionColors [
     0.13 0.55 0.13
   ]
@@ -1560,15 +1552,7 @@ DEF PERSON_BRUNO Robot {
   ]
   name "Bruno"
   model "employee_bruno"
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder {
-        height 1.8
-        radius 0.25
-      }
-    ]
-  }
+  boundingObject NULL
   recognitionColors [
     0.15 0.3 0.8
   ]
@@ -1619,15 +1603,7 @@ DEF PERSON_CARLA Robot {
   ]
   name "Carla"
   model "employee_carla"
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder {
-        height 1.8
-        radius 0.25
-      }
-    ]
-  }
+  boundingObject NULL
   recognitionColors [
     0.6 0.3 0.7
   ]
@@ -1678,15 +1654,7 @@ DEF PERSON_INTRUDER Robot {
   ]
   name "Intruder"
   model "person_unknown"
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder {
-        height 1.8
-        radius 0.25
-      }
-    ]
-  }
+  boundingObject NULL
   recognitionColors [
     0.15 0.15 0.15
   ]

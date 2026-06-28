@@ -1273,6 +1273,13 @@ Robot {
                     ]
                   }
                 }
+                Camera {
+                  translation 0.08 0 0.04
+                  name "booster_camera"
+                  fieldOfView 1.2
+                  width 640
+                  height 480
+                }
               ]
               name "H2"
               boundingObject USE H2

@@ -8,7 +8,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/Floor.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Door.proto"
+EXTERNPROTO "DoorNoCol.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/tables/protos/Desk.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/tables/protos/Table.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/chairs/protos/OfficeChair.proto"
@@ -27,7 +27,7 @@ WorldInfo {
     "robo de patrulha e agentes CyberSentinel nos servidores."
   ]
   optimalThreadCount 8
-  basicTimeStep 1
+  basicTimeStep 2
   FPS 30
   contactProperties [
     ContactProperties {
@@ -148,7 +148,7 @@ Wall {
   name "wall south west"
   size 4.5 0.2 2.4
 }
-DEF DOOR_ENTRANCE Door {
+DEF DOOR_ENTRANCE DoorNoCol {
   translation -5 -6 0
   name "porta entrada"
   solidName "room_door"
@@ -184,7 +184,7 @@ Wall {
   name "wall corridor south 1"
   size 4.5 0.2 2.4
 }
-DEF DOOR_CHECKPOINT Door {
+DEF DOOR_CHECKPOINT DoorNoCol {
   translation -5 -1 0
   name "porta checkpoint"
   solidName "room_door"
@@ -195,7 +195,7 @@ Wall {
   name "wall corridor south 2"
   size 9 0.2 2.4
 }
-DEF DOOR_BREAK Door {
+DEF DOOR_BREAK DoorNoCol {
   translation 5 -1 0
   name "porta sala convivio"
   solidName "room_door"
@@ -214,7 +214,7 @@ Wall {
   name "wall corridor north 1"
   size 1.5 0.2 2.4
 }
-DEF DOOR_WR1 Door {
+DEF DOOR_WR1 DoorNoCol {
   translation -8 1 0
   name "porta sala trabalho 1"
   solidName "room_door"
@@ -225,7 +225,7 @@ Wall {
   name "wall corridor north 2"
   size 3 0.2 2.4
 }
-DEF DOOR_WR2 Door {
+DEF DOOR_WR2 DoorNoCol {
   translation -4 1 0
   name "porta sala trabalho 2"
   solidName "room_door"
@@ -236,7 +236,7 @@ Wall {
   name "wall corridor north 3"
   size 3 0.2 2.4
 }
-DEF DOOR_WR3 Door {
+DEF DOOR_WR3 DoorNoCol {
   translation 0 1 0
   name "porta sala trabalho 3"
   solidName "room_door"
@@ -247,7 +247,7 @@ Wall {
   name "wall corridor north 4"
   size 3 0.2 2.4
 }
-DEF DOOR_WR4 Door {
+DEF DOOR_WR4 DoorNoCol {
   translation 4 1 0
   name "porta sala trabalho 4"
   solidName "room_door"
@@ -258,7 +258,7 @@ Wall {
   name "wall corridor north 5"
   size 3 0.2 2.4
 }
-DEF DOOR_DATACENTER Door {
+DEF DOOR_DATACENTER DoorNoCol {
   translation 8 1 0
   name "porta datacenter"
   solidName "room_door"
@@ -1329,12 +1329,7 @@ DEF PERSON_ALICE Robot {
       ]
     }
   ]
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder { height 1.8 radius 0.25 }
-    ]
-  }
+  boundingObject NULL
 }
 DEF PERSON_BRUNO Robot {
   translation -3.5 -8 0
@@ -1372,12 +1367,7 @@ DEF PERSON_BRUNO Robot {
       ]
     }
   ]
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder { height 1.8 radius 0.25 }
-    ]
-  }
+  boundingObject NULL
 }
 DEF PERSON_CARLA Robot {
   translation -6.5 -8.5 0
@@ -1415,12 +1405,7 @@ DEF PERSON_CARLA Robot {
       ]
     }
   ]
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder { height 1.8 radius 0.25 }
-    ]
-  }
+  boundingObject NULL
 }
 DEF PERSON_INTRUDER Robot {
   translation -5 -9.5 0
@@ -1458,12 +1443,7 @@ DEF PERSON_INTRUDER Robot {
       ]
     }
   ]
-  boundingObject Pose {
-    translation 0 0 0.92
-    children [
-      Cylinder { height 1.8 radius 0.25 }
-    ]
-  }
+  boundingObject NULL
 }
 
 # ===================================== supervisor de seguranca (coordenador)
@@ -1576,6 +1556,13 @@ DEF BOOSTER_T1 Robot {
                       "./T1_release_meshes/H2.STL"
                     ]
                   }
+                }
+                Camera {
+                  translation 0.08 0 0.04
+                  name "booster_camera"
+                  fieldOfView 1.2
+                  width 640
+                  height 480
                 }
               ]
               name "H2"
@@ -3463,7 +3450,7 @@ DEF BOOSTER_T1 Robot {
   ]
   name "T1_release"
   solidName "booster"
-  boundingObject USE Trunk
+  boundingObject NULL
   physics Physics {
     density -1
     mass 11.7
