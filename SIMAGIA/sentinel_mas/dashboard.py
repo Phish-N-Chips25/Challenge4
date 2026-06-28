@@ -13,6 +13,7 @@ Exposes:
 """
 
 import asyncio
+import os
 
 from aiohttp import web
 from spade.agent import Agent
@@ -179,7 +180,12 @@ async def _index(request):
     return web.Response(text=PAGE, content_type="text/html")
 
 
-async def start_dashboard(zcs: dict, patrol, injector, host="localhost", port=8080):
+async def start_dashboard(zcs: dict, patrol, injector, host=None, port=8080):
+    # Bind all interfaces by default so the dashboard is reachable from other
+    # machines on the LAN; override with SENTINEL_DASHBOARD_HOST=127.0.0.1 to
+    # restrict to loopback.
+    if host is None:
+        host = os.environ.get("SENTINEL_DASHBOARD_HOST", "0.0.0.0")
     app = web.Application()
     app["zcs"] = zcs
     app["patrol"] = patrol
